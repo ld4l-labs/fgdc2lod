@@ -6,3 +6,4 @@
 /src/main/resources/log4j2-test.properties
 
 **/.DS_Store
+/dependency-reduced-pom.xml
