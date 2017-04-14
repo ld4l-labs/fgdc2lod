@@ -4,8 +4,8 @@ package org.ld4l.bib2lod.record.xml.fgdc;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.ld4l.bib2lod.record.RecordField.RecordFieldException;
 import org.ld4l.bib2lod.record.xml.XmlTestUtils;
+import org.ld4l.bib2lod.records.RecordField.RecordFieldException;
 import org.ld4l.bib2lod.testing.AbstractTestClass;
 
 /**

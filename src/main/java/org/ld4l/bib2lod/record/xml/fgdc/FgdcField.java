@@ -2,7 +2,7 @@
 
 package org.ld4l.bib2lod.record.xml.fgdc;
 
-import org.ld4l.bib2lod.record.xml.BaseXmlElement;
+import org.ld4l.bib2lod.records.xml.BaseXmlElement;
 import org.w3c.dom.Element;
 
 /**

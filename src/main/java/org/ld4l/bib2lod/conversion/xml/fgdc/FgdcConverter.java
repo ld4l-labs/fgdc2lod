@@ -6,12 +6,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.ld4l.bib2lod.conversion.BaseConverter;
 import org.ld4l.bib2lod.entitybuilders.BuildParams;
-import org.ld4l.bib2lod.entitybuilders.Entity;
 import org.ld4l.bib2lod.entitybuilders.EntityBuilder;
 import org.ld4l.bib2lod.entitybuilders.EntityBuilder.EntityBuilderException;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lWorkType;
 import org.ld4l.bib2lod.parsing.xml.fgdc.FgdcParser;
-import org.ld4l.bib2lod.record.Record;
 
 /**
  * Converts FGDC records.
@@ -37,14 +35,18 @@ public class FgdcConverter extends BaseConverter {
         return PARSER_CLASS;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.ld4l.bib2lod.conversion.BaseConverter#buildEntity(org.ld4l.bib2lod.record.Record)
+	/*
+	 * (non-Javadoc)
+	 * @see org.ld4l.bib2lod.conversion.BaseConverter#buildEntity(org.ld4l.bib2lod.records.Record)
 	 */
 	@Override
-	protected Entity buildEntity(Record record) throws EntityBuilderException {
+	protected org.ld4l.bib2lod.entity.Entity buildEntity(org.ld4l.bib2lod.records.Record record)
+			throws EntityBuilderException {
         EntityBuilder instanceBuilder = getBuilder(Ld4lWorkType.class);
         BuildParams params = new BuildParams()
                 .setRecord(record);
         return instanceBuilder.build(params);
 	}
+	
+	
 }
