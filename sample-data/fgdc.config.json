@@ -1,0 +1,24 @@
+{
+  "localNamespace": "http://localhost:8080/bibframe/individual/",
+  "InputService": {
+    "class": "org.ld4l.bib2lod.io.FileInputService",
+    "source": "sample-data/MinimalFGDC_Title.xml",
+    "extension": "xml"
+  }, 
+  "OutputService": {
+    "class": "org.ld4l.bib2lod.io.FileOutputService",
+    "destination": "target/",
+    "format": "N-TRIPLE"
+  },
+  "UriService": [
+    { 
+      "class": "org.ld4l.bib2lod.uris.RandomUriMinter"
+    } 
+  ],
+  "Converter": {
+    "class": "org.ld4l.bib2lod.conversion.xml.fgdc.FgdcConverter"
+  },
+  "EntityBuilders": {
+    "class": "org.ld4l.bib2lod.entitybuilders.xml.fgdc.ld4l.FgdcToLd4lEntityBuilders"
+  }
+}                         
