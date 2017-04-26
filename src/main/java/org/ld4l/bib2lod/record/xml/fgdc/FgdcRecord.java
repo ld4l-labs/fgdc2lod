@@ -17,7 +17,7 @@ public class FgdcRecord extends BaseXmlRecord {
     
     private enum Field {
         TITLE("title"),
-        BOUNDING("bounding");
+        GEOMETRY("bounding");
         
         private final String tagName;
         
@@ -27,7 +27,7 @@ public class FgdcRecord extends BaseXmlRecord {
     }
     
     private FgdcTitle title;
-    // private Fgdc FgdcGeometry bounding;
+    private FgdcGeometry geometry;
 
 	/**
 	 * Constructor
@@ -38,7 +38,7 @@ public class FgdcRecord extends BaseXmlRecord {
 		super(element);
 		
 		this.title = buildTitle(element);
-		// this.bounding = buildBounding(element);
+		this.geometry = buildGeometry(element);
 	}
 	
     /*
@@ -50,10 +50,25 @@ public class FgdcRecord extends BaseXmlRecord {
         if (titleNodes.getLength() == 0) {
             return null;
         }
-        // There should be only one leader - ignore any others.
-        return new FgdcTitle((Element) titleNodes.item(0));        
+
+        // There should be only one title - ignore any others.
+        return new FgdcTitle((Element) titleNodes.item(0));       
     }
 
+	/*
+	 * Builds this Record's geography from the FGDC input.
+	 */
+	private FgdcGeometry buildGeometry(Element element) {
+		NodeList boundingNodes = element.getElementsByTagName(Field.GEOMETRY.tagName);
+		if (boundingNodes.getLength() == 0) {
+			return null;
+		}
+		
+		// There should be only one bounding - ignore any others.
+		FgdcGeometry fdgcGeometry = new FgdcGeometry((Element)boundingNodes.item(0));
+		return fdgcGeometry;
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.ld4l.bib2lod.record.Record#isValid()
 	 */
@@ -61,6 +76,10 @@ public class FgdcRecord extends BaseXmlRecord {
 	public boolean isValid() {
 
 		if (!hasTitle()) {
+			return false;
+		}
+		
+		if (!hasGeometry()) {
 			return false;
 		}
 		
@@ -74,5 +93,24 @@ public class FgdcRecord extends BaseXmlRecord {
     public FgdcTitle getTitle() {
     	return this.title;
     }
+    
+    private boolean hasGeometry() {
+    	return this.geometry != null;
+    }
+    
+    public FgdcGeometry getGeometry() {
+    	return this.geometry;
+    }
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("FgdcRecord [title=");
+		builder.append(title);
+		builder.append(", geometry=");
+		builder.append(geometry);
+		builder.append("]");
+		return builder.toString();
+	}
 
 }

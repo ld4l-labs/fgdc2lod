@@ -21,13 +21,18 @@ public class FgdcTitle extends FgdcField {
 	 */
 	@Override
 	public boolean isValid() {
-        if (textValue == null) {
+        if (getTextValue() == null) {
             return false;
         }
-        if (textValue.isEmpty()) {
+        if (getTextValue().isEmpty()) {
             return false;
         }
         return true;
     }
+	
+	@Override
+	public String toString() {
+		return getTextValue();
+	}
 
 }

@@ -2,9 +2,9 @@ package org.ld4l.bib2lod.ontology.fgdc;
 
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.ResourceFactory;
-import org.ld4l.bib2lod.ontology.OntologyProp;
+import org.ld4l.bib2lod.ontology.ObjectProp;
 
-public enum FgdcObjectProp implements OntologyProp {
+public enum FgdcObjectProp implements ObjectProp {
 
     HAS_COORDINATES(CartographyNamespace.RDAU, "P60109");
    

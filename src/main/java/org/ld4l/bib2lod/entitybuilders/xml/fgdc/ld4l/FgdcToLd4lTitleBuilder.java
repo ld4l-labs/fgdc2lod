@@ -24,6 +24,7 @@ public class FgdcToLd4lTitleBuilder extends FgdcToLd4lEntityBuilder {
         
     	FgdcRecord record = (FgdcRecord) params.getRecord();
         Entity bibEntity = params.getRelatedEntity();
+        // huh? nothing done with this if !isValid(); if valid, this is overwritten
         Entity title = new Entity(Ld4lTitleType.superClass());
         
         FgdcTitle fgdcTitle = record.getTitle();
@@ -31,9 +32,11 @@ public class FgdcToLd4lTitleBuilder extends FgdcToLd4lEntityBuilder {
         	String titleValue = fgdcTitle.getTextValue();
         	title = buildTitleElement(Ld4lTitleType.TITLE, titleValue);
         	bibEntity.addChild(Ld4lObjectProp.HAS_TITLE, title);
+        	// add title as label of parent (Cartography)
+        	bibEntity.addAttribute(Ld4lDatatypeProp.LABEL, titleValue);
         }
         
-        return title;
+        return title; // nothing done with return value???
     }
        
     private Entity buildTitleElement(

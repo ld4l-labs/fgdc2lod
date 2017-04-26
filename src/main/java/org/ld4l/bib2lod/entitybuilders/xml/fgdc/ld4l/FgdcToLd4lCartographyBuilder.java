@@ -25,7 +25,7 @@ public class FgdcToLd4lCartographyBuilder extends FgdcToLd4lEntityBuilder {
         this.instance = new Entity(Ld4lWorkType.CARTOGRAPHY);
         
         buildTitle();
-//        buildGeometry();
+        buildGeometry();
         
         return instance;
     }

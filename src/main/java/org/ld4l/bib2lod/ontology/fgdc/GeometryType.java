@@ -2,6 +2,7 @@ package org.ld4l.bib2lod.ontology.fgdc;
 
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
+import org.ld4l.bib2lod.ontology.Namespace;
 import org.ld4l.bib2lod.ontology.Type;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lNamespace;
 
@@ -12,8 +13,8 @@ import org.ld4l.bib2lod.ontology.ld4l.Ld4lNamespace;
 public enum GeometryType implements Type {
     
 	GEOMETRY(CartographyNamespace.GEO, "Geometry"),
-    PROJECTION(CartographyNamespace.RDAU, "P60109"); // domain - bf:Cartography, range - geo:Geometry
-	// Identifier class is in org.ld4l.bib2lod.ontology.ld4l.Ld4lIdentifierType
+	CARTOGRAPIC(Ld4lNamespace.BIBFRAME, "Cartographic"),
+    PROJECTION(Ld4lNamespace.BIBFRAME, "Projection");
     
     private String uri;
     private Resource ontClass;
@@ -21,7 +22,7 @@ public enum GeometryType implements Type {
     /**
      * Constructor
      */
-    GeometryType(CartographyNamespace namespace, String localName) {
+    GeometryType(Namespace namespace, String localName) {
         this.uri = namespace.uri() + localName;
         this.ontClass = ResourceFactory.createResource(uri);
     }

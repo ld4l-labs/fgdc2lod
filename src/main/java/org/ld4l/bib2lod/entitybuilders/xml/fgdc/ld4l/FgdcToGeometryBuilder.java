@@ -6,11 +6,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.ld4l.bib2lod.entity.Entity;
 import org.ld4l.bib2lod.entitybuilders.BuildParams;
+import org.ld4l.bib2lod.ontology.fgdc.FgdcDatatypeProp;
+import org.ld4l.bib2lod.ontology.fgdc.FgdcObjectProp;
 import org.ld4l.bib2lod.ontology.fgdc.GeometryType;
-import org.ld4l.bib2lod.ontology.ld4l.Ld4lObjectProp;
-import org.ld4l.bib2lod.ontology.ld4l.Ld4lTitleType;
+import org.ld4l.bib2lod.record.xml.fgdc.FgdcGeometry;
 import org.ld4l.bib2lod.record.xml.fgdc.FgdcRecord;
-import org.ld4l.bib2lod.record.xml.fgdc.FgdcTitle;
 
 /**
  * Builds a Geometry Entity.
@@ -24,24 +24,24 @@ public class FgdcToGeometryBuilder extends FgdcToLd4lEntityBuilder {
         
     	FgdcRecord record = (FgdcRecord) params.getRecord();
         Entity bibEntity = params.getRelatedEntity();
-        Entity geometry = new Entity(GeometryType.superClass());
+        // huh? nothing done with this if !isValid(); if valid, this is overwritten
+        Entity geometry = new Entity(GeometryType.superClass()); // (no rdfs:label added)
+        geometry.addType(GeometryType.CARTOGRAPIC);
         
-        FgdcTitle fgdcTitle = record.getTitle();
-        if (fgdcTitle.isValid()) {
-        	String titleValue = fgdcTitle.getTextValue();
-        	geometry = buildWellKnownTextElement(Ld4lTitleType.TITLE, titleValue);
-        	bibEntity.addChild(Ld4lObjectProp.HAS_TITLE, geometry);
+        FgdcGeometry fgdcGeometry = record.getGeometry();
+        if (fgdcGeometry.isValid()) {
+        	
+        	geometry = addWellKnownText(geometry, fgdcGeometry);
+        	bibEntity.addChild(FgdcObjectProp.HAS_COORDINATES, geometry);
         }
         
-        return geometry;
+        return geometry; // nothing done with return value???
     }
        
-    private Entity buildWellKnownTextElement(
-    		Ld4lTitleType elementClass, String label) {
-        
-         Entity titleElement = new Entity(elementClass);
-//         titleElement.addAttribute(FgdcDatatypeProp.AS_WKT, label);
-         return titleElement;
+    private Entity addWellKnownText(Entity geometry, FgdcGeometry fgdcGeometry) {
+    	
+        geometry.addAttribute(FgdcDatatypeProp.AS_WKT, fgdcGeometry.getWKT());
+        return geometry;
     }
     
 }
