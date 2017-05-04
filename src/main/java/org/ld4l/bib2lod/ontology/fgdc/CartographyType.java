@@ -10,11 +10,13 @@ import org.ld4l.bib2lod.ontology.ld4l.Ld4lNamespace;
  * Enumerates the cartography types used in the LD4L BIBFRAME 2 extensions and
  * application profile.
  */
-public enum GeometryType implements Type {
+public enum CartographyType implements Type {
     
 	GEOMETRY(CartographyNamespace.GEO, "Geometry"),
 	CARTOGRAPIC(Ld4lNamespace.BIBFRAME, "Cartographic"),
-    PROJECTION(Ld4lNamespace.BIBFRAME, "Projection");
+    PROJECTION(Ld4lNamespace.BIBFRAME, "Projection"),
+    DATASET(Ld4lNamespace.BIBFRAME, "Dataset"),
+    EPSG_CODE(CartographyNamespace.CARTOTEKO, "EpsgCode");
     
     private String uri;
     private Resource ontClass;
@@ -22,7 +24,7 @@ public enum GeometryType implements Type {
     /**
      * Constructor
      */
-    GeometryType(Namespace namespace, String localName) {
+    CartographyType(Namespace namespace, String localName) {
         this.uri = namespace.uri() + localName;
         this.ontClass = ResourceFactory.createResource(uri);
     }

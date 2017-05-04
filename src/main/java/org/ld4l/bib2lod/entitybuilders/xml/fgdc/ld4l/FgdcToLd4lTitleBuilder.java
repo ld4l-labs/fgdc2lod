@@ -31,7 +31,7 @@ public class FgdcToLd4lTitleBuilder extends FgdcToLd4lEntityBuilder {
         if (fgdcTitle.isValid()) {
         	String titleValue = fgdcTitle.getTextValue();
         	title = buildTitleElement(Ld4lTitleType.TITLE, titleValue);
-        	bibEntity.addChild(Ld4lObjectProp.HAS_TITLE, title);
+        	bibEntity.addRelationship(Ld4lObjectProp.HAS_TITLE, title);
         	// add title as label of parent (Cartography)
         	bibEntity.addAttribute(Ld4lDatatypeProp.LABEL, titleValue);
         }

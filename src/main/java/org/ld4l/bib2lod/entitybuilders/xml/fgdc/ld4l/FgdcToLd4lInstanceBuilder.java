@@ -5,7 +5,8 @@ package org.ld4l.bib2lod.entitybuilders.xml.fgdc.ld4l;
 import org.ld4l.bib2lod.entity.Entity;
 import org.ld4l.bib2lod.entitybuilders.BuildParams;
 import org.ld4l.bib2lod.entitybuilders.EntityBuilder;
-import org.ld4l.bib2lod.ontology.fgdc.GeometryType;
+import org.ld4l.bib2lod.ontology.fgdc.CartographyType;
+import org.ld4l.bib2lod.ontology.ld4l.Ld4lInstanceType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lTitleType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lWorkType;
 import org.ld4l.bib2lod.record.xml.fgdc.FgdcRecord;
@@ -13,7 +14,7 @@ import org.ld4l.bib2lod.record.xml.fgdc.FgdcRecord;
 /**
  * Builds an Cartography individual from a Record.
  */
-public class FgdcToLd4lCartographyBuilder extends FgdcToLd4lEntityBuilder {
+public class FgdcToLd4lInstanceBuilder extends FgdcToLd4lEntityBuilder {
     
     private FgdcRecord record;
     private Entity instance;
@@ -21,11 +22,11 @@ public class FgdcToLd4lCartographyBuilder extends FgdcToLd4lEntityBuilder {
     @Override
     public Entity build(BuildParams params) throws EntityBuilderException {
 
-        this.record = (FgdcRecord) params.getRecord();  
-        this.instance = new Entity(Ld4lWorkType.CARTOGRAPHY);
+        this.record = (FgdcRecord) params.getRecord();
+        this.instance = new Entity(Ld4lInstanceType.INSTANCE);
         
         buildTitle();
-        buildGeometry();
+        buildWorks();
         
         return instance;
     }
@@ -39,14 +40,13 @@ public class FgdcToLd4lCartographyBuilder extends FgdcToLd4lEntityBuilder {
         builder.build(params);
     }
     
-    private void buildGeometry() throws EntityBuilderException {
+    private void buildWorks() throws EntityBuilderException {
         
-        EntityBuilder builder = getBuilder(GeometryType.class);
-
+        EntityBuilder builder = getBuilder(Ld4lWorkType.class);
         BuildParams params = new BuildParams()
                 .setRecord(record)
-                .setRelatedEntity(instance);        
+                .setRelatedEntity(instance);
         builder.build(params);
-    }   
+    }
         
 }

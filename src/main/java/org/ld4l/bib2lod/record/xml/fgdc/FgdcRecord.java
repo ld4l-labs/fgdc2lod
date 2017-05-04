@@ -28,6 +28,7 @@ public class FgdcRecord extends BaseXmlRecord {
     
     private FgdcTitle title;
     private FgdcGeometry geometry;
+    private String layerId;
 
 	/**
 	 * Constructor
@@ -39,6 +40,7 @@ public class FgdcRecord extends BaseXmlRecord {
 		
 		this.title = buildTitle(element);
 		this.geometry = buildGeometry(element);
+		this.layerId = buildLayerId(element);
 	}
 	
     /*
@@ -67,6 +69,10 @@ public class FgdcRecord extends BaseXmlRecord {
 		// There should be only one bounding - ignore any others.
 		FgdcGeometry fdgcGeometry = new FgdcGeometry((Element)boundingNodes.item(0));
 		return fdgcGeometry;
+	}
+	
+	private String buildLayerId(Element element) {
+		return element.getAttribute("layerid");
 	}
 	
 	/* (non-Javadoc)
@@ -101,6 +107,10 @@ public class FgdcRecord extends BaseXmlRecord {
     public FgdcGeometry getGeometry() {
     	return this.geometry;
     }
+    
+    public String getLayerId() {
+    	return this.layerId;
+    }
 
 	@Override
 	public String toString() {
@@ -109,6 +119,8 @@ public class FgdcRecord extends BaseXmlRecord {
 		builder.append(title);
 		builder.append(", geometry=");
 		builder.append(geometry);
+		builder.append(", layerId=");
+		builder.append(layerId);
 		builder.append("]");
 		return builder.toString();
 	}
