@@ -5,10 +5,11 @@ package org.ld4l.bib2lod.entitybuilders.xml.fgdc.ld4l;
 import org.ld4l.bib2lod.entity.Entity;
 import org.ld4l.bib2lod.entitybuilders.BuildParams;
 import org.ld4l.bib2lod.entitybuilders.EntityBuilder;
-import org.ld4l.bib2lod.entitybuilders.EntityBuilder.EntityBuilderException;
 import org.ld4l.bib2lod.ontology.fgdc.CartographyType;
+import org.ld4l.bib2lod.ontology.ld4l.Ld4lActivityType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lDatatypeProp;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lIdentifierType;
+import org.ld4l.bib2lod.ontology.ld4l.Ld4lInstanceType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lObjectProp;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lTitleType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lWorkType;
@@ -17,24 +18,29 @@ import org.ld4l.bib2lod.record.xml.fgdc.FgdcRecord;
 /**
  * Builds an Cartography individual from a Record.
  */
-public class FgdcToLd4lWorkBuilder extends FgdcToLd4lEntityBuilder {
+public class FgdcToLd4lCartographyBuilder extends FgdcToLd4lEntityBuilder {
     
     private FgdcRecord record;
-    private Entity instance;
+//    private Entity instance;
     private Entity work;
   
     @Override
     public Entity build(BuildParams params) throws EntityBuilderException {
 
         this.record = (FgdcRecord) params.getRecord();
-        this.instance = params.getRelatedEntity();
-        this.work = new Entity(Ld4lWorkType.CARTOGRAPHY);
-        this.work.addType(CartographyType.DATASET);
+        
+        if ( !this.record.isValid() ) {
+        	throw new EntityBuilderException("The record is invalid: " + this.record);
+        }
+        
+        this.work = new Entity(CartographyType.DATASET);
+        this.work.addType(Ld4lWorkType.CARTOGRAPHY); // (This is defined as two different types.)
         
         buildTitle();
-        buildGeometry();
+        buildInstances();
+        buildOriginatorActivity();
         addIdentifiers();
-        instance.addRelationship(Ld4lObjectProp.IS_INSTANCE_OF, work);
+        buildGeometry();
 
         return this.work;
     }
@@ -48,6 +54,16 @@ public class FgdcToLd4lWorkBuilder extends FgdcToLd4lEntityBuilder {
         builder.build(params);
     }
     
+    private void buildInstances() throws EntityBuilderException {
+        
+        EntityBuilder builder = getBuilder(Ld4lInstanceType.class);
+
+        BuildParams params = new BuildParams()
+                .setRecord(record)
+                .setRelatedEntity(work);        
+        builder.build(params);
+    }
+    
     private void buildGeometry() throws EntityBuilderException {
         
         EntityBuilder builder = getBuilder(CartographyType.class);
@@ -56,15 +72,26 @@ public class FgdcToLd4lWorkBuilder extends FgdcToLd4lEntityBuilder {
                 .setRecord(record)
                 .setRelatedEntity(work);        
         builder.build(params);
-    }   
+    }
     
     private void addIdentifiers() {
     	
-    	if ( !record.getLayerId().isEmpty()) {
+    	if ( record.getLayerId().isValid()) {
     		Entity identifier = new Entity(Ld4lIdentifierType.LOCAL);
-    		identifier.addAttribute(Ld4lDatatypeProp.VALUE, record.getLayerId());
+    		identifier.addAttribute(Ld4lDatatypeProp.VALUE, record.getLayerId().getTextValue());
     		work.addRelationship(Ld4lObjectProp.IS_IDENTIFIED_BY, identifier);
     	}
+    }
+    
+    private void buildOriginatorActivity() throws EntityBuilderException {
+        
+        EntityBuilder builder = getBuilder(Ld4lActivityType.class);
+        
+        BuildParams params = new BuildParams()
+                .setRecord(record)     
+                .setRelatedEntity(work)
+                .setType(Ld4lActivityType.ORIGINATOR_ACTIVITY);
+        builder.build(params);
     }
         
 }

@@ -1,5 +1,3 @@
-/* $This file is distributed under the terms of the license in /doc/license.txt$ */
-
 package org.ld4l.bib2lod.record.xml.fgdc;
 
 import org.junit.Assert;
@@ -9,17 +7,17 @@ import org.ld4l.bib2lod.records.RecordField.RecordFieldException;
 import org.ld4l.bib2lod.testing.AbstractTestClass;
 
 /**
- * Tests class FgdcTitle.
+ * Tests class FgdcAgent.
  */
-public class FgdcTitleTest extends AbstractTestClass {
+public class FgdcAgentTest extends AbstractTestClass {
 
-    private static final String NO_VALUE = "<title/>";
+    private static final String NO_VALUE = "<publish/>";
     
     private static final String NO_TEXT_VALUE = 
-            "<title><subfield>Some Title</subfield></title>";
+            "<publish><subfield>Some Agent</subfield></publish>";
       
-    private static final String VALID_TITLE = 
-            "<title>Some Title</title>";
+    private static final String VALID_AGENT = 
+            "<publish>Some Agent</publish>";
 
  
     // ----------------------------------------------------------------------
@@ -28,29 +26,29 @@ public class FgdcTitleTest extends AbstractTestClass {
     
     @Test
     public void noValue_Invalid() throws Exception {
-    	FgdcTitle title = buildTitleFromString(NO_VALUE);
-        Assert.assertFalse(title.isValid());
+    	FgdcAgent agent = buildTitleFromString(NO_VALUE);
+        Assert.assertFalse(agent.isValid());
     }
     
     @Test
     public void noTextValue_Invalid() throws Exception {
-    	FgdcTitle title = buildTitleFromString(NO_TEXT_VALUE);
-        Assert.assertFalse(title.isValid());
+    	FgdcAgent agent = buildTitleFromString(NO_TEXT_VALUE);
+        Assert.assertFalse(agent.isValid());
     }
     
     @Test
     public void validTitle_Valid() throws Exception {
-    	FgdcTitle title = buildTitleFromString(VALID_TITLE);
-        Assert.assertTrue(title.isValid());
+    	FgdcAgent agent = buildTitleFromString(VALID_AGENT);
+        Assert.assertTrue(agent.isValid());
     }
 
     // ----------------------------------------------------------------------
     // Helper methods
     // ----------------------------------------------------------------------
     
-    private FgdcTitle buildTitleFromString(String s) 
+    private FgdcAgent buildTitleFromString(String s) 
             throws RecordFieldException {
-        return (FgdcTitle) XmlTestUtils.buildElementFromString(
-        		FgdcTitle.class, s);
+        return (FgdcAgent) XmlTestUtils.buildElementFromString(
+        		FgdcAgent.class, s);
     }
 }

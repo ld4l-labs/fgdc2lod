@@ -4,6 +4,8 @@ package org.ld4l.bib2lod.entitybuilders.xml.fgdc.ld4l;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.ld4l.bib2lod.datatypes.FgdcCustomDatatype;
+import org.ld4l.bib2lod.entity.Attribute;
 import org.ld4l.bib2lod.entity.Entity;
 import org.ld4l.bib2lod.entitybuilders.BuildParams;
 import org.ld4l.bib2lod.ontology.Type;
@@ -27,16 +29,18 @@ public class FgdcToGeometryBuilder extends FgdcToLd4lEntityBuilder {
     	FgdcRecord record = (FgdcRecord) params.getRecord();
         Entity cartography = params.getRelatedEntity();
         Entity geometry = new Entity(CartographyType.superClass()); // (no rdfs:label added)
-        geometry.addType(CartographyType.CARTOGRAPIC);
-        // when converting FGDC record, the Geometry always has its Cartography as source
-        geometry.addRelationship(FgdcObjectProp.HAS_SOURCE, cartography);
-        cartography.addRelationship(FgdcObjectProp.HAS_COORDINATES, geometry);
         
         FgdcGeometry fgdcGeometry = record.getGeometry();
-        if (fgdcGeometry.isValid()) {
+        if (fgdcGeometry != null && fgdcGeometry.isValid()) {
         	
-        	geometry.addAttribute(FgdcDatatypeProp.AS_WKT, fgdcGeometry.getWKT());
+        	Attribute wktAttr = new Attribute(fgdcGeometry.getWKT(),
+        			FgdcCustomDatatype.GeoDatatype.WKT_DATATYPE);
+        	geometry.addAttribute(FgdcDatatypeProp.AS_WKT, wktAttr);
         	addProjection(geometry, fgdcGeometry);
+
+        	// when converting FGDC record, the Geometry always has its Cartography as source
+        	geometry.addRelationship(FgdcObjectProp.HAS_SOURCE, cartography);
+        	cartography.addRelationship(FgdcObjectProp.HAS_COORDINATES, geometry);
         }
         
         return geometry;

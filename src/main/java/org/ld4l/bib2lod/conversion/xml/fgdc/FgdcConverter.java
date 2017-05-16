@@ -9,8 +9,8 @@ import org.ld4l.bib2lod.entity.Entity;
 import org.ld4l.bib2lod.entitybuilders.BuildParams;
 import org.ld4l.bib2lod.entitybuilders.EntityBuilder;
 import org.ld4l.bib2lod.entitybuilders.EntityBuilder.EntityBuilderException;
-import org.ld4l.bib2lod.ontology.ld4l.Ld4lInstanceType;
-import org.ld4l.bib2lod.parsing.xml.fgdc.FgdcParser;
+import org.ld4l.bib2lod.ontology.ld4l.Ld4lWorkType;
+import org.ld4l.bib2lod.records.Record;
 
 /**
  * Converts FGDC records.
@@ -18,8 +18,6 @@ import org.ld4l.bib2lod.parsing.xml.fgdc.FgdcParser;
 public class FgdcConverter extends BaseConverter {
     
     private static final Logger LOGGER = LogManager.getLogger();
-    
-    private static final Class<?> PARSER_CLASS = FgdcParser.class;
 
 	/**
 	 * Constructor
@@ -28,25 +26,17 @@ public class FgdcConverter extends BaseConverter {
 		super();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.ld4l.bib2lod.conversion.BaseConverter#getParserClass()
-	 */
-	@Override
-	protected Class<?> getParserClass() {
-        return PARSER_CLASS;
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * @see org.ld4l.bib2lod.conversion.BaseConverter#buildEntity(org.ld4l.bib2lod.records.Record)
 	 */
 	@Override
-	protected Entity buildEntity(org.ld4l.bib2lod.records.Record record)
+	protected Entity buildEntity(Record record)
 			throws EntityBuilderException {
-        EntityBuilder instanceBuilder = getBuilder(Ld4lInstanceType.class);
+        EntityBuilder cartographyBuilder = getBuilder(Ld4lWorkType.class);
         BuildParams params = new BuildParams()
                 .setRecord(record);
-        return instanceBuilder.build(params);
+        return cartographyBuilder.build(params);
 	}
 	
 	

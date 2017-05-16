@@ -5,15 +5,19 @@ package org.ld4l.bib2lod.record.xml.fgdc;
 import org.w3c.dom.Element;
 
 /**
- * Represents the title in a FGDC record.
+ * Represents the local HGL identifier in a FGDC record.
  */
-public class FgdcTitle extends FgdcField {
+public class FgdcHglLayerId extends FgdcField {
 
 	/**
 	 * @param element
 	 */
-	public FgdcTitle(Element element) {
+	public FgdcHglLayerId(Element element) {
 		super(element);
+		// override above since we really just want to get text from attribute
+		if (element.getAttribute("layerid") != null) {
+			super.textValue = element.getAttribute("layerid");
+		}
 	}
 
 	/* (non-Javadoc)
@@ -26,14 +30,10 @@ public class FgdcTitle extends FgdcField {
         }
         return true;
     }
-
+	
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("FgdcTitle [textValue=");
-		builder.append(textValue);
-		builder.append("]");
-		return builder.toString();
+		return getTextValue();
 	}
-	
+
 }

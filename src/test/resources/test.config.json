@@ -2,13 +2,13 @@
   "localNamespace": "http://localhost:8080/bibframe/individual/",
   "InputService": {
     "class": "org.ld4l.bib2lod.io.FileInputService",
-    "source": "sample-data/",
+    "source": "src/test/resources/",
     "extension": "xml"
   }, 
   "OutputService": {
     "class": "org.ld4l.bib2lod.io.FileOutputService",
     "destination": "target/",
-    "format": "TURTLE"
+    "format": "RDF/XML"
   },
   "UriService": [
     { 

@@ -17,7 +17,8 @@ public class FgdcRecord extends BaseXmlRecord {
     
     private enum Field {
         TITLE("title"),
-        GEOMETRY("bounding");
+        GEOMETRY("bounding"),
+        CITEINFO("citeinfo");
         
         private final String tagName;
         
@@ -26,9 +27,11 @@ public class FgdcRecord extends BaseXmlRecord {
         }       
     }
     
+    private FgdcHglLayerId layerId;
     private FgdcTitle title;
     private FgdcGeometry geometry;
-    private String layerId;
+    private FgdcOriginatorActivity fgdcOriginatorActivity;
+    private FgdcPublisherActivity fgdcPublisherActivity;
 
 	/**
 	 * Constructor
@@ -38,9 +41,11 @@ public class FgdcRecord extends BaseXmlRecord {
 	public FgdcRecord(Element element) {
 		super(element);
 		
+		this.layerId = buildLayerId(element);
 		this.title = buildTitle(element);
 		this.geometry = buildGeometry(element);
-		this.layerId = buildLayerId(element);
+		this.fgdcOriginatorActivity = buildFgdcOriginator(element);
+		this.fgdcPublisherActivity = buildFgdcPublisher(element);
 	}
 	
     /*
@@ -71,8 +76,28 @@ public class FgdcRecord extends BaseXmlRecord {
 		return fdgcGeometry;
 	}
 	
-	private String buildLayerId(Element element) {
-		return element.getAttribute("layerid");
+	private FgdcHglLayerId buildLayerId(Element element) {
+		return new FgdcHglLayerId(element);
+	}
+	
+	private FgdcOriginatorActivity buildFgdcOriginator(Element element) {
+        NodeList citeinfoNodes = element.getElementsByTagName(Field.CITEINFO.tagName);
+        if (citeinfoNodes.getLength() == 0) {
+            return null;
+        }
+        
+        // should be only one node, ignore others
+        return new FgdcOriginatorActivity((Element) citeinfoNodes.item(0));
+	}
+	
+	private FgdcPublisherActivity buildFgdcPublisher(Element element) {
+        NodeList citeinfoNodes = element.getElementsByTagName(Field.CITEINFO.tagName);
+        if (citeinfoNodes.getLength() == 0) {
+            return null;
+        }
+        
+        // should be only one node, ignore others
+        return new FgdcPublisherActivity((Element) citeinfoNodes.item(0));
 	}
 	
 	/* (non-Javadoc)
@@ -81,46 +106,46 @@ public class FgdcRecord extends BaseXmlRecord {
 	@Override
 	public boolean isValid() {
 
-		if (!hasTitle()) {
-			return false;
-		}
-		
-		if (!hasGeometry()) {
+		if (this.layerId == null || !this.layerId.isValid()) {
 			return false;
 		}
 		
 		return true;
 	}
     
-    private boolean hasTitle() {
-        return this.title != null;
-    }
-    
     public FgdcTitle getTitle() {
     	return this.title;
-    }
-    
-    private boolean hasGeometry() {
-    	return this.geometry != null;
     }
     
     public FgdcGeometry getGeometry() {
     	return this.geometry;
     }
     
-    public String getLayerId() {
+    public FgdcHglLayerId getLayerId() {
     	return this.layerId;
+    }
+    
+    public FgdcOriginatorActivity getFgdcOriginatorActivity() {
+    	return this.fgdcOriginatorActivity;
+    }
+    
+    public FgdcPublisherActivity getFgdcPublisherActivity() {
+    	return this.fgdcPublisherActivity;
     }
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("FgdcRecord [title=");
+		builder.append("FgdcRecord [layerId=");
+		builder.append(layerId);
+		builder.append(", title=");
 		builder.append(title);
 		builder.append(", geometry=");
 		builder.append(geometry);
-		builder.append(", layerId=");
-		builder.append(layerId);
+		builder.append(", fgdcOriginatorActivity=");
+		builder.append(fgdcOriginatorActivity);
+		builder.append(", fgdcPublisherActivity=");
+		builder.append(fgdcPublisherActivity);
 		builder.append("]");
 		return builder.toString();
 	}

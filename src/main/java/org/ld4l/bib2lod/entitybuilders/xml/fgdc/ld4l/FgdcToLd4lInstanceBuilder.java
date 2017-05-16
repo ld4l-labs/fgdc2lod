@@ -5,10 +5,10 @@ package org.ld4l.bib2lod.entitybuilders.xml.fgdc.ld4l;
 import org.ld4l.bib2lod.entity.Entity;
 import org.ld4l.bib2lod.entitybuilders.BuildParams;
 import org.ld4l.bib2lod.entitybuilders.EntityBuilder;
-import org.ld4l.bib2lod.ontology.fgdc.CartographyType;
+import org.ld4l.bib2lod.ontology.ld4l.Ld4lActivityType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lInstanceType;
+import org.ld4l.bib2lod.ontology.ld4l.Ld4lObjectProp;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lTitleType;
-import org.ld4l.bib2lod.ontology.ld4l.Ld4lWorkType;
 import org.ld4l.bib2lod.record.xml.fgdc.FgdcRecord;
 
 /**
@@ -17,16 +17,19 @@ import org.ld4l.bib2lod.record.xml.fgdc.FgdcRecord;
 public class FgdcToLd4lInstanceBuilder extends FgdcToLd4lEntityBuilder {
     
     private FgdcRecord record;
+    private Entity work;
     private Entity instance;
   
     @Override
     public Entity build(BuildParams params) throws EntityBuilderException {
 
         this.record = (FgdcRecord) params.getRecord();
+        this.work = params.getRelatedEntity();
         this.instance = new Entity(Ld4lInstanceType.INSTANCE);
         
         buildTitle();
-        buildWorks();
+        buildPublisherActivity();
+        work.addRelationship(Ld4lObjectProp.HAS_INSTANCE, instance);
         
         return instance;
     }
@@ -40,13 +43,15 @@ public class FgdcToLd4lInstanceBuilder extends FgdcToLd4lEntityBuilder {
         builder.build(params);
     }
     
-    private void buildWorks() throws EntityBuilderException {
+    private void buildPublisherActivity() throws EntityBuilderException {
         
-        EntityBuilder builder = getBuilder(Ld4lWorkType.class);
+        EntityBuilder builder = getBuilder(Ld4lActivityType.class);
+        
         BuildParams params = new BuildParams()
-                .setRecord(record)
-                .setRelatedEntity(instance);
+                .setRecord(record)     
+                .setRelatedEntity(instance)
+                .setType(Ld4lActivityType.PUBLISHER_ACTIVITY);
         builder.build(params);
     }
-        
+
 }

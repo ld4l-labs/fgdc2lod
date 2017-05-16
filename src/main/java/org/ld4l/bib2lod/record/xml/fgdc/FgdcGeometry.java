@@ -88,7 +88,6 @@ public class FgdcGeometry extends FgdcField {
     	wkt.append(' ');
     	wkt.append(this.northbc);
     	wkt.append("))");
-    	wkt.append("^^geo:wktLiteral");
     	return wkt.toString();
 	}
 
@@ -101,6 +100,9 @@ public class FgdcGeometry extends FgdcField {
 			return false;
 		}
 		if (this.westbc == null || this.eastbc == null || this.northbc == null || this.southbc == null) {
+			return false;
+		}
+		if (this.westbc.isEmpty() || this.eastbc.isEmpty() || this.northbc.isEmpty() || this.southbc.isEmpty()) {
 			return false;
 		}
 		

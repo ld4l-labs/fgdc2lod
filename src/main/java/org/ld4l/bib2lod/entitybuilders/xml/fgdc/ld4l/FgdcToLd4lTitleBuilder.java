@@ -24,7 +24,6 @@ public class FgdcToLd4lTitleBuilder extends FgdcToLd4lEntityBuilder {
         
     	FgdcRecord record = (FgdcRecord) params.getRecord();
         Entity bibEntity = params.getRelatedEntity();
-        // huh? nothing done with this if !isValid(); if valid, this is overwritten
         Entity title = new Entity(Ld4lTitleType.superClass());
         
         FgdcTitle fgdcTitle = record.getTitle();
