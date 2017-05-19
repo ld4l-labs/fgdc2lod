@@ -1,3 +1,5 @@
+/* $This file is distributed under the terms of the license in /doc/license.txt$ */
+
 package org.ld4l.bib2lod.entitybuilders.xml.fgdc.ld4l;
 
 import java.util.HashMap;
@@ -7,6 +9,7 @@ import org.ld4l.bib2lod.entitybuilders.EntityBuilder;
 import org.ld4l.bib2lod.ontology.Type;
 import org.ld4l.bib2lod.ontology.fgdc.CartographyType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lActivityType;
+import org.ld4l.bib2lod.ontology.ld4l.Ld4lAnnotationType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lInstanceType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lTitleType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lWorkType;
@@ -21,6 +24,7 @@ public class FgdcToLd4lEntityBuilderFactory extends BaseEntityBuilderFactory {
         typeToBuilder.put(Ld4lTitleType.class, FgdcToLd4lTitleBuilder.class);
         typeToBuilder.put(CartographyType.class, FgdcToGeometryBuilder.class);
         typeToBuilder.put(Ld4lActivityType.class, FgdcToActivityBuilder.class);
+        typeToBuilder.put(Ld4lAnnotationType.class, FgdcToAnnotationBuilder.class);
     }
     
     @Override

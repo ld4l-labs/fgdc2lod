@@ -67,9 +67,7 @@ public class FgdcOriginatorActivity extends FgdcField {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("FgdcOriginatorActivity [citeinfoElement=");
-		builder.append(citeinfoElement);
-		builder.append(", origins=");
+		builder.append("FgdcOriginatorActivity [origins=");
 		builder.append(origins);
 		builder.append("]");
 		return builder.toString();

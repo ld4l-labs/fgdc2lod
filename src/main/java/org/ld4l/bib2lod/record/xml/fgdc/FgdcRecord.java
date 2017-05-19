@@ -2,6 +2,9 @@
 
 package org.ld4l.bib2lod.record.xml.fgdc;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.ld4l.bib2lod.records.xml.BaseXmlRecord;
@@ -18,7 +21,9 @@ public class FgdcRecord extends BaseXmlRecord {
     private enum Field {
         TITLE("title"),
         GEOMETRY("bounding"),
-        CITEINFO("citeinfo");
+        CITEINFO("citeinfo"),
+        ABSTRACT("abstract"),
+        PURPOSE("purpose");
         
         private final String tagName;
         
@@ -32,6 +37,7 @@ public class FgdcRecord extends BaseXmlRecord {
     private FgdcGeometry geometry;
     private FgdcOriginatorActivity fgdcOriginatorActivity;
     private FgdcPublisherActivity fgdcPublisherActivity;
+    private List<FgdcAnnotation> fgdcAnnotations;
 
 	/**
 	 * Constructor
@@ -46,6 +52,7 @@ public class FgdcRecord extends BaseXmlRecord {
 		this.geometry = buildGeometry(element);
 		this.fgdcOriginatorActivity = buildFgdcOriginator(element);
 		this.fgdcPublisherActivity = buildFgdcPublisher(element);
+		this.fgdcAnnotations = buildFgdcAnnotations(element);
 	}
 	
     /*
@@ -100,6 +107,28 @@ public class FgdcRecord extends BaseXmlRecord {
         return new FgdcPublisherActivity((Element) citeinfoNodes.item(0));
 	}
 	
+	private List<FgdcAnnotation> buildFgdcAnnotations(Element element) {
+		List<FgdcAnnotation> annots = new ArrayList<>();
+		NodeList abstractNodes = element.getElementsByTagName(Field.ABSTRACT.tagName);
+		if (abstractNodes.getLength() > 0) {
+			// should only be one
+			FgdcAnnotation abstractAnnot =
+					new FgdcAnnotation((Element)abstractNodes.item(0),
+							FgdcAnnotation.AnnotationType.SUMMARIZING);
+			annots.add(abstractAnnot);
+		}
+		NodeList purposeNodes = element.getElementsByTagName(Field.PURPOSE.tagName);
+		if (purposeNodes.getLength() > 0) {
+			// should only be one
+			FgdcAnnotation purposeAnnot =
+					new FgdcAnnotation((Element)purposeNodes.item(0),
+							FgdcAnnotation.AnnotationType.PROVIDING_PURPOSE);
+			annots.add(purposeAnnot);
+		}
+		
+		return annots;
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.ld4l.bib2lod.record.Record#isValid()
 	 */
@@ -132,6 +161,10 @@ public class FgdcRecord extends BaseXmlRecord {
     public FgdcPublisherActivity getFgdcPublisherActivity() {
     	return this.fgdcPublisherActivity;
     }
+    
+    public List<FgdcAnnotation> getFgdcAnnotations() {
+    	return this.fgdcAnnotations;
+    }
 
 	@Override
 	public String toString() {
@@ -146,6 +179,8 @@ public class FgdcRecord extends BaseXmlRecord {
 		builder.append(fgdcOriginatorActivity);
 		builder.append(", fgdcPublisherActivity=");
 		builder.append(fgdcPublisherActivity);
+		builder.append(", fgdcAnnotations=");
+		builder.append(fgdcAnnotations);
 		builder.append("]");
 		return builder.toString();
 	}

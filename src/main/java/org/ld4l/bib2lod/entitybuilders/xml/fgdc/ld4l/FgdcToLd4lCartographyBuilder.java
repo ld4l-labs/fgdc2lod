@@ -7,6 +7,7 @@ import org.ld4l.bib2lod.entitybuilders.BuildParams;
 import org.ld4l.bib2lod.entitybuilders.EntityBuilder;
 import org.ld4l.bib2lod.ontology.fgdc.CartographyType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lActivityType;
+import org.ld4l.bib2lod.ontology.ld4l.Ld4lAnnotationType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lDatatypeProp;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lIdentifierType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lInstanceType;
@@ -21,7 +22,6 @@ import org.ld4l.bib2lod.record.xml.fgdc.FgdcRecord;
 public class FgdcToLd4lCartographyBuilder extends FgdcToLd4lEntityBuilder {
     
     private FgdcRecord record;
-//    private Entity instance;
     private Entity work;
   
     @Override
@@ -41,6 +41,7 @@ public class FgdcToLd4lCartographyBuilder extends FgdcToLd4lEntityBuilder {
         buildOriginatorActivity();
         addIdentifiers();
         buildGeometry();
+        buildAnnotations();
 
         return this.work;
     }
@@ -91,6 +92,15 @@ public class FgdcToLd4lCartographyBuilder extends FgdcToLd4lEntityBuilder {
                 .setRecord(record)     
                 .setRelatedEntity(work)
                 .setType(Ld4lActivityType.ORIGINATOR_ACTIVITY);
+        builder.build(params);
+    }
+    
+    private void buildAnnotations() throws EntityBuilderException {
+        EntityBuilder builder = getBuilder(Ld4lAnnotationType.class);
+        
+        BuildParams params = new BuildParams()
+                .setRecord(record)
+                .setRelatedEntity(work);
         builder.build(params);
     }
         

@@ -84,9 +84,7 @@ public class FgdcPublisherActivity extends FgdcField {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("FgdcPublisherActivity [citeinfoElement=");
-		builder.append(citeinfoElement);
-		builder.append(", agent=");
+		builder.append("FgdcPublisherActivity [agent=");
 		builder.append(agent);
 		builder.append(", location=");
 		builder.append(location);
