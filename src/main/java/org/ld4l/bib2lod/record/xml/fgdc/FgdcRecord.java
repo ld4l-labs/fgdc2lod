@@ -23,7 +23,9 @@ public class FgdcRecord extends BaseXmlRecord {
         GEOMETRY("bounding"),
         CITEINFO("citeinfo"),
         ABSTRACT("abstract"),
-        PURPOSE("purpose");
+        PURPOSE("purpose"),
+        EDITION("edition"),
+        ELECTRONIC_LOCATOR("onlink");
         
         private final String tagName;
         
@@ -38,6 +40,8 @@ public class FgdcRecord extends BaseXmlRecord {
     private FgdcOriginatorActivity fgdcOriginatorActivity;
     private FgdcPublisherActivity fgdcPublisherActivity;
     private List<FgdcAnnotation> fgdcAnnotations;
+    private FgdcTextOnlyField fgdcEdition;
+    private FgdcTextOnlyField fgdcElectroncLocator;
 
 	/**
 	 * Constructor
@@ -53,6 +57,8 @@ public class FgdcRecord extends BaseXmlRecord {
 		this.fgdcOriginatorActivity = buildFgdcOriginator(element);
 		this.fgdcPublisherActivity = buildFgdcPublisher(element);
 		this.fgdcAnnotations = buildFgdcAnnotations(element);
+		this.fgdcEdition = buildEdition(element);
+		this.fgdcElectroncLocator = buildElectronicLocator(element);
 	}
 	
     /*
@@ -129,6 +135,26 @@ public class FgdcRecord extends BaseXmlRecord {
 		return annots;
 	}
 	
+	private FgdcTextOnlyField buildEdition(Element element) {
+        NodeList editionNodes = element.getElementsByTagName(Field.EDITION.tagName);
+        if (editionNodes.getLength() == 0) {
+            return null;
+        }
+        
+        // should be only one node, ignore others
+        return new FgdcTextOnlyField((Element) editionNodes.item(0), Field.EDITION.tagName);
+	}
+	
+	private FgdcTextOnlyField buildElectronicLocator(Element element) {
+        NodeList electronicLocatorNodes = element.getElementsByTagName(Field.ELECTRONIC_LOCATOR.tagName);
+        if (electronicLocatorNodes.getLength() == 0) {
+            return null;
+        }
+        
+        // should be only one node, ignore others
+        return new FgdcTextOnlyField((Element) electronicLocatorNodes.item(0), Field.ELECTRONIC_LOCATOR.tagName);
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.ld4l.bib2lod.record.Record#isValid()
 	 */
@@ -165,6 +191,14 @@ public class FgdcRecord extends BaseXmlRecord {
     public List<FgdcAnnotation> getFgdcAnnotations() {
     	return this.fgdcAnnotations;
     }
+    
+    public FgdcTextOnlyField getFgdcEdition() {
+    	return this.fgdcEdition;
+    }
+    
+    public FgdcTextOnlyField getFgdcElectronicLocator() {
+    	return this.fgdcElectroncLocator;
+    }
 
 	@Override
 	public String toString() {
@@ -181,6 +215,10 @@ public class FgdcRecord extends BaseXmlRecord {
 		builder.append(fgdcPublisherActivity);
 		builder.append(", fgdcAnnotations=");
 		builder.append(fgdcAnnotations);
+		builder.append(", fgdcEdition=");
+		builder.append(fgdcEdition);
+		builder.append(", fgdcElectroncLocator=");
+		builder.append(fgdcElectroncLocator);
 		builder.append("]");
 		return builder.toString();
 	}

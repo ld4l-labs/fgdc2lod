@@ -16,8 +16,7 @@ import org.ld4l.bib2lod.record.xml.fgdc.FgdcAnnotation;
 import org.ld4l.bib2lod.record.xml.fgdc.FgdcRecord;
 
 /**
- * @author dan179
- *
+ * Builds an Annotation Entity.
  */
 public class FgdcToAnnotationBuilder extends FgdcToLd4lEntityBuilder {
 
@@ -63,7 +62,8 @@ public class FgdcToAnnotationBuilder extends FgdcToLd4lEntityBuilder {
         	}
         }
  
-    	return null;
+//    	return annotation;
+        return null;
 	}
 
 }
