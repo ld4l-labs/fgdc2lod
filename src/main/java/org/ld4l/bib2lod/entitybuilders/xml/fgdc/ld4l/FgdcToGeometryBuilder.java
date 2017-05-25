@@ -31,7 +31,7 @@ public class FgdcToGeometryBuilder extends FgdcToLd4lEntityBuilder {
         Entity geometry = new Entity(CartographyType.superClass()); // (no rdfs:label added)
         
         FgdcGeometry fgdcGeometry = record.getGeometry();
-        if (fgdcGeometry != null && fgdcGeometry.isValid()) {
+        if (fgdcGeometry != null) {
         	
         	Attribute wktAttr = new Attribute(fgdcGeometry.getWKT(),
         			FgdcCustomDatatype.GeoDatatype.WKT_DATATYPE);

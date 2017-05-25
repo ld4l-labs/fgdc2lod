@@ -27,13 +27,11 @@ public class FgdcToLd4lTitleBuilder extends FgdcToLd4lEntityBuilder {
         Entity title = new Entity(Ld4lTitleType.superClass());
         
         FgdcTitle fgdcTitle = record.getTitle();
-        if (fgdcTitle.isValid()) {
-        	String titleValue = fgdcTitle.getTextValue();
-        	title = buildTitleElement(Ld4lTitleType.TITLE, titleValue);
-        	bibEntity.addRelationship(Ld4lObjectProp.HAS_TITLE, title);
-        	// add title as label of parent (Cartography)
-        	bibEntity.addAttribute(Ld4lDatatypeProp.LABEL, titleValue);
-        }
+    	String titleValue = fgdcTitle.getTextValue();
+    	title = buildTitleElement(Ld4lTitleType.TITLE, titleValue);
+    	bibEntity.addRelationship(Ld4lObjectProp.HAS_TITLE, title);
+    	// add title as label of parent (Cartography)
+    	bibEntity.addAttribute(Ld4lDatatypeProp.LABEL, titleValue);
         
         return title; // nothing done with return value???
     }

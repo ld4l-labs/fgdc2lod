@@ -2,6 +2,7 @@
 
 package org.ld4l.bib2lod.record.xml.fgdc;
 
+import org.ld4l.bib2lod.records.Record.RecordException;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -30,7 +31,7 @@ public class FgdcPublisherActivity extends FgdcField {
 	/**
 	 * @param element
 	 */
-	public FgdcPublisherActivity(Element element) {
+	public FgdcPublisherActivity(Element element) throws RecordException {
 		super(element);
 		this.citeinfoElement = element;
 
@@ -51,6 +52,7 @@ public class FgdcPublisherActivity extends FgdcField {
 				this.date = dateNodes.item(0).getTextContent();
 			}
 		}
+        isValid();
 	}
 
 	public FgdcAgent getAgent() {
@@ -65,20 +67,10 @@ public class FgdcPublisherActivity extends FgdcField {
 		return date;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.ld4l.bib2lod.record.RecordField#isValid()
-	 */
-	@Override
-	public boolean isValid() {
-		if (this.citeinfoElement == null) {
-			return false;
+	private void isValid() throws RecordFieldException {
+		if (this.agent == null || this.location == null || this.date == null) {
+			throw new RecordFieldException("some value is null");
 		}
-		
-		if (this.agent == null && this.location == null && this.date == null) {
-			return false;
-		}
-		
-		return true;
 	}
 
 	@Override

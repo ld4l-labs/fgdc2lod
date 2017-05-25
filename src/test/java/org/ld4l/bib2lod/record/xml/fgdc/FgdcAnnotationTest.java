@@ -8,17 +8,18 @@ import java.io.IOException;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.junit.Assert;
 import org.junit.Test;
+import org.ld4l.bib2lod.records.Record.RecordException;
 import org.ld4l.bib2lod.records.RecordField.RecordFieldException;
+import org.ld4l.bib2lod.testing.AbstractTestClass;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
-public class FgdcAnnotationTest {
+public class FgdcAnnotationTest extends AbstractTestClass {
 
 	private static final String NO_VALUE = "<descript />";
 
-	private static final String NO_TEXT_VALUE = "<abstract><subfield>Some text.</subfield></abstract>";
+	private static final String NO_TEXT_VALUE = "<descript></descript>";
       
     private static final String VALID_record = 
             "<abstract>Some text.</abstract>";
@@ -30,20 +31,20 @@ public class FgdcAnnotationTest {
     
     @Test
     public void noValue_Invalid() throws Exception {
-    	FgdcAnnotation record = buildFgdcAnnotationFromString(NO_VALUE, FgdcAnnotation.AnnotationType.SUMMARIZING);
-        Assert.assertFalse(record.isValid());
+    	expectException(RecordFieldException.class, "text value is null");
+    	buildFgdcAnnotationFromString(NO_VALUE, FgdcAnnotation.AnnotationType.SUMMARIZING);
     }
     
     @Test
     public void noTextValue_Invalid() throws Exception {
-    	FgdcAnnotation record = buildFgdcAnnotationFromString(NO_TEXT_VALUE, FgdcAnnotation.AnnotationType.SUMMARIZING);
-        Assert.assertFalse(record.isValid());
+    	expectException(RecordFieldException.class, "text value is null");
+    	buildFgdcAnnotationFromString(NO_TEXT_VALUE, FgdcAnnotation.AnnotationType.SUMMARIZING);
     }
     
     @Test
     public void validrecord_Valid() throws Exception {
-    	FgdcAnnotation record = buildFgdcAnnotationFromString(VALID_record, FgdcAnnotation.AnnotationType.SUMMARIZING);
-        Assert.assertTrue(record.isValid());
+        // No exception
+    	buildFgdcAnnotationFromString(VALID_record, FgdcAnnotation.AnnotationType.SUMMARIZING);
     }
 
     // ----------------------------------------------------------------------
@@ -51,7 +52,7 @@ public class FgdcAnnotationTest {
     // ----------------------------------------------------------------------
     
     private FgdcAnnotation buildFgdcAnnotationFromString(String s, FgdcAnnotation.AnnotationType type) 
-            throws RecordFieldException {
+            throws RecordException {
     		
 		Element element;
 		try {

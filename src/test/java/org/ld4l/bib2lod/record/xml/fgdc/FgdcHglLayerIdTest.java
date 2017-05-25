@@ -1,10 +1,11 @@
 package org.ld4l.bib2lod.record.xml.fgdc;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.ld4l.bib2lod.record.xml.XmlTestUtils;
 import org.ld4l.bib2lod.records.Record.RecordException;
+import org.ld4l.bib2lod.records.RecordField.RecordFieldException;
 import org.ld4l.bib2lod.testing.AbstractTestClass;
+import org.w3c.dom.Element;
 
 /**
  * Tests class FgdcHglLayerId.
@@ -26,20 +27,20 @@ public class FgdcHglLayerIdTest extends AbstractTestClass {
     
     @Test
     public void noValue_Invalid() throws Exception {
-    	FgdcRecord record = buildFgdcRecordFromString(NO_VALUE);
-        Assert.assertFalse(record.isValid());
+    	expectException(RecordFieldException.class, "text value is empty");
+    	buildFgdcRecordFromString(NO_VALUE);
     }
     
     @Test
     public void noTextValue_Invalid() throws Exception {
-    	FgdcRecord record = buildFgdcRecordFromString(NO_ATTRIBUTE_VALUE);
-        Assert.assertFalse(record.isValid());
+    	expectException(RecordFieldException.class, "text value is empty");
+    	buildFgdcRecordFromString(NO_ATTRIBUTE_VALUE);
     }
     
     @Test
     public void validrecord_Valid() throws Exception {
+        // No exception
     	FgdcRecord record = buildFgdcRecordFromString(VALID_record);
-        Assert.assertTrue(record.isValid());
     }
 
     // ----------------------------------------------------------------------
@@ -48,7 +49,7 @@ public class FgdcHglLayerIdTest extends AbstractTestClass {
     
     private FgdcRecord buildFgdcRecordFromString(String s) 
             throws RecordException {
-        return (FgdcRecord) XmlTestUtils.buildRecordFromString(
-        		FgdcRecord.class, s);
+    	Element element = XmlTestUtils.buildElementFromString(s);
+    	return new FgdcRecord(element);
     }
 }

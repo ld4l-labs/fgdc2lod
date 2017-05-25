@@ -2,6 +2,7 @@
 
 package org.ld4l.bib2lod.record.xml.fgdc;
 
+import org.ld4l.bib2lod.records.Record.RecordException;
 import org.w3c.dom.Element;
 
 /**
@@ -11,14 +12,15 @@ public class FgdcTextOnlyField extends FgdcField {
 	
 	private String fieldName = "";
 
-	public FgdcTextOnlyField(Element element) {
+	public FgdcTextOnlyField(Element element) throws RecordException {
 		super(element);
+        isValid();
 	}
 
 	/**
 	 * Constructor giving this generic field a specific name.
 	 */
-	public FgdcTextOnlyField(Element element, String fieldName) {
+	public FgdcTextOnlyField(Element element, String fieldName) throws RecordException {
 		super(element);
 		if (fieldName != null && !fieldName.isEmpty()) {
 			this.fieldName = fieldName;
@@ -29,15 +31,13 @@ public class FgdcTextOnlyField extends FgdcField {
 		return fieldName;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.ld4l.bib2lod.record.RecordField#isValid()
-	 */
-	@Override
-	public boolean isValid() {
-        if (getTextValue() == null || getTextValue().isEmpty()) {
-            return false;
+	private void isValid() throws RecordFieldException {
+        if (textValue == null) {
+            throw new RecordFieldException("text value is null");
         }
-        return true;
+        if (textValue.isEmpty()) {
+            throw new RecordFieldException("text value is empty");
+        }
     }
 
 	@Override

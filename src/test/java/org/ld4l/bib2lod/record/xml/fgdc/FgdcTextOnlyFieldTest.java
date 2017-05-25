@@ -12,8 +12,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.ld4l.bib2lod.record.xml.XmlTestUtils;
+import org.ld4l.bib2lod.records.Record.RecordException;
 import org.ld4l.bib2lod.records.RecordField.RecordFieldException;
-import org.ld4l.bib2lod.records.xml.XmlElement;
 import org.ld4l.bib2lod.testing.AbstractTestClass;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -39,43 +39,37 @@ public class FgdcTextOnlyFieldTest extends AbstractTestClass {
     
     @Test
     public void noValue_Invalid() throws Exception {
-    	FgdcTextOnlyField field = buildTextOnlyFieldFromString(NO_VALUE, null);
-        Assert.assertFalse(field.isValid());
-        Assert.assertEquals("", field.getFieldName());
+    	expectException(RecordFieldException.class, "text value is null");
+    	buildTextOnlyFieldFromString(NO_VALUE, null);
     }
     
     @Test
     public void noValueWithFieldName_Invalid() throws Exception {
     	FgdcTextOnlyField field = buildTextOnlyFieldFromString(NO_VALUE, FIELD_NAME);
-    	Assert.assertFalse(field.isValid());
         Assert.assertEquals(FIELD_NAME, field.getFieldName());
     }
     
     @Test
     public void noTextValue_Invalid() throws Exception {
-    	FgdcTextOnlyField field = buildTextOnlyFieldFromString(NO_TEXT_VALUE, null);
-        Assert.assertFalse(field.isValid());
-        Assert.assertEquals("", field.getFieldName());
+    	expectException(RecordFieldException.class, "text value is null");
+    	buildTextOnlyFieldFromString(NO_TEXT_VALUE, null);
     }
     
     @Test
     public void noTextValueWithFieldName_Invalid() throws Exception {
     	FgdcTextOnlyField field = buildTextOnlyFieldFromString(NO_TEXT_VALUE, FIELD_NAME);
-    	Assert.assertFalse(field.isValid());
         Assert.assertEquals(FIELD_NAME, field.getFieldName());
     }
     
     @Test
     public void validText_Valid() throws Exception {
     	FgdcTextOnlyField field = buildTextOnlyFieldFromString(VALID_TITLE, null);
-        Assert.assertTrue(field.isValid());
         Assert.assertEquals("", field.getFieldName());
     }
     
     @Test
     public void validTextWithFieldName_Valid() throws Exception {
     	FgdcTextOnlyField field = buildTextOnlyFieldFromString(VALID_TITLE, FIELD_NAME);
-        Assert.assertTrue(field.isValid());
         Assert.assertEquals(FIELD_NAME, field.getFieldName());
     }
 
@@ -84,11 +78,11 @@ public class FgdcTextOnlyFieldTest extends AbstractTestClass {
     // ----------------------------------------------------------------------
     
     private FgdcTextOnlyField buildTextOnlyFieldFromString(String xmlString, String fieldName) 
-            throws RecordFieldException {
+            throws RecordException {
     	
     	if (fieldName == null) {
-    		return (FgdcTextOnlyField) XmlTestUtils.buildElementFromString(
-    				FgdcTextOnlyField.class, xmlString);
+    		Element element = XmlTestUtils.buildElementFromString(xmlString);
+    		return new FgdcTextOnlyField(element);
     	} else {
     		return instance(FgdcTextOnlyField.class, xmlString, fieldName);
     	}

@@ -3,6 +3,7 @@
  */
 package org.ld4l.bib2lod.record.xml.fgdc;
 
+import org.ld4l.bib2lod.records.Record.RecordException;
 import org.w3c.dom.Element;
 
 /**
@@ -14,19 +15,18 @@ public class FgdcAgent extends FgdcField {
 	/**
 	 * @param element
 	 */
-	public FgdcAgent(Element element) {
+	public FgdcAgent(Element element) throws RecordException {
 		super(element);
+        isValid();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.ld4l.bib2lod.records.RecordField#isValid()
-	 */
-	@Override
-	public boolean isValid() {
-        if (getTextValue() == null || getTextValue().isEmpty()) {
-            return false;
+	private void isValid() throws RecordFieldException {
+        if (textValue == null) {
+            throw new RecordFieldException("text value is null");
         }
-        return true;
+        if (textValue.isEmpty()) {
+            throw new RecordFieldException("text value is empty");
+        }
     }
 
 	@Override

@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.ld4l.bib2lod.records.RecordField.RecordFieldException;
 import org.ld4l.bib2lod.records.xml.BaseXmlRecord;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -48,7 +49,7 @@ public class FgdcRecord extends BaseXmlRecord {
 	 * 
 	 * @param element - The top-most FGDC XML element.
 	 */
-	public FgdcRecord(Element element) {
+	public FgdcRecord(Element element) throws RecordException {
 		super(element);
 		
 		this.layerId = buildLayerId(element);
@@ -59,13 +60,14 @@ public class FgdcRecord extends BaseXmlRecord {
 		this.fgdcAnnotations = buildFgdcAnnotations(element);
 		this.fgdcEdition = buildEdition(element);
 		this.fgdcElectroncLocator = buildElectronicLocator(element);
+        isValid();
 	}
 	
     /*
      * Builds this Record's title from the FGDC input. Only a single title
      * is allowed; others are ignored. Returns null if no title node is found.
      */
-	private FgdcTitle buildTitle(Element element) {
+	private FgdcTitle buildTitle(Element element) throws RecordException {
         NodeList titleNodes = element.getElementsByTagName(Field.TITLE.tagName);
         if (titleNodes.getLength() == 0) {
             return null;
@@ -78,7 +80,7 @@ public class FgdcRecord extends BaseXmlRecord {
 	/*
 	 * Builds this Record's geography from the FGDC input.
 	 */
-	private FgdcGeometry buildGeometry(Element element) {
+	private FgdcGeometry buildGeometry(Element element) throws RecordException {
 		NodeList boundingNodes = element.getElementsByTagName(Field.GEOMETRY.tagName);
 		if (boundingNodes.getLength() == 0) {
 			return null;
@@ -89,11 +91,11 @@ public class FgdcRecord extends BaseXmlRecord {
 		return fdgcGeometry;
 	}
 	
-	private FgdcHglLayerId buildLayerId(Element element) {
+	private FgdcHglLayerId buildLayerId(Element element) throws RecordException {
 		return new FgdcHglLayerId(element);
 	}
 	
-	private FgdcOriginatorActivity buildFgdcOriginator(Element element) {
+	private FgdcOriginatorActivity buildFgdcOriginator(Element element) throws RecordException {
         NodeList citeinfoNodes = element.getElementsByTagName(Field.CITEINFO.tagName);
         if (citeinfoNodes.getLength() == 0) {
             return null;
@@ -103,7 +105,7 @@ public class FgdcRecord extends BaseXmlRecord {
         return new FgdcOriginatorActivity((Element) citeinfoNodes.item(0));
 	}
 	
-	private FgdcPublisherActivity buildFgdcPublisher(Element element) {
+	private FgdcPublisherActivity buildFgdcPublisher(Element element) throws RecordException {
         NodeList citeinfoNodes = element.getElementsByTagName(Field.CITEINFO.tagName);
         if (citeinfoNodes.getLength() == 0) {
             return null;
@@ -113,7 +115,7 @@ public class FgdcRecord extends BaseXmlRecord {
         return new FgdcPublisherActivity((Element) citeinfoNodes.item(0));
 	}
 	
-	private List<FgdcAnnotation> buildFgdcAnnotations(Element element) {
+	private List<FgdcAnnotation> buildFgdcAnnotations(Element element) throws RecordException {
 		List<FgdcAnnotation> annots = new ArrayList<>();
 		NodeList abstractNodes = element.getElementsByTagName(Field.ABSTRACT.tagName);
 		if (abstractNodes.getLength() > 0) {
@@ -135,7 +137,7 @@ public class FgdcRecord extends BaseXmlRecord {
 		return annots;
 	}
 	
-	private FgdcTextOnlyField buildEdition(Element element) {
+	private FgdcTextOnlyField buildEdition(Element element) throws RecordException {
         NodeList editionNodes = element.getElementsByTagName(Field.EDITION.tagName);
         if (editionNodes.getLength() == 0) {
             return null;
@@ -145,7 +147,7 @@ public class FgdcRecord extends BaseXmlRecord {
         return new FgdcTextOnlyField((Element) editionNodes.item(0), Field.EDITION.tagName);
 	}
 	
-	private FgdcTextOnlyField buildElectronicLocator(Element element) {
+	private FgdcTextOnlyField buildElectronicLocator(Element element) throws RecordException {
         NodeList electronicLocatorNodes = element.getElementsByTagName(Field.ELECTRONIC_LOCATOR.tagName);
         if (electronicLocatorNodes.getLength() == 0) {
             return null;
@@ -155,17 +157,10 @@ public class FgdcRecord extends BaseXmlRecord {
         return new FgdcTextOnlyField((Element) electronicLocatorNodes.item(0), Field.ELECTRONIC_LOCATOR.tagName);
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.ld4l.bib2lod.record.Record#isValid()
-	 */
-	@Override
-	public boolean isValid() {
-
-		if (this.layerId == null || !this.layerId.isValid()) {
-			return false;
-		}
-		
-		return true;
+	private void isValid() throws RecordFieldException {
+        if (layerId == null) {
+            throw new RecordFieldException("layerId attribute is null");
+        }
 	}
     
     public FgdcTitle getTitle() {

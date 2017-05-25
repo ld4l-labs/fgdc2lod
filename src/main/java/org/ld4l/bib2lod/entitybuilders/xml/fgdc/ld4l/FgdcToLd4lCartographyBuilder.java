@@ -29,10 +29,6 @@ public class FgdcToLd4lCartographyBuilder extends FgdcToLd4lEntityBuilder {
 
         this.record = (FgdcRecord) params.getRecord();
         
-        if ( !this.record.isValid() ) {
-        	throw new EntityBuilderException("The record is invalid: " + this.record);
-        }
-        
         this.work = new Entity(CartographyType.DATASET);
         this.work.addType(Ld4lWorkType.CARTOGRAPHY); // (This is defined as two different types.)
         
@@ -77,11 +73,9 @@ public class FgdcToLd4lCartographyBuilder extends FgdcToLd4lEntityBuilder {
     
     private void addIdentifiers() {
     	
-    	if ( record.getLayerId().isValid()) {
-    		Entity identifier = new Entity(Ld4lIdentifierType.LOCAL);
-    		identifier.addAttribute(Ld4lDatatypeProp.VALUE, record.getLayerId().getTextValue());
-    		work.addRelationship(Ld4lObjectProp.IS_IDENTIFIED_BY, identifier);
-    	}
+		Entity identifier = new Entity(Ld4lIdentifierType.LOCAL);
+		identifier.addAttribute(Ld4lDatatypeProp.VALUE, record.getLayerId().getTextValue());
+		work.addRelationship(Ld4lObjectProp.IS_IDENTIFIED_BY, identifier);
     }
     
     private void buildOriginatorActivity() throws EntityBuilderException {

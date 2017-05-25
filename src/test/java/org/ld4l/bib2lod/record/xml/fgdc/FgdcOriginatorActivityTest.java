@@ -1,10 +1,11 @@
 package org.ld4l.bib2lod.record.xml.fgdc;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.ld4l.bib2lod.record.xml.XmlTestUtils;
+import org.ld4l.bib2lod.records.Record.RecordException;
 import org.ld4l.bib2lod.records.RecordField.RecordFieldException;
 import org.ld4l.bib2lod.testing.AbstractTestClass;
+import org.w3c.dom.Element;
 
 /**
  * Tests class FgdcOriginatorActivity.
@@ -42,20 +43,20 @@ public class FgdcOriginatorActivityTest extends AbstractTestClass {
     
     @Test
     public void noContent_Invalid() throws Exception {
-    	FgdcOriginatorActivity activity = buildOriginatorActivityFromString(INVALID_NO_CONTENT);
-        Assert.assertFalse(activity.isValid());
+    	expectException(RecordFieldException.class, "origins value is null");
+    	buildOriginatorActivityFromString(INVALID_NO_CONTENT);
     }
     
     @Test
     public void noOrigin_Invalid() throws Exception {
-    	FgdcOriginatorActivity activity = buildOriginatorActivityFromString(INVALID_MISSING_ORIGINS);
-        Assert.assertFalse(activity.isValid());
+    	expectException(RecordFieldException.class, "origins value is null");
+    	buildOriginatorActivityFromString(INVALID_MISSING_ORIGINS);
     }
     
     @Test
     public void activity_Valid() throws Exception {
-    	FgdcOriginatorActivity activity = buildOriginatorActivityFromString(VALID_ORIGINATOR);
-        Assert.assertTrue(activity.isValid());
+        // No exception
+    	buildOriginatorActivityFromString(VALID_ORIGINATOR);
     }
 
     // ----------------------------------------------------------------------
@@ -63,9 +64,9 @@ public class FgdcOriginatorActivityTest extends AbstractTestClass {
     // ----------------------------------------------------------------------
     
     private FgdcOriginatorActivity buildOriginatorActivityFromString(String s) 
-            throws RecordFieldException {
-        return (FgdcOriginatorActivity) XmlTestUtils.buildElementFromString(
-        		FgdcOriginatorActivity.class, s);
+            throws RecordException {
+    	Element element = XmlTestUtils.buildElementFromString(s);
+    	return new FgdcOriginatorActivity(element);
     }
 
 }

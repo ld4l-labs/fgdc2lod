@@ -5,6 +5,7 @@ package org.ld4l.bib2lod.record.xml.fgdc;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.ld4l.bib2lod.records.Record.RecordException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -30,7 +31,7 @@ public class FgdcOriginatorActivity extends FgdcField {
 	/**
 	 * @param element
 	 */
-	public FgdcOriginatorActivity(Element element) {
+	public FgdcOriginatorActivity(Element element) throws RecordException {
 		super(element);
 		this.citeinfoElement = element;
 		this.origins = new ArrayList<>();
@@ -43,25 +44,17 @@ public class FgdcOriginatorActivity extends FgdcField {
 				}
 			}
 		}
+        isValid();
 	}
 	
 	public List<FgdcAgent> getOrigins() {
 		return this.origins;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.ld4l.bib2lod.record.RecordField#isValid()
-	 */
-	@Override
-	public boolean isValid() {
-		if (this.citeinfoElement == null) {
-			return false;
-		}
+	private void isValid() throws RecordFieldException {
 		if (this.origins.isEmpty()) {
-			return false;
+			throw new RecordFieldException("origins value is null");
 		}
-		
-		return true;
 	}
 
 	@Override

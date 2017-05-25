@@ -2,6 +2,7 @@
 
 package org.ld4l.bib2lod.record.xml.fgdc;
 
+import org.ld4l.bib2lod.records.Record.RecordException;
 import org.w3c.dom.Element;
 
 /**
@@ -18,28 +19,26 @@ public class FgdcAnnotation extends FgdcField {
 
 	private AnnotationType annotationType;
 	
-	public FgdcAnnotation(Element element, AnnotationType annotationType) {
+	public FgdcAnnotation(Element element, AnnotationType annotationType) throws RecordException {
 		super(element);
 		this.annotationType = annotationType;
+        isValid();
 	}
 
 	public AnnotationType getAnnotationType() {
 		return annotationType;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.ld4l.bib2lod.record.RecordField#isValid()
-	 */
-	@Override
-	public boolean isValid() {
-        if (getTextValue() == null || getTextValue().isEmpty()) {
-            return false;
+	private void isValid() throws RecordFieldException {
+        if (textValue == null) {
+            throw new RecordFieldException("text value is null");
+        }
+        if (textValue.isEmpty()) {
+            throw new RecordFieldException("text value is empty");
         }
         if (this.annotationType == null) {
-        	return false;
+        	throw new RecordFieldException("AnnotationType is empty");
         }
-        
-        return true;
     }
 
 	@Override

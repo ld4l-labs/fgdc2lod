@@ -25,13 +25,9 @@ public class FgdcToItemBuilder extends FgdcToLd4lEntityBuilder {
         
         Entity  item = new Entity(Ld4lItemType.superClass());
         FgdcTextOnlyField field = record.getFgdcElectronicLocator();
-        if (field.isValid()) {
-        	item.addExternalRelationship(Ld4lObjectProp.ELECTRONIC_LOCATOR, field.getTextValue());
-        	FgdcTitle title = record.getTitle();
-        	if (title.isValid()) {
-        		item.addAttribute(Ld4lDatatypeProp.LABEL, title.getTextValue());
-        	}
-        }
+    	item.addExternalRelationship(Ld4lObjectProp.ELECTRONIC_LOCATOR, field.getTextValue());
+    	FgdcTitle title = record.getTitle();
+		item.addAttribute(Ld4lDatatypeProp.LABEL, title.getTextValue());
         instance.addRelationship(Ld4lObjectProp.HAS_ITEM, item);
         return item;
 	}

@@ -43,45 +43,41 @@ public class FgdcToActivityBuilder extends FgdcToLd4lEntityBuilder {
 
     	if (type.equals(Ld4lActivityType.ORIGINATOR_ACTIVITY)){
     		FgdcOriginatorActivity fgdcOriginatorActivity = this.record.getFgdcOriginatorActivity();
-    		if (fgdcOriginatorActivity.isValid()) {
-    			// add Agents
-    			if ( !fgdcOriginatorActivity.getOrigins().isEmpty()) {
-    				for (FgdcAgent agent : fgdcOriginatorActivity.getOrigins()) {
-    					Entity agentEntity = new Entity(Ld4lAgentType.AGENT);
-    					agentEntity.addAttribute(Ld4lDatatypeProp.LABEL, agent.getTextValue());
-    					this.activity.addRelationship(Ld4lObjectProp.HAS_AGENT, agentEntity);
-    				}
-    			}
-		    	
-		        addLabel();
-		        this.bibEntity.addRelationship(Ld4lObjectProp.HAS_ACTIVITY, this.activity);
-    		}
+			// add Agents
+			if ( !fgdcOriginatorActivity.getOrigins().isEmpty()) {
+				for (FgdcAgent agent : fgdcOriginatorActivity.getOrigins()) {
+					Entity agentEntity = new Entity(Ld4lAgentType.AGENT);
+					agentEntity.addAttribute(Ld4lDatatypeProp.LABEL, agent.getTextValue());
+					this.activity.addRelationship(Ld4lObjectProp.HAS_AGENT, agentEntity);
+				}
+			}
+	    	
+	        addLabel();
+	        this.bibEntity.addRelationship(Ld4lObjectProp.HAS_ACTIVITY, this.activity);
     	}
     	
     	if (type.equals(Ld4lActivityType.PUBLISHER_ACTIVITY)) {
     		FgdcPublisherActivity fgdcPublisherActivity = this.record.getFgdcPublisherActivity();
-    		if (fgdcPublisherActivity.isValid()) {
-    			// create and add Agent
-    			if (fgdcPublisherActivity.getAgent() != null) {
-    				Entity agentEntity = new Entity(Ld4lAgentType.AGENT);
-    				agentEntity.addAttribute(Ld4lDatatypeProp.LABEL, fgdcPublisherActivity.getAgent().getTextValue());
-    				this.activity.addRelationship(Ld4lObjectProp.HAS_AGENT, agentEntity);
-    			}
-				
-				// create and add location
-				if (fgdcPublisherActivity.getLocation() != null) {
-					Entity location = new Entity(Ld4lLocationType.LOCATION);
-					location.addAttribute(Ld4lDatatypeProp.LABEL, fgdcPublisherActivity.getLocation());
-					this.activity.addRelationship(Ld4lObjectProp.IS_AT_LOCATION, location);
-				}
-				// add date
-				if (fgdcPublisherActivity.getDate() != null) {
-					this.activity.addAttribute(Ld4lDatatypeProp.DATE, fgdcPublisherActivity.getDate());
-				}
-		    	
-		        addLabel();
-		        this.bibEntity.addRelationship(Ld4lObjectProp.HAS_ACTIVITY, this.activity);
-    		}
+			// create and add Agent
+			if (fgdcPublisherActivity.getAgent() != null) {
+				Entity agentEntity = new Entity(Ld4lAgentType.AGENT);
+				agentEntity.addAttribute(Ld4lDatatypeProp.LABEL, fgdcPublisherActivity.getAgent().getTextValue());
+				this.activity.addRelationship(Ld4lObjectProp.HAS_AGENT, agentEntity);
+			}
+			
+			// create and add location
+			if (fgdcPublisherActivity.getLocation() != null) {
+				Entity location = new Entity(Ld4lLocationType.LOCATION);
+				location.addAttribute(Ld4lDatatypeProp.LABEL, fgdcPublisherActivity.getLocation());
+				this.activity.addRelationship(Ld4lObjectProp.IS_AT_LOCATION, location);
+			}
+			// add date
+			if (fgdcPublisherActivity.getDate() != null) {
+				this.activity.addAttribute(Ld4lDatatypeProp.DATE, fgdcPublisherActivity.getDate());
+			}
+	    	
+	        addLabel();
+	        this.bibEntity.addRelationship(Ld4lObjectProp.HAS_ACTIVITY, this.activity);
     	}
 
         return this.activity;

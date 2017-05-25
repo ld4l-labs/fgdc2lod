@@ -1,10 +1,11 @@
 package org.ld4l.bib2lod.record.xml.fgdc;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.ld4l.bib2lod.record.xml.XmlTestUtils;
+import org.ld4l.bib2lod.records.Record.RecordException;
 import org.ld4l.bib2lod.records.RecordField.RecordFieldException;
 import org.ld4l.bib2lod.testing.AbstractTestClass;
+import org.w3c.dom.Element;
 
 /**
  * Tests class FgdcGeometry.
@@ -42,26 +43,26 @@ public class FgdcGeometryTest extends AbstractTestClass {
     
     @Test
     public void noValue_Invalid() throws Exception {
-    	FgdcGeometry geometry = buildGeometryFromString(NO_VALUE);
-        Assert.assertFalse(geometry.isValid());
+    	expectException(RecordFieldException.class, "A bounding coordinate is null");
+    	buildGeometryFromString(NO_VALUE);
     }
     
     @Test
     public void missingCoordinate_Invalid() throws Exception {
-    	FgdcGeometry geometry = buildGeometryFromString(MISSING_COORDINATE);
-        Assert.assertFalse(geometry.isValid());
+    	expectException(RecordFieldException.class, "A bounding coordinate is null");
+    	buildGeometryFromString(MISSING_COORDINATE);
     }
     
     @Test
     public void noTextCoordinate_Invalid() throws Exception {
-    	FgdcGeometry geometry = buildGeometryFromString(NO_TEXT_COORDINATE);
-        Assert.assertFalse(geometry.isValid());
+    	expectException(RecordFieldException.class, "A bounding coordinate is empty");
+    	buildGeometryFromString(NO_TEXT_COORDINATE);
     }
     
     @Test
     public void geometry_Valid() throws Exception {
-    	FgdcGeometry geometry = buildGeometryFromString(VALID_GEOMETRY);
-        Assert.assertTrue(geometry.isValid());
+    	// No exception
+    	buildGeometryFromString(VALID_GEOMETRY);
     }
 
     // ----------------------------------------------------------------------
@@ -69,8 +70,8 @@ public class FgdcGeometryTest extends AbstractTestClass {
     // ----------------------------------------------------------------------
     
     private FgdcGeometry buildGeometryFromString(String s) 
-            throws RecordFieldException {
-        return (FgdcGeometry) XmlTestUtils.buildElementFromString(
-        		FgdcGeometry.class, s);
+            throws RecordException {
+    	Element element = XmlTestUtils.buildElementFromString(s);
+    	return new FgdcGeometry(element);
     }
 }

@@ -4,12 +4,12 @@ package org.ld4l.bib2lod.entitybuilders.xml.fgdc.ld4l;
 
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
-import org.ld4l.bib2lod.configuration.Bib2LodObjectFactory;
-import org.ld4l.bib2lod.configuration.MockBib2LodObjectFactory;
 import org.ld4l.bib2lod.entity.Attribute;
 import org.ld4l.bib2lod.entity.Entity;
 import org.ld4l.bib2lod.entitybuilders.BuildParams;
@@ -22,13 +22,17 @@ import org.ld4l.bib2lod.ontology.ld4l.Ld4lWorkType;
 import org.ld4l.bib2lod.record.xml.XmlTestUtils;
 import org.ld4l.bib2lod.record.xml.fgdc.FgdcRecord;
 import org.ld4l.bib2lod.records.Record.RecordException;
+import org.ld4l.bib2lod.records.RecordField.RecordFieldException;
+import org.ld4l.bib2lod.testing.AbstractTestClass;
+import org.ld4l.bib2lod.testing.BaseMockBib2LodObjectFactory;
+import org.w3c.dom.Element;
 
 /**
  * Tests the FgdcToLd4lTitleBuilder class.
  */
-public class FgdcToLd4lTitleBuilderTest {
+public class FgdcToLd4lTitleBuilderTest extends AbstractTestClass {
 	
-    private static MockBib2LodObjectFactory factory;
+    private static BaseMockBib2LodObjectFactory factory;
     
 	private EntityBuilder titleBuilder;
 
@@ -37,9 +41,21 @@ public class FgdcToLd4lTitleBuilderTest {
         		"<idinfo>" +
 					"<citation>" +
 						"<citeinfo>" +
+							"<origin>Cambridge (Mass.). Public Library</origin>" +
+							"<pubdate>2014</pubdate>" +
 							"<title>Test Title Text</title>" +
+							"<edition>2014 revised ed.</edition>" +
+							"<pubinfo>" +
+								"<pubplace>Cambridge, Massachusetts</pubplace>" +
+								"<publish>Cambridge (Mass.). Geographic Information Systems</publish>" +
+							"</pubinfo>" +
+							"<onlink>http://hgl.harvard.edu:8080/HGL/hgl.jsp?action=VColl&amp;VCollName=CAMBRIDGE14PUBLICLIBRARIES</onlink>" +
 						"</citeinfo>" +
 					"</citation>" +
+					"<descript>" +
+						"<abstract>This layer contains point features of all public libraries in Cambridge.</abstract>" +
+						"<purpose>Created for general use by City staff.</purpose>" +
+					"</descript>" +
 				"</idinfo>" +
 			"</metadata>";
 
@@ -55,10 +71,9 @@ public class FgdcToLd4lTitleBuilderTest {
 			"</metadata>";
     
     @BeforeClass
-    public static void setUpClass() {
-        factory = new MockBib2LodObjectFactory();
+    public static void setUpClass() throws Exception {
+        factory = new BaseMockBib2LodObjectFactory();
         factory.addInstance(EntityBuilderFactory.class, new FgdcToLd4lEntityBuilderFactory());
-        Bib2LodObjectFactory.setFactoryInstance(factory);
     }
 
     @Before
@@ -80,6 +95,7 @@ public class FgdcToLd4lTitleBuilderTest {
 	
 	@Test
 	public void testInvalidTitleRecord() throws Exception {
+    	expectException(RecordFieldException.class, "text value is null");
 		
 		FgdcRecord record = buildFgdcRecordFromString(INVALID_no_title_text_record);
 		
@@ -118,7 +134,7 @@ public class FgdcToLd4lTitleBuilderTest {
     
     private FgdcRecord buildFgdcRecordFromString(String s) 
             throws RecordException {
-        return (FgdcRecord) XmlTestUtils.buildRecordFromString(
-        		FgdcRecord.class, s);
+    	Element element = XmlTestUtils.buildElementFromString(s);
+    	return new FgdcRecord(element);
     }
 }

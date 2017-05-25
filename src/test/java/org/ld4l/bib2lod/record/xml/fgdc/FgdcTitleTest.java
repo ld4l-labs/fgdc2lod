@@ -2,11 +2,12 @@
 
 package org.ld4l.bib2lod.record.xml.fgdc;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.ld4l.bib2lod.record.xml.XmlTestUtils;
+import org.ld4l.bib2lod.records.Record.RecordException;
 import org.ld4l.bib2lod.records.RecordField.RecordFieldException;
 import org.ld4l.bib2lod.testing.AbstractTestClass;
+import org.w3c.dom.Element;
 
 /**
  * Tests class FgdcTitle.
@@ -28,20 +29,20 @@ public class FgdcTitleTest extends AbstractTestClass {
     
     @Test
     public void noValue_Invalid() throws Exception {
-    	FgdcTitle title = buildTitleFromString(NO_VALUE);
-        Assert.assertFalse(title.isValid());
+    	expectException(RecordFieldException.class, "text value is null");
+    	buildTitleFromString(NO_VALUE);
     }
     
     @Test
     public void noTextValue_Invalid() throws Exception {
-    	FgdcTitle title = buildTitleFromString(NO_TEXT_VALUE);
-        Assert.assertFalse(title.isValid());
+    	expectException(RecordFieldException.class, "text value is null");
+    	buildTitleFromString(NO_TEXT_VALUE);
     }
     
     @Test
     public void validTitle_Valid() throws Exception {
-    	FgdcTitle title = buildTitleFromString(VALID_TITLE);
-        Assert.assertTrue(title.isValid());
+        // No exception
+    	buildTitleFromString(VALID_TITLE);
     }
 
     // ----------------------------------------------------------------------
@@ -49,8 +50,8 @@ public class FgdcTitleTest extends AbstractTestClass {
     // ----------------------------------------------------------------------
     
     private FgdcTitle buildTitleFromString(String s) 
-            throws RecordFieldException {
-        return (FgdcTitle) XmlTestUtils.buildElementFromString(
-        		FgdcTitle.class, s);
+            throws RecordException {
+    	Element element = XmlTestUtils.buildElementFromString(s);
+    	return new FgdcTitle(element);
     }
 }

@@ -6,6 +6,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.ld4l.bib2lod.parsing.xml.XmlParser;
 import org.ld4l.bib2lod.record.xml.fgdc.FgdcRecord;
+import org.ld4l.bib2lod.records.Record.RecordException;
+import org.ld4l.bib2lod.records.xml.XmlRecord;
+import org.w3c.dom.Element;
 
 /**
  * Parses a FGDC XML record.
@@ -15,7 +18,6 @@ public class FgdcParser extends XmlParser {
     private static final Logger LOGGER = LogManager.getLogger(); 
               
     private static final String RECORD_TAG_NAME = "metadata";   
-    private static final Class<?> RECORD_CLASS = FgdcRecord.class;
 
 	public FgdcParser() {
 		super();
@@ -29,12 +31,9 @@ public class FgdcParser extends XmlParser {
 		return RECORD_TAG_NAME;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.ld4l.bib2lod.parsing.xml.XmlParser#getRecordClass()
-	 */
 	@Override
-	protected Class<?> getRecordClass() {
-		return RECORD_CLASS;
+	protected XmlRecord createRecord(Element recordElement) throws RecordException {
+		return new FgdcRecord(recordElement);
 	}
 
 }

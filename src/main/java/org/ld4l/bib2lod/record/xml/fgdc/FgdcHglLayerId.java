@@ -2,6 +2,7 @@
 
 package org.ld4l.bib2lod.record.xml.fgdc;
 
+import org.ld4l.bib2lod.records.Record.RecordException;
 import org.w3c.dom.Element;
 
 /**
@@ -12,23 +13,22 @@ public class FgdcHglLayerId extends FgdcField {
 	/**
 	 * @param element
 	 */
-	public FgdcHglLayerId(Element element) {
+	public FgdcHglLayerId(Element element) throws RecordException {
 		super(element);
 		// override above since we really just want to get text from attribute
 		if (element.getAttribute("layerid") != null) {
 			super.textValue = element.getAttribute("layerid");
 		}
+		isValid();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.ld4l.bib2lod.record.RecordField#isValid()
-	 */
-	@Override
-	public boolean isValid() {
-        if (getTextValue() == null || getTextValue().isEmpty()) {
-            return false;
+	private void isValid() throws RecordFieldException {
+        if (textValue == null) {
+            throw new RecordFieldException("text value is null");
         }
-        return true;
+        if (textValue.isEmpty()) {
+            throw new RecordFieldException("text value is empty");
+        }
     }
 	
 	@Override

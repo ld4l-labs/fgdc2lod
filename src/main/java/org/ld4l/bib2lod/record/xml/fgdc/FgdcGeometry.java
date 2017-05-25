@@ -2,6 +2,7 @@
 
 package org.ld4l.bib2lod.record.xml.fgdc;
 
+import org.ld4l.bib2lod.records.Record.RecordException;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -34,7 +35,7 @@ public class FgdcGeometry extends FgdcField {
 	/**
 	 * @param element
 	 */
-	public FgdcGeometry(Element element) {
+	public FgdcGeometry(Element element) throws RecordException {
 		super(element);
 		this.geometryElement = element;
 		if (this.geometryElement != null) {
@@ -59,7 +60,7 @@ public class FgdcGeometry extends FgdcField {
 	        	this.southbc = nodes.item(0).getTextContent();
 	        }
 		}
-		
+		isValid();
 	}
 	
 	/**
@@ -91,22 +92,13 @@ public class FgdcGeometry extends FgdcField {
     	return wkt.toString();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.ld4l.bib2lod.record.RecordField#isValid()
-	 */
-	@Override
-	public boolean isValid() {
-		if (this.geometryElement == null) {
-			return false;
-		}
+	private void isValid() throws RecordFieldException {
 		if (this.westbc == null || this.eastbc == null || this.northbc == null || this.southbc == null) {
-			return false;
+			throw new RecordFieldException("A bounding coordinate is null");
 		}
 		if (this.westbc.isEmpty() || this.eastbc.isEmpty() || this.northbc.isEmpty() || this.southbc.isEmpty()) {
-			return false;
+			throw new RecordFieldException("A bounding coordinate is empty");
 		}
-		
-		return true;
 	}
 
 	@Override
