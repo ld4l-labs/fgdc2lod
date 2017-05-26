@@ -11,13 +11,13 @@ import org.ld4l.bib2lod.ontology.ld4l.Ld4lInstanceType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lItemType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lObjectProp;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lTitleType;
+import org.ld4l.bib2lod.record.xml.fgdc.FgdcField;
 import org.ld4l.bib2lod.record.xml.fgdc.FgdcRecord;
-import org.ld4l.bib2lod.record.xml.fgdc.FgdcTextOnlyField;
 
 /**
  * Builds an Cartography individual from a Record.
  */
-public class FgdcToLd4lInstanceBuilder extends FgdcToLd4lEntityBuilder {
+public class FgdcToInstanceBuilder extends FgdcToLd4lEntityBuilder {
     
     private FgdcRecord record;
     private Entity work;
@@ -28,6 +28,7 @@ public class FgdcToLd4lInstanceBuilder extends FgdcToLd4lEntityBuilder {
 
         this.record = (FgdcRecord) params.getRecord();
         this.work = params.getRelatedEntity();
+        // need to pass title along
         this.instance = new Entity(Ld4lInstanceType.INSTANCE);
         
         buildTitle();
@@ -70,8 +71,10 @@ public class FgdcToLd4lInstanceBuilder extends FgdcToLd4lEntityBuilder {
     }
     
     private void buildEditionStatement() {
-    	FgdcTextOnlyField field = record.getFgdcEdition();
-		instance.addAttribute(Ld4lDatatypeProp.EDITION_STATEMENT, field.getTextValue());
+    	FgdcField field = record.getCiteinfoField().getEdition();
+    	if (field != null) {
+    		instance.addAttribute(Ld4lDatatypeProp.EDITION_STATEMENT, field.getTextValue());
+    	}
     }
 
 }

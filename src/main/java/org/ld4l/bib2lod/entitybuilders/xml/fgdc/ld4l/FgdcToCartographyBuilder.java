@@ -6,20 +6,21 @@ import org.ld4l.bib2lod.entity.Entity;
 import org.ld4l.bib2lod.entitybuilders.BuildParams;
 import org.ld4l.bib2lod.entitybuilders.EntityBuilder;
 import org.ld4l.bib2lod.ontology.fgdc.CartographyType;
+import org.ld4l.bib2lod.ontology.fgdc.HarvardType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lActivityType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lAnnotationType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lDatatypeProp;
-import org.ld4l.bib2lod.ontology.ld4l.Ld4lIdentifierType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lInstanceType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lObjectProp;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lTitleType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lWorkType;
+import org.ld4l.bib2lod.record.xml.fgdc.FgdcField;
 import org.ld4l.bib2lod.record.xml.fgdc.FgdcRecord;
 
 /**
  * Builds an Cartography individual from a Record.
  */
-public class FgdcToLd4lCartographyBuilder extends FgdcToLd4lEntityBuilder {
+public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
     
     private FgdcRecord record;
     private Entity work;
@@ -73,29 +74,42 @@ public class FgdcToLd4lCartographyBuilder extends FgdcToLd4lEntityBuilder {
     
     private void addIdentifiers() {
     	
-		Entity identifier = new Entity(Ld4lIdentifierType.LOCAL);
-		identifier.addAttribute(Ld4lDatatypeProp.VALUE, record.getLayerId().getTextValue());
+		Entity identifier = new Entity(HarvardType.HGLID);
+		String layerId = record.getLayerId(); // should be validated as non-null
+		identifier.addAttribute(Ld4lDatatypeProp.VALUE, layerId);
 		work.addRelationship(Ld4lObjectProp.IS_IDENTIFIED_BY, identifier);
     }
     
     private void buildOriginatorActivity() throws EntityBuilderException {
         
         EntityBuilder builder = getBuilder(Ld4lActivityType.class);
-        
-        BuildParams params = new BuildParams()
-                .setRecord(record)     
-                .setRelatedEntity(work)
-                .setType(Ld4lActivityType.ORIGINATOR_ACTIVITY);
-        builder.build(params);
+    	BuildParams params = new BuildParams()
+    			.setRecord(record)     
+    			.setRelatedEntity(work)
+    			.setType(Ld4lActivityType.ORIGINATOR_ACTIVITY);
+    	builder.build(params);
     }
     
     private void buildAnnotations() throws EntityBuilderException {
         EntityBuilder builder = getBuilder(Ld4lAnnotationType.class);
         
-        BuildParams params = new BuildParams()
-                .setRecord(record)
-                .setRelatedEntity(work);
-        builder.build(params);
+        FgdcField field = record.getPurposeField();
+        if (field != null) {
+        	BuildParams params = new BuildParams()
+        			.setRecord(record)
+        			.setField(field)
+        			.setRelatedEntity(work);
+        	builder.build(params);
+        }
+
+        field = record.getAbstractField();
+        if (field != null) {
+        	BuildParams params = new BuildParams()
+        			.setRecord(record)
+        			.setField(field)
+        			.setRelatedEntity(work);
+        	builder.build(params);
+        }
     }
         
 }

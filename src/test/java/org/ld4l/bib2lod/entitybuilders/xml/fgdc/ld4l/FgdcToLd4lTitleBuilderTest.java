@@ -4,11 +4,9 @@ package org.ld4l.bib2lod.entitybuilders.xml.fgdc.ld4l;
 
 import java.util.List;
 
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.ld4l.bib2lod.entity.Attribute;
 import org.ld4l.bib2lod.entity.Entity;
@@ -78,7 +76,7 @@ public class FgdcToLd4lTitleBuilderTest extends AbstractTestClass {
 
     @Before
     public void setUp() {
-        titleBuilder = new FgdcToLd4lTitleBuilder();
+        titleBuilder = new FgdcToTitleBuilder();
     }
 	
 	@Test

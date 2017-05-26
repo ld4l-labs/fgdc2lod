@@ -27,13 +27,13 @@ public class FgdcHglLayerIdTest extends AbstractTestClass {
     
     @Test
     public void noValue_Invalid() throws Exception {
-    	expectException(RecordFieldException.class, "text value is empty");
+    	expectException(RecordFieldException.class, "layerId attribute is empty");
     	buildFgdcRecordFromString(NO_VALUE);
     }
     
     @Test
     public void noTextValue_Invalid() throws Exception {
-    	expectException(RecordFieldException.class, "text value is empty");
+    	expectException(RecordFieldException.class, "layerId attribute is empty");
     	buildFgdcRecordFromString(NO_ATTRIBUTE_VALUE);
     }
     

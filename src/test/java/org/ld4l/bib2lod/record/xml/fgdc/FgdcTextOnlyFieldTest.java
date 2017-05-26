@@ -4,14 +4,12 @@ package org.ld4l.bib2lod.record.xml.fgdc;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.ld4l.bib2lod.record.xml.XmlTestUtils;
 import org.ld4l.bib2lod.records.Record.RecordException;
 import org.ld4l.bib2lod.records.RecordField.RecordFieldException;
 import org.ld4l.bib2lod.testing.AbstractTestClass;
@@ -45,8 +43,8 @@ public class FgdcTextOnlyFieldTest extends AbstractTestClass {
     
     @Test
     public void noValueWithFieldName_Invalid() throws Exception {
+       	expectException(RecordFieldException.class, "text value is null");
     	FgdcTextOnlyField field = buildTextOnlyFieldFromString(NO_VALUE, FIELD_NAME);
-        Assert.assertEquals(FIELD_NAME, field.getFieldName());
     }
     
     @Test
@@ -57,12 +55,12 @@ public class FgdcTextOnlyFieldTest extends AbstractTestClass {
     
     @Test
     public void noTextValueWithFieldName_Invalid() throws Exception {
-    	FgdcTextOnlyField field = buildTextOnlyFieldFromString(NO_TEXT_VALUE, FIELD_NAME);
-        Assert.assertEquals(FIELD_NAME, field.getFieldName());
+       	expectException(RecordFieldException.class, "text value is null");
+    	buildTextOnlyFieldFromString(NO_TEXT_VALUE, FIELD_NAME);
     }
     
     @Test
-    public void validText_Valid() throws Exception {
+    public void validTexNoFieldNamet_Valid() throws Exception {
     	FgdcTextOnlyField field = buildTextOnlyFieldFromString(VALID_TITLE, null);
         Assert.assertEquals("", field.getFieldName());
     }
@@ -80,30 +78,21 @@ public class FgdcTextOnlyFieldTest extends AbstractTestClass {
     private FgdcTextOnlyField buildTextOnlyFieldFromString(String xmlString, String fieldName) 
             throws RecordException {
     	
-    	if (fieldName == null) {
-    		Element element = XmlTestUtils.buildElementFromString(xmlString);
-    		return new FgdcTextOnlyField(element);
-    	} else {
-    		return instance(FgdcTextOnlyField.class, xmlString, fieldName);
-    	}
+		return instance(FgdcTextOnlyField.class, xmlString, fieldName);
     }
 
     private FgdcTextOnlyField instance(Class<?> elementClass, String xmlString, String fieldName) 
-            throws RecordFieldException {
-        try {
-        	Element element = DocumentBuilderFactory
-        			.newInstance()
-        			.newDocumentBuilder()
-        			.parse(new ByteArrayInputStream(xmlString.getBytes()))
-        			.getDocumentElement();
-            return (FgdcTextOnlyField) elementClass
-                    .getConstructor(Element.class, String.class)
-                    .newInstance(element, fieldName);
-        } catch (InstantiationException
-                | IllegalAccessException | IllegalArgumentException
-                | InvocationTargetException | NoSuchMethodException
-                | SecurityException | SAXException | IOException | ParserConfigurationException e) {
-            throw new RecordFieldException(e);
-        }     
+            throws RecordException {
+        	Element element;
+			try {
+				element = DocumentBuilderFactory
+						.newInstance()
+						.newDocumentBuilder()
+						.parse(new ByteArrayInputStream(xmlString.getBytes()))
+						.getDocumentElement();
+				return new FgdcTextOnlyField(element, fieldName);
+			} catch (SAXException | IOException | ParserConfigurationException e) {
+				throw new RecordFieldException(e);
+			}
     }
 }

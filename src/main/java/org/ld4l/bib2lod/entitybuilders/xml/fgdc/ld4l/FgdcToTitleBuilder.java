@@ -6,16 +6,17 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.ld4l.bib2lod.entity.Entity;
 import org.ld4l.bib2lod.entitybuilders.BuildParams;
+import org.ld4l.bib2lod.entitybuilders.EntityBuilder.EntityBuilderException;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lDatatypeProp;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lObjectProp;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lTitleType;
+import org.ld4l.bib2lod.record.xml.fgdc.FgdcField;
 import org.ld4l.bib2lod.record.xml.fgdc.FgdcRecord;
-import org.ld4l.bib2lod.record.xml.fgdc.FgdcTitle;
 
 /**
  * Builds a Title Entity.
  */
-public class FgdcToLd4lTitleBuilder extends FgdcToLd4lEntityBuilder {
+public class FgdcToTitleBuilder extends FgdcToLd4lEntityBuilder {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -26,14 +27,15 @@ public class FgdcToLd4lTitleBuilder extends FgdcToLd4lEntityBuilder {
         Entity bibEntity = params.getRelatedEntity();
         Entity title = new Entity(Ld4lTitleType.superClass());
         
-        FgdcTitle fgdcTitle = record.getTitle();
+        FgdcField fgdcTitle = record.getCiteinfoField().getTitle();
+        
     	String titleValue = fgdcTitle.getTextValue();
     	title = buildTitleElement(Ld4lTitleType.TITLE, titleValue);
     	bibEntity.addRelationship(Ld4lObjectProp.HAS_TITLE, title);
     	// add title as label of parent (Cartography)
     	bibEntity.addAttribute(Ld4lDatatypeProp.LABEL, titleValue);
         
-        return title; // nothing done with return value???
+        return title;
     }
        
     private Entity buildTitleElement(

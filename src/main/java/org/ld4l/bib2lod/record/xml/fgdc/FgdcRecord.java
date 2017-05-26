@@ -2,11 +2,6 @@
 
 package org.ld4l.bib2lod.record.xml.fgdc;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.ld4l.bib2lod.records.RecordField.RecordFieldException;
 import org.ld4l.bib2lod.records.xml.BaseXmlRecord;
 import org.w3c.dom.Element;
@@ -17,16 +12,13 @@ import org.w3c.dom.NodeList;
  */
 public class FgdcRecord extends BaseXmlRecord {
     
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final String LAYER_ID_ATTRIBUTE_NAME = "layerid";
     
     private enum Field {
-        TITLE("title"),
-        GEOMETRY("bounding"),
-        CITEINFO("citeinfo"),
-        ABSTRACT("abstract"),
-        PURPOSE("purpose"),
-        EDITION("edition"),
-        ELECTRONIC_LOCATOR("onlink");
+    		CITEINFO("citeinfo"),
+    		ABSTRACT("abstract"),
+    		PURPOSE("purpose"),
+    		BOUNDING("bounding");
         
         private final String tagName;
         
@@ -35,185 +27,105 @@ public class FgdcRecord extends BaseXmlRecord {
         }       
     }
     
-    private FgdcHglLayerId layerId;
-    private FgdcTitle title;
-    private FgdcGeometry geometry;
-    private FgdcOriginatorActivity fgdcOriginatorActivity;
-    private FgdcPublisherActivity fgdcPublisherActivity;
-    private List<FgdcAnnotation> fgdcAnnotations;
-    private FgdcTextOnlyField fgdcEdition;
-    private FgdcTextOnlyField fgdcElectroncLocator;
+    private String layerId;
+    private FgdcCiteinfoField citeinfoField;
+    private FgdcField abstractField;
+    private FgdcField purposeField;
+    private FgdcBoundingField boundingField;
 
 	/**
 	 * Constructor
 	 * 
-	 * @param element - The top-most FGDC XML element.
+	 * @param record - The top-most FGDC XML element.
 	 */
-	public FgdcRecord(Element element) throws RecordException {
-		super(element);
+	public FgdcRecord(Element record) throws RecordException {
+		super(record);
 		
-		this.layerId = buildLayerId(element);
-		this.title = buildTitle(element);
-		this.geometry = buildGeometry(element);
-		this.fgdcOriginatorActivity = buildFgdcOriginator(element);
-		this.fgdcPublisherActivity = buildFgdcPublisher(element);
-		this.fgdcAnnotations = buildFgdcAnnotations(element);
-		this.fgdcEdition = buildEdition(element);
-		this.fgdcElectroncLocator = buildElectronicLocator(element);
-        isValid();
+		citeinfoField = buildFgdcCiteinfo(record);
+		abstractField = buildField(record, Field.ABSTRACT);
+		purposeField = buildField(record, Field.PURPOSE);
+		boundingField = buildFgdcBoundingField(record);
+		layerId = record.getAttribute(LAYER_ID_ATTRIBUTE_NAME);
+		isValid();
 	}
 	
-    /*
-     * Builds this Record's title from the FGDC input. Only a single title
-     * is allowed; others are ignored. Returns null if no title node is found.
-     */
-	private FgdcTitle buildTitle(Element element) throws RecordException {
-        NodeList titleNodes = element.getElementsByTagName(Field.TITLE.tagName);
-        if (titleNodes.getLength() == 0) {
+	private final FgdcCiteinfoField buildFgdcCiteinfo(Element record) throws RecordException {
+        NodeList citeinfoNodes = 
+                record.getElementsByTagName(Field.CITEINFO.tagName);
+        if (citeinfoNodes.getLength() == 0) {
             return null;
         }
 
         // There should be only one title - ignore any others.
-        return new FgdcTitle((Element) titleNodes.item(0));       
-    }
+        return new FgdcCiteinfoField((Element)citeinfoNodes.item(0));       
+		
+	}
+	
+	private final FgdcBoundingField buildFgdcBoundingField(Element record) throws RecordException {
+        NodeList boundingNodes = 
+                record.getElementsByTagName(Field.BOUNDING.tagName);
+        if (boundingNodes.getLength() == 0) {
+            return null;
+        }
 
-	/*
-	 * Builds this Record's geography from the FGDC input.
-	 */
-	private FgdcGeometry buildGeometry(Element element) throws RecordException {
-		NodeList boundingNodes = element.getElementsByTagName(Field.GEOMETRY.tagName);
-		if (boundingNodes.getLength() == 0) {
-			return null;
-		}
+        // There should be only one title - ignore any others.
+        return new FgdcBoundingField((Element)boundingNodes.item(0));       
 		
-		// There should be only one bounding - ignore any others.
-		FgdcGeometry fdgcGeometry = new FgdcGeometry((Element)boundingNodes.item(0));
-		return fdgcGeometry;
 	}
 	
-	private FgdcHglLayerId buildLayerId(Element element) throws RecordException {
-		return new FgdcHglLayerId(element);
-	}
-	
-	private FgdcOriginatorActivity buildFgdcOriginator(Element element) throws RecordException {
-        NodeList citeinfoNodes = element.getElementsByTagName(Field.CITEINFO.tagName);
-        if (citeinfoNodes.getLength() == 0) {
+	private FgdcField buildField(Element element, Field field) throws RecordException {
+		NodeList nodes = 
+				element.getElementsByTagName(field.tagName);
+        if (nodes.getLength() == 0) {
             return null;
         }
-        
-        // should be only one node, ignore others
-        return new FgdcOriginatorActivity((Element) citeinfoNodes.item(0));
-	}
-	
-	private FgdcPublisherActivity buildFgdcPublisher(Element element) throws RecordException {
-        NodeList citeinfoNodes = element.getElementsByTagName(Field.CITEINFO.tagName);
-        if (citeinfoNodes.getLength() == 0) {
-            return null;
-        }
-        
-        // should be only one node, ignore others
-        return new FgdcPublisherActivity((Element) citeinfoNodes.item(0));
-	}
-	
-	private List<FgdcAnnotation> buildFgdcAnnotations(Element element) throws RecordException {
-		List<FgdcAnnotation> annots = new ArrayList<>();
-		NodeList abstractNodes = element.getElementsByTagName(Field.ABSTRACT.tagName);
-		if (abstractNodes.getLength() > 0) {
-			// should only be one
-			FgdcAnnotation abstractAnnot =
-					new FgdcAnnotation((Element)abstractNodes.item(0),
-							FgdcAnnotation.AnnotationType.SUMMARIZING);
-			annots.add(abstractAnnot);
-		}
-		NodeList purposeNodes = element.getElementsByTagName(Field.PURPOSE.tagName);
-		if (purposeNodes.getLength() > 0) {
-			// should only be one
-			FgdcAnnotation purposeAnnot =
-					new FgdcAnnotation((Element)purposeNodes.item(0),
-							FgdcAnnotation.AnnotationType.PROVIDING_PURPOSE);
-			annots.add(purposeAnnot);
-		}
-		
-		return annots;
-	}
-	
-	private FgdcTextOnlyField buildEdition(Element element) throws RecordException {
-        NodeList editionNodes = element.getElementsByTagName(Field.EDITION.tagName);
-        if (editionNodes.getLength() == 0) {
-            return null;
-        }
-        
-        // should be only one node, ignore others
-        return new FgdcTextOnlyField((Element) editionNodes.item(0), Field.EDITION.tagName);
-	}
-	
-	private FgdcTextOnlyField buildElectronicLocator(Element element) throws RecordException {
-        NodeList electronicLocatorNodes = element.getElementsByTagName(Field.ELECTRONIC_LOCATOR.tagName);
-        if (electronicLocatorNodes.getLength() == 0) {
-            return null;
-        }
-        
-        // should be only one node, ignore others
-        return new FgdcTextOnlyField((Element) electronicLocatorNodes.item(0), Field.ELECTRONIC_LOCATOR.tagName);
+
+        // There should be only one title - ignore any others.
+        return new FgdcTextOnlyField((Element)nodes.item(0), field.tagName);       
 	}
 	
 	private void isValid() throws RecordFieldException {
         if (layerId == null) {
             throw new RecordFieldException("layerId attribute is null");
         }
+        if (layerId.isEmpty()) {
+            throw new RecordFieldException("layerId attribute is empty");
+        }
 	}
-    
-    public FgdcTitle getTitle() {
-    	return this.title;
-    }
-    
-    public FgdcGeometry getGeometry() {
-    	return this.geometry;
-    }
-    
-    public FgdcHglLayerId getLayerId() {
-    	return this.layerId;
-    }
-    
-    public FgdcOriginatorActivity getFgdcOriginatorActivity() {
-    	return this.fgdcOriginatorActivity;
-    }
-    
-    public FgdcPublisherActivity getFgdcPublisherActivity() {
-    	return this.fgdcPublisherActivity;
-    }
-    
-    public List<FgdcAnnotation> getFgdcAnnotations() {
-    	return this.fgdcAnnotations;
-    }
-    
-    public FgdcTextOnlyField getFgdcEdition() {
-    	return this.fgdcEdition;
-    }
-    
-    public FgdcTextOnlyField getFgdcElectronicLocator() {
-    	return this.fgdcElectroncLocator;
-    }
+	
+	public String getLayerId() {
+		return layerId;
+	}
+	
+	public FgdcCiteinfoField getCiteinfoField() {
+		return citeinfoField;
+	}
+
+	public FgdcField getAbstractField() {
+		return abstractField;
+	}
+
+	public FgdcField getPurposeField() {
+		return purposeField;
+	}
+
+	public FgdcBoundingField getBoundingField() {
+		return boundingField;
+	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("FgdcRecord [layerId=");
 		builder.append(layerId);
-		builder.append(", title=");
-		builder.append(title);
-		builder.append(", geometry=");
-		builder.append(geometry);
-		builder.append(", fgdcOriginatorActivity=");
-		builder.append(fgdcOriginatorActivity);
-		builder.append(", fgdcPublisherActivity=");
-		builder.append(fgdcPublisherActivity);
-		builder.append(", fgdcAnnotations=");
-		builder.append(fgdcAnnotations);
-		builder.append(", fgdcEdition=");
-		builder.append(fgdcEdition);
-		builder.append(", fgdcElectroncLocator=");
-		builder.append(fgdcElectroncLocator);
+		builder.append(", citeinfoField=");
+		builder.append(citeinfoField);
+		builder.append(", abstractField=");
+		builder.append(abstractField);
+		builder.append(", purposeField=");
+		builder.append(purposeField);
+		builder.append(", boundingField=");
+		builder.append(boundingField);
 		builder.append("]");
 		return builder.toString();
 	}

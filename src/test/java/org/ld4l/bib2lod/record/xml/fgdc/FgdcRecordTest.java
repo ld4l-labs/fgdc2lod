@@ -27,13 +27,13 @@ public class FgdcRecordTest extends AbstractTestClass {
     
     @Test
     public void noAttribute_Invalid() throws Exception {
-    	expectException(RecordFieldException.class, "text value is empty");
+    	expectException(RecordFieldException.class, "layerId attribute is empty");
     	buildFgdcRecordFromString(NO_VALUE);
     }
     
     @Test
     public void noAttributeValue_Invalid() throws Exception {
-    	expectException(RecordFieldException.class, "text value is empty");
+    	expectException(RecordFieldException.class, "layerId attribute is empty");
     	buildFgdcRecordFromString(NO_ATTRIBUTE_VALUE);
     }
     

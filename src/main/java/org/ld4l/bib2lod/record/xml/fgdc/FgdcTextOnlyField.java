@@ -12,11 +12,6 @@ public class FgdcTextOnlyField extends FgdcField {
 	
 	private String fieldName = "";
 
-	public FgdcTextOnlyField(Element element) throws RecordException {
-		super(element);
-        isValid();
-	}
-
 	/**
 	 * Constructor giving this generic field a specific name.
 	 */
@@ -25,6 +20,7 @@ public class FgdcTextOnlyField extends FgdcField {
 		if (fieldName != null && !fieldName.isEmpty()) {
 			this.fieldName = fieldName;
 		}
+		isValid();
 	}
 
 	public String getFieldName() {
