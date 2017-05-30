@@ -23,6 +23,11 @@ public class FgdcTextOnlyField extends FgdcField {
 		isValid();
 	}
 
+	/**
+	 * Represents the input XML element name creating this record.
+	 * 
+	 * @return The element name used for creating the text value of this record.
+	 */
 	public String getFieldName() {
 		return fieldName;
 	}
