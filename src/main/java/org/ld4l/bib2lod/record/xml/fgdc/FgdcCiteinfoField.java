@@ -3,10 +3,7 @@ package org.ld4l.bib2lod.record.xml.fgdc;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.ld4l.bib2lod.records.Record.RecordException;
-import org.ld4l.bib2lod.records.RecordField.RecordFieldException;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 

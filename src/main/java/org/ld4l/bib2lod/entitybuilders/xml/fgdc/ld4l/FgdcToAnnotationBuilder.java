@@ -17,8 +17,6 @@ import org.ld4l.bib2lod.record.xml.fgdc.FgdcTextOnlyField;
  */
 public class FgdcToAnnotationBuilder extends FgdcToLd4lEntityBuilder {
 
-    private static final Logger LOGGER = LogManager.getLogger();
-
 	/* (non-Javadoc)
 	 * @see org.ld4l.bib2lod.entitybuilders.EntityBuilder#build(org.ld4l.bib2lod.entitybuilders.BuildParams)
 	 */
