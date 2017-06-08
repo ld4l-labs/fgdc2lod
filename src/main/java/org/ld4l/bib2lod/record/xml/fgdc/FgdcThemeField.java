@@ -34,7 +34,12 @@ public class FgdcThemeField extends FgdcField {
 	}
 
 	private void isValid() throws RecordFieldException {
-		// TODO: does valid mean at one 'themekt' and at least one 'themekey'???
+		if (themekt == null) {
+			throw new RecordFieldException("themekt is null");
+		}
+		if (themekeys.isEmpty()) {
+			throw new RecordFieldException("themekeys is empty");
+		}
 	}
 	
 	private FgdcField buildField(Element element, Field field) throws RecordException {

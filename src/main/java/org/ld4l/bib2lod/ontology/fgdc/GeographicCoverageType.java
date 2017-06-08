@@ -7,16 +7,12 @@ import org.ld4l.bib2lod.ontology.Type;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lNamespace;
 
 /**
- * Enumerates the cartography types used in the LD4L BIBFRAME 2 extensions and
+ * Enumerates the Geographic Coverage types used in the Bibliotek-o extensions and
  * application profile.
  */
-public enum CartographyType implements Type {
+public enum GeographicCoverageType implements Type {
     
-	GEOMETRY(CartographyNamespace.GEO, "Geometry"),
-	CARTOGRAPIC(Ld4lNamespace.BIBFRAME, "Cartographic"),
-	DATASET(Ld4lNamespace.BIBFRAME, "Dataset"),
-	EPSG_CODE(CartographyNamespace.CARTOTEKO, "EpsgCode"),
-    PROJECTION(Ld4lNamespace.BIBFRAME, "Projection");
+	GEOGRAPHIC_COVERAGE(Ld4lNamespace.BIBFRAME, "GeographicCoverage");
     
     private String uri;
     private Resource ontClass;
@@ -24,7 +20,7 @@ public enum CartographyType implements Type {
     /**
      * Constructor
      */
-    CartographyType(Namespace namespace, String localName) {
+    GeographicCoverageType(Namespace namespace, String localName) {
         this.uri = namespace.uri() + localName;
         this.ontClass = ResourceFactory.createResource(uri);
     }
@@ -40,7 +36,7 @@ public enum CartographyType implements Type {
     } 
 
     public static Type superClass() {
-        return GEOMETRY;
+        return GEOGRAPHIC_COVERAGE;
     }
 
 }

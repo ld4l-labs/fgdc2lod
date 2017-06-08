@@ -18,7 +18,8 @@ public class FgdcRecord extends BaseXmlRecord {
     		CITEINFO("citeinfo"),
     		ABSTRACT("abstract"),
     		PURPOSE("purpose"),
-    		BOUNDING("bounding");
+    		BOUNDING("bounding"),
+    		KEYWORDS("keywords");
         
         private final String tagName;
         
@@ -32,6 +33,7 @@ public class FgdcRecord extends BaseXmlRecord {
     private FgdcField abstractField;
     private FgdcField purposeField;
     private FgdcBoundingField boundingField;
+    private FgdcKeywordsField keywordsField;
 
 	/**
 	 * Constructor
@@ -45,6 +47,7 @@ public class FgdcRecord extends BaseXmlRecord {
 		abstractField = buildField(record, Field.ABSTRACT);
 		purposeField = buildField(record, Field.PURPOSE);
 		boundingField = buildFgdcBoundingField(record);
+		keywordsField = buildFgdcKeywordsField(record);
 		layerId = record.getAttribute(LAYER_ID_ATTRIBUTE_NAME);
 		isValid();
 	}
@@ -73,9 +76,20 @@ public class FgdcRecord extends BaseXmlRecord {
 		
 	}
 	
-	private FgdcField buildField(Element element, Field field) throws RecordException {
+	private FgdcKeywordsField buildFgdcKeywordsField(Element record) throws RecordException {
 		NodeList nodes = 
-				element.getElementsByTagName(field.tagName);
+				record.getElementsByTagName(Field.KEYWORDS.tagName);
+		if (nodes.getLength() == 0) {
+			return null;
+		}
+		
+		// There should be only one title - ignore any others.
+		return new FgdcKeywordsField((Element)nodes.item(0));       
+	}
+	
+	private FgdcField buildField(Element record, Field field) throws RecordException {
+		NodeList nodes = 
+				record.getElementsByTagName(field.tagName);
         if (nodes.getLength() == 0) {
             return null;
         }
@@ -112,6 +126,10 @@ public class FgdcRecord extends BaseXmlRecord {
 	public FgdcBoundingField getBoundingField() {
 		return boundingField;
 	}
+	
+	public FgdcKeywordsField getKeywordsField() {
+		return keywordsField;
+	}
 
 	@Override
 	public String toString() {
@@ -126,6 +144,8 @@ public class FgdcRecord extends BaseXmlRecord {
 		builder.append(purposeField);
 		builder.append(", boundingField=");
 		builder.append(boundingField);
+		builder.append(", keywordsField=");
+		builder.append(keywordsField);
 		builder.append("]");
 		return builder.toString();
 	}

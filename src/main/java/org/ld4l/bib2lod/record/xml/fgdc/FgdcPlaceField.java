@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ld4l.bib2lod.records.Record.RecordException;
+import org.ld4l.bib2lod.records.RecordField.RecordFieldException;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -34,7 +35,12 @@ public class FgdcPlaceField extends FgdcField {
 	}
 
 	private void isValid() throws RecordFieldException {
-		// TODO: does valid mean at one 'placekt' and at least one 'placekey'???
+		if (placekt == null) {
+			throw new RecordFieldException("placekt is null");
+		}
+		if (placekeys.isEmpty()) {
+			throw new RecordFieldException("placekeys is empty");
+		}
 	}
 	
 	private FgdcField buildField(Element element, Field field) throws RecordException {

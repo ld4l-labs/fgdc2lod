@@ -134,10 +134,61 @@ public class FgdcTestData {
 			"<themekey>public libraries</themekey>" +
 		"</theme>";
 
+	public static final String INVALID_THEME_MISSING_THEME_KT = 
+		"<theme>" +
+			"<themekey>City of Cambridge</themekey>" +
+			"<themekey>Libraries</themekey>" +
+			"<themekey>public libraries</themekey>" +
+		"</theme>";
+
+	public static final String INVALID_THEME_EMPTY_THEME_KT = 
+		"<theme>" +
+			"<themekt></themekt>" +
+			"<themekey>City of Cambridge</themekey>" +
+			"<themekey>Libraries</themekey>" +
+			"<themekey>public libraries</themekey>" +
+		"</theme>";
+
+	public static final String INVALID_THEME_MISSING_THEME_KEY = 
+		"<theme>" +
+			"<themekt>LCSH</themekt>" +
+		"</theme>";
+
+	public static final String INVALID_THEME_EMPTY_THEME_KEY = 
+		"<theme>" +
+			"<themekt>LCSH</themekt>" +
+			"<themekey></themekey>" +
+		"</theme>";
+
 	public static final String VALID_PLACE = 
 		"<place>" +
 			"<placekt>GNIS</placekt>" +
 			"<placekey>Massachusetts</placekey>" +
+			"<placekey>Cambridge</placekey>" +
+		"</place>";
+
+	public static final String INVALID_PLACE_MISSING_PLACE_KT = 
+		"<place>" +
+			"<placekey>Massachusetts</placekey>" +
+			"<placekey>Cambridge</placekey>" +
+		"</place>";
+
+	public static final String INVALID_PLACE_EMPTY_PLACE_KT = 
+		"<place>" +
+			"<placekt></placekt>" +
+			"<placekey>Massachusetts</placekey>" +
+			"<placekey>Cambridge</placekey>" +
+		"</place>";
+
+	public static final String INVALID_PLACE_MISSING_PLACE_KEY = 
+		"<place>" +
+			"<placekt>GNIS</placekt>" +
+		"</place>";
+
+	public static final String INVALID_PLACE_EMPTY_PLACE_KEY = 
+		"<place>" +
+			"<placekt>GNIS</placekt>" +
+			"<placekey></placekey>" +
 			"<placekey>Cambridge</placekey>" +
 		"</place>";
 }

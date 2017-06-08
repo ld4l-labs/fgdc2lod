@@ -22,12 +22,12 @@ import org.ld4l.bib2lod.ontology.fgdc.FgdcDatatypeProp;
 import org.ld4l.bib2lod.ontology.fgdc.FgdcObjectProp;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lDatatypeProp;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lWorkType;
-import org.ld4l.bib2lod.record.xml.XmlTestUtils;
 import org.ld4l.bib2lod.record.xml.fgdc.FgdcRecord;
 import org.ld4l.bib2lod.records.Record.RecordException;
 import org.ld4l.bib2lod.testing.AbstractTestClass;
 import org.ld4l.bib2lod.testing.BaseMockBib2LodObjectFactory;
 import org.ld4l.bib2lod.testing.FgdcTestData;
+import org.ld4l.bib2lod.testing.xml.XmlTestUtils;
 import org.ld4l.bib2lod.util.collections.MapOfLists;
 import org.w3c.dom.Element;
 

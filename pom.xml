@@ -23,6 +23,11 @@
 			<artifactId>Bib2Lod</artifactId>
 			<version>${bib2lod.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.opencsv</groupId>
+			<artifactId>opencsv</artifactId>
+			<version>3.9</version>
+		</dependency>
         <dependency>
             <groupId>org.ld4l.bib2lod</groupId>
             <artifactId>Bib2Lod</artifactId>

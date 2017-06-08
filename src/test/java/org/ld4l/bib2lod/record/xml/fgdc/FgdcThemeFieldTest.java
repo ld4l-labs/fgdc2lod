@@ -6,10 +6,11 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.ld4l.bib2lod.record.xml.XmlTestUtils;
 import org.ld4l.bib2lod.records.Record.RecordException;
+import org.ld4l.bib2lod.records.RecordField.RecordFieldException;
 import org.ld4l.bib2lod.testing.AbstractTestClass;
 import org.ld4l.bib2lod.testing.FgdcTestData;
+import org.ld4l.bib2lod.testing.xml.XmlTestUtils;
 import org.w3c.dom.Element;
 
 /**
@@ -22,20 +23,44 @@ public class FgdcThemeFieldTest extends AbstractTestClass {
     // ----------------------------------------------------------------------
     
     @Test
-    public void validPlaceField() throws Exception {
-    	FgdcThemeField fgdcThemeField = buildFgdcCiteinfoFieldFromString(FgdcTestData.VALID_THEME);
+    public void validThemeField() throws Exception {
+    	FgdcThemeField fgdcThemeField = buildFgdcThemeFieldFromString(FgdcTestData.VALID_THEME);
     	FgdcField themeKt = fgdcThemeField.getThemeKt();
     	Assert.assertNotNull(themeKt);
     	List<FgdcField> themeKeys = fgdcThemeField.getThemeKeys();
     	Assert.assertNotNull(themeKeys);
     	Assert.assertEquals(3, themeKeys.size());
     }
-
+    
+    @Test
+    public void missingThemeKtValue_invalid() throws Exception {
+       	expectException(RecordFieldException.class, "themekt is null");
+    	buildFgdcThemeFieldFromString(FgdcTestData.INVALID_THEME_MISSING_THEME_KT);
+    }
+    
+    @Test
+    public void emtpyThemeKtValue_invalid() throws Exception {
+       	expectException(RecordFieldException.class, "text value is null");
+    	buildFgdcThemeFieldFromString(FgdcTestData.INVALID_THEME_EMPTY_THEME_KT);
+    }
+    
+    @Test
+    public void missingThemeKeyValue_invalid() throws Exception {
+       	expectException(RecordFieldException.class, "themekeys is empty");
+    	buildFgdcThemeFieldFromString(FgdcTestData.INVALID_THEME_MISSING_THEME_KEY);
+    }
+    
+    @Test
+    public void emptyThemeKeyValue_invalid() throws Exception {
+       	expectException(RecordFieldException.class, "text value is null");
+    	buildFgdcThemeFieldFromString(FgdcTestData.INVALID_THEME_EMPTY_THEME_KEY);
+    }
+    
     // ----------------------------------------------------------------------
     // Helper methods
     // ----------------------------------------------------------------------
     
-    private FgdcThemeField buildFgdcCiteinfoFieldFromString(String xmlString) 
+    private FgdcThemeField buildFgdcThemeFieldFromString(String xmlString) 
             throws RecordException {
     	
     	Element element = XmlTestUtils.buildElementFromString(xmlString);

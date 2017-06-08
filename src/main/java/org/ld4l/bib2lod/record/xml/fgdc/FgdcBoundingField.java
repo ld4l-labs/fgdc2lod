@@ -84,25 +84,25 @@ public class FgdcBoundingField extends FgdcField {
 	 */
 	public String getWKT() {
     	StringBuilder wkt = new StringBuilder("POLYGON((");
-    	wkt.append(west);
+    	wkt.append(west.getTextValue());
     	wkt.append(' ');
-    	wkt.append(north);
+    	wkt.append(north.getTextValue());
     	wkt.append(", ");
-    	wkt.append(east);
+    	wkt.append(east.getTextValue());
     	wkt.append(' ');
-    	wkt.append(north);
+    	wkt.append(north.getTextValue());
     	wkt.append(", ");
-    	wkt.append(east);
+    	wkt.append(east.getTextValue());
     	wkt.append(' ');
-    	wkt.append(south);
+    	wkt.append(south.getTextValue());
     	wkt.append(", ");
-    	wkt.append(west);
+    	wkt.append(west.getTextValue());
     	wkt.append(' ');
-    	wkt.append(south);
+    	wkt.append(south.getTextValue());
     	wkt.append(", ");
-    	wkt.append(west);
+    	wkt.append(west.getTextValue());
     	wkt.append(' ');
-    	wkt.append(north);
+    	wkt.append(north.getTextValue());
     	wkt.append("))");
     	return wkt.toString();
 	}
