@@ -8,11 +8,9 @@ import org.ld4l.bib2lod.entitybuilders.BaseEntityBuilderFactory;
 import org.ld4l.bib2lod.entitybuilders.EntityBuilder;
 import org.ld4l.bib2lod.ontology.Type;
 import org.ld4l.bib2lod.ontology.fgdc.CartographyType;
-import org.ld4l.bib2lod.ontology.fgdc.GeographicCoverageType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lActivityType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lAgentType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lAnnotationType;
-import org.ld4l.bib2lod.ontology.ld4l.Ld4lConceptType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lInstanceType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lItemType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lTitleType;
@@ -31,8 +29,6 @@ public class FgdcToLd4lEntityBuilderFactory extends BaseEntityBuilderFactory {
         typeToBuilder.put(Ld4lAnnotationType.class, FgdcToAnnotationBuilder.class);
         typeToBuilder.put(Ld4lItemType.class, FgdcToItemBuilder.class);
         typeToBuilder.put(Ld4lAgentType.class, FgdcToAgentBuilder.class);
-        typeToBuilder.put(Ld4lConceptType.class, FgdcToThemeBuilder.class);
-        typeToBuilder.put(GeographicCoverageType.class, FgdcToThemeBuilder.class);
     }
     
     @Override

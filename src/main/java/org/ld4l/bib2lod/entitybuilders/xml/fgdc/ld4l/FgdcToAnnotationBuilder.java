@@ -23,13 +23,18 @@ public class FgdcToAnnotationBuilder extends FgdcToLd4lEntityBuilder {
 	public Entity build(BuildParams params) throws EntityBuilderException {
         
         Entity bibEntity = params.getRelatedEntity();
-        FgdcTextOnlyField field = (FgdcTextOnlyField) params.getField();
-        if (field == null) {
+        if (bibEntity == null) {
+            throw new EntityBuilderException(
+                    "A related Entity is required to build an Annotation.");
+        }
+
+        if (params.getField() == null) {
         	throw new EntityBuilderException("field is null");
         }
-        if ( !(field instanceof FgdcTextOnlyField)) {
+        if ( !(params.getField() instanceof FgdcTextOnlyField)) {
         	throw new EntityBuilderException("field not instanceof FgdcTextOnlyField");
         }
+        FgdcTextOnlyField field = (FgdcTextOnlyField) params.getField();
         
         Entity annotation = new Entity(Ld4lAnnotationType.ANNOTATION);
         Entity textualBody = new Entity(Ld4lTextualBodyType.TEXTUAL_BODY);
@@ -47,7 +52,7 @@ public class FgdcToAnnotationBuilder extends FgdcToLd4lEntityBuilder {
 				annotation.addExternalRelationship(Ld4lObjectProp.HAS_CREATOR, Ld4lNamedIndividual._134059638.uri());
 				break;
 			default:
-				throw new UnsupportedOperationException(field.getFieldName() + " type Annotation not yet supported.");
+				throw new EntityBuilderException(field.getFieldName() + " type Annotation not yet supported.");
         }
 		bibEntity.addRelationship(Ld4lObjectProp.HAS_ANNOTATION, annotation);
         

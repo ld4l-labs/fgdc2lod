@@ -22,17 +22,20 @@ public class FgdcToAgentBuilder extends FgdcToLd4lEntityBuilder {
     public Entity build(BuildParams params) throws EntityBuilderException {
         
         Entity bibEntity = params.getRelatedEntity();
-        Entity agent = new Entity(Ld4lAgentType.superClass());
+        if (bibEntity == null) {
+        	throw new EntityBuilderException("A related Entity is required to build a title.");
+        }
         
         FgdcField agentField = (FgdcField)params.getField();
         if (agentField == null) {
-        	throw new EntityBuilderException("agentField is null");
+        	throw new EntityBuilderException("An agentField is required to build an Agent.");
         }
+
 		Entity agentEntity = new Entity(Ld4lAgentType.AGENT);
 		agentEntity.addAttribute(Ld4lDatatypeProp.LABEL, agentField.getTextValue());
 		bibEntity.addRelationship(Ld4lObjectProp.HAS_AGENT, agentEntity);
         
-        return agent;
+        return agentEntity;
     }
        
 }

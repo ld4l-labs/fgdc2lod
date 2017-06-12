@@ -29,10 +29,20 @@ public class FgdcToActivityBuilder extends FgdcToLd4lEntityBuilder {
     public Entity build(BuildParams params) throws EntityBuilderException {
         
     	FgdcRecord record = (FgdcRecord) params.getRecord();
-    	Entity bibEntity = params.getRelatedEntity();
+        if (record == null) {
+            throw new EntityBuilderException(
+                    "A FgdcRecord is required to build an Activity.");
+        }
+
+        Entity bibEntity = params.getRelatedEntity();
+        if (bibEntity == null) {
+            throw new EntityBuilderException(
+                    "A related Entity is required to build an Activity.");
+        }
+
         Ld4lActivityType type = (Ld4lActivityType) params.getType();
         if (type == null) {
-        	throw new EntityBuilderException("type is null");
+        	throw new EntityBuilderException("An Ld4lActivityType is required to build an Activity.");
         }
         
         Entity activity = new Entity(type);
@@ -87,7 +97,7 @@ public class FgdcToActivityBuilder extends FgdcToLd4lEntityBuilder {
 	    	}
 	    	
     	} else {
-    		LOGGER.warn("Specific type not indicated: {}", type);
+    		throw new EntityBuilderException("Non-specific Activity type not indicated: " + type.label());
     	}
     	
         return activity;

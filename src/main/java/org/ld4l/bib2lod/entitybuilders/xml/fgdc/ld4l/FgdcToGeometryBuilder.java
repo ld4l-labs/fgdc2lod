@@ -27,7 +27,17 @@ public class FgdcToGeometryBuilder extends FgdcToLd4lEntityBuilder {
     public Entity build(BuildParams params) throws EntityBuilderException {
         
     	FgdcRecord record = (FgdcRecord) params.getRecord();
+        if (record == null) {
+            throw new EntityBuilderException(
+                    "A FgdcRecord is required to build a geometry.");
+        }
+
         Entity cartography = params.getRelatedEntity();
+        if (cartography == null) {
+            throw new EntityBuilderException(
+                    "A related Entity is required to build a geometry.");
+        }
+
         Entity geometry = new Entity(CartographyType.superClass()); // (no rdfs:label added)
         
         FgdcBoundingField fgdcBoundingField = record.getBoundingField();

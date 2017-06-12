@@ -84,15 +84,50 @@ public class FgdcTestData {
 			"</idinfo>" +
 		"</metadata>";
 ////////////////
+	
+		public static final String VALID_ACTIVITIES =
+	        "<metadata layerid='CAMBRIDGE14PUBLICLIBRARIES'>" +
+            	"<idinfo>" +
+    				"<citation>" +
+    					"<citeinfo>" +
+    	                "<origin>Cambridge (Mass.). Geographic Information Systems</origin>" +
+    	                "<origin>Cambridge (Mass.). Public Library</origin>" +
+    	                "<pubdate>2014</pubdate>" +
+    	                "<title>Public Libraries, Cambridge, Massachusetts, 2014</title>" +
+    	                "<edition>2014 revised ed.</edition>" +
+    	                "<pubinfo>" +
+    	                    "<pubplace>Cambridge, Massachusetts</pubplace>" +
+    	                    "<publish>Cambridge (Mass.). Geographic Information Systems</publish>" +
+    	                "</pubinfo>" +
+    	                "<onlink>http://hgl.harvard.edu:8080/HGL/hgl.jsp?action=VColl&amp;VCollName=CAMBRIDGE14PUBLICLIBRARIES</onlink>" +
+    					"</citeinfo>" +
+    				"</citation>" +
+    			"</idinfo>" +
+    		"</metadata>";
+
+				
+////////////////
 
 	public static final String VALID_KEYWORDS = 
         "<metadata layerid='CAMBRIDGE14PUBLICLIBRARIES'>" +
 			"<idinfo>" +
 				"<citation>" +
 					"<citeinfo>" +
+						"<origin>Cambridge (Mass.). Geographic Information Systems</origin>" +
+						"<origin>Cambridge (Mass.). Public Library</origin>" +
+						"<pubdate>2014</pubdate>" +
 						"<title>Public Libraries, Cambridge, Massachusetts, 2014</title>" +
+						"<edition>2014 revised ed.</edition>" +
+						"<pubinfo>" +
+							"<pubplace>Cambridge, Massachusetts</pubplace>" +
+							"<publish>Cambridge (Mass.). Geographic Information Systems</publish>" +
+						"</pubinfo>" +
 					"</citeinfo>" +
 				"</citation>" +
+				"<descript>" +
+					"<abstract>Abstract text</abstract>" +
+					"<purpose>Purpose text</purpose>" +
+				"</descript>" +
 				"<spdom>" +
 					"<bounding>" +
 						"<westbc>-71.146912</westbc>" +
@@ -191,4 +226,15 @@ public class FgdcTestData {
 			"<placekey></placekey>" +
 			"<placekey>Cambridge</placekey>" +
 		"</place>";
+	
+//////////
+	public static final String VALID_AGENT =
+		"<agent>Agent Text</agent>";
+	
+///////////
+	public static final String VALID_ABSTRACT =
+		"<abstract>Abstract text</abstract>";
+	
+	public static final String VALID_PURPOSE =
+		"<purpose>Purpose text</purpose>";
 }

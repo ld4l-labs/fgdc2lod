@@ -4,7 +4,6 @@ package org.ld4l.bib2lod.entitybuilders.xml.fgdc.ld4l;
 
 import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
-import java.util.List;
 
 import org.ld4l.bib2lod.csv.IsoTopicConcordanceBean;
 import org.ld4l.bib2lod.csv.IsoTopicConcordanceManager;
@@ -49,7 +48,12 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
 		} catch (FileNotFoundException | URISyntaxException e) {
 			throw new EntityBuilderException("Could not instantiate IsoTopicConcordanceManager", e);
 		}
-        this.record = (FgdcRecord) params.getRecord();
+
+    	this.record = (FgdcRecord) params.getRecord();
+        if (record == null) {
+            throw new EntityBuilderException(
+                    "A FgdcRecord is required to build a Cartography.");
+        }
         
         this.work = new Entity(CartographyType.DATASET);
         this.work.addType(Ld4lWorkType.CARTOGRAPHY); // (This is defined as two different types.)
@@ -60,7 +64,7 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
         addIdentifiers();
         buildGeometry();
         buildAnnotations();
-        buildKeywords();
+        addKeywords();
         
         // add genericForm
         this.work.addExternalRelationship(FgdcObjectProp.GENRE_FORM, FgdcToCartographyBuilder.GENRE_FORM_URI);
@@ -137,9 +141,12 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
         }
     }
     
-    private void buildKeywords() throws EntityBuilderException {
+    // Logic too complex to add a Builder class
+    private void addKeywords() throws EntityBuilderException {
         
         FgdcKeywordsField keywordsField = record.getKeywordsField();
+        
+        // First check for theme keywords
         if (keywordsField != null && keywordsField.getThemes() != null) {
         	for (FgdcThemeField themeField : keywordsField.getThemes()) {
         		
@@ -150,7 +157,6 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
                 	IsoTopicConcordanceBean concordanceBean = null;
                 	// check to see if themekt is of the type that requires a concordance file check
                 	if (FgdcToCartographyBuilder.ISO_TOPIC_CATEGORY_MARKER.equalsIgnoreCase(themeKtFieldText)) {
-                		List<FgdcField> themeKeys = themeField.getThemeKeys();
                 		// expect only one
                 		concordanceBean = concordanceManager.getConcordanceEntry(themeKey.getTextValue());
                 	}
@@ -174,6 +180,7 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
         	}
         }
         
+        // Next check for place keywords
         if (keywordsField != null && keywordsField.getPlaces() != null) {
         	// field.getPlaces() could be empty
         	// if not, already validation that each place will have at least one

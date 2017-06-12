@@ -15,7 +15,7 @@ import org.ld4l.bib2lod.record.xml.fgdc.FgdcField;
 import org.ld4l.bib2lod.record.xml.fgdc.FgdcRecord;
 
 /**
- * Builds an Cartography individual from a Record.
+ * Builds an Instance individual from a Record.
  */
 public class FgdcToInstanceBuilder extends FgdcToLd4lEntityBuilder {
     
@@ -27,7 +27,17 @@ public class FgdcToInstanceBuilder extends FgdcToLd4lEntityBuilder {
     public Entity build(BuildParams params) throws EntityBuilderException {
 
         this.record = (FgdcRecord) params.getRecord();
-        this.work = params.getRelatedEntity();
+		if (record == null) {
+			throw new EntityBuilderException(
+					"A FgdcRecord is required to build an Instance.");
+		}
+
+		this.work = params.getRelatedEntity();
+        if (work == null) {
+            throw new EntityBuilderException(
+                    "A related Entity is required to build an Instance.");
+        }
+
         // need to pass title along
         this.instance = new Entity(Ld4lInstanceType.INSTANCE);
         

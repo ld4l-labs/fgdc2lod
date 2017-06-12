@@ -20,7 +20,16 @@ public class FgdcToItemBuilder extends FgdcToLd4lEntityBuilder {
 	public Entity build(BuildParams params) throws EntityBuilderException {
 
     	FgdcRecord record = (FgdcRecord) params.getRecord();
+        if (record == null) {
+            throw new EntityBuilderException(
+                    "A FgdcRecord is required to build an Item.");
+        }
+
         Entity instance = params.getRelatedEntity();
+        if (instance == null) {
+            throw new EntityBuilderException(
+                    "A related Entity is required to build an Item.");
+        }
         
         Entity  item = new Entity(Ld4lItemType.superClass());
         FgdcField electronicLocatorField = record.getCiteinfoField().getOnlink();
