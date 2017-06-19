@@ -19,7 +19,8 @@ public class FgdcCiteinfoField extends FgdcField {
     		EDITION("edition"),
     		PUBPLACE("pubplace"),
     		PUBLISH("publish"),
-    		ONLINK("onlink");
+    		ONLINK("onlink"),
+    		GEOFORM("geoform");
         
         private final String tagName;
         
@@ -35,6 +36,7 @@ public class FgdcCiteinfoField extends FgdcField {
 	private FgdcField pubplace;
 	private FgdcField publish;
 	private FgdcField onlink;
+	private FgdcField geoform;
 
 	public FgdcCiteinfoField(Element element) throws RecordException {
 		super(element);
@@ -45,6 +47,7 @@ public class FgdcCiteinfoField extends FgdcField {
 		pubplace = buildField(element, Field.PUBPLACE);
 		publish = buildField(element, Field.PUBLISH);
 		onlink = buildField(element, Field.ONLINK);
+		geoform = buildField(element, Field.GEOFORM);
 		isValid();
 	}
 
@@ -104,6 +107,10 @@ public class FgdcCiteinfoField extends FgdcField {
 		return onlink;
 	}
 
+	public FgdcField getGeoform() {
+		return geoform;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -121,6 +128,8 @@ public class FgdcCiteinfoField extends FgdcField {
 		builder.append(publish);
 		builder.append(", onlink=");
 		builder.append(onlink);
+		builder.append(", geoform=");
+		builder.append(geoform);
 		builder.append("]");
 		return builder.toString();
 	}

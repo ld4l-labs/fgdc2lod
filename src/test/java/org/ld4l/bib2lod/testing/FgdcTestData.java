@@ -117,6 +117,7 @@ public class FgdcTestData {
 						"<origin>Cambridge (Mass.). Public Library</origin>" +
 						"<pubdate>2014</pubdate>" +
 						"<title>Public Libraries, Cambridge, Massachusetts, 2014</title>" +
+						"<geoform>map</geoform>" +
 						"<edition>2014 revised ed.</edition>" +
 						"<pubinfo>" +
 							"<pubplace>Cambridge, Massachusetts</pubplace>" +

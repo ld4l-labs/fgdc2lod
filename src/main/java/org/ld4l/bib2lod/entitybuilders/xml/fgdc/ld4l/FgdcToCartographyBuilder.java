@@ -3,6 +3,7 @@
 package org.ld4l.bib2lod.entitybuilders.xml.fgdc.ld4l;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URISyntaxException;
 
 import org.ld4l.bib2lod.csv.IsoTopicConcordanceBean;
@@ -10,6 +11,7 @@ import org.ld4l.bib2lod.csv.IsoTopicConcordanceManager;
 import org.ld4l.bib2lod.entity.Entity;
 import org.ld4l.bib2lod.entitybuilders.BuildParams;
 import org.ld4l.bib2lod.entitybuilders.EntityBuilder;
+import org.ld4l.bib2lod.ontology.fgdc.CartographySubType;
 import org.ld4l.bib2lod.ontology.fgdc.CartographyType;
 import org.ld4l.bib2lod.ontology.fgdc.FgdcObjectProp;
 import org.ld4l.bib2lod.ontology.fgdc.GeographicCoverageType;
@@ -38,6 +40,7 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
     private IsoTopicConcordanceManager concordanceManager;
     
     private static final String GENRE_FORM_URI = "http://id.loc.gov/authorities/genreForms/gf2011026297";
+    private static final String ENG_LANGUAGE_URI = "http://lexvo.org/id/iso639-3/eng";
     private static final String ISO_TOPIC_CATEGORY_MARKER = "ISO 19115 Topic Category";
   
     @Override
@@ -45,7 +48,7 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
 
     	try {
 			this.concordanceManager = new IsoTopicConcordanceManager();
-		} catch (FileNotFoundException | URISyntaxException e) {
+		} catch ( URISyntaxException | IOException e) {
 			throw new EntityBuilderException("Could not instantiate IsoTopicConcordanceManager", e);
 		}
 
@@ -65,9 +68,12 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
         buildGeometry();
         buildAnnotations();
         addKeywords();
+        buildSubtype();
         
         // add genericForm
         this.work.addExternalRelationship(FgdcObjectProp.GENRE_FORM, FgdcToCartographyBuilder.GENRE_FORM_URI);
+        // add language
+        this.work.addExternalRelationship(Ld4lObjectProp.HAS_LANGUAGE, ENG_LANGUAGE_URI);
 
         return this.work;
     }
@@ -139,6 +145,18 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
         			.setRelatedEntity(work);
         	builder.build(params);
         }
+    }
+    
+    private void buildSubtype() throws EntityBuilderException {
+        
+    	if (record.getCiteinfoField() != null) {
+    		EntityBuilder builder = getBuilder(CartographySubType.class);
+    		
+    		BuildParams params = new BuildParams()
+    				.setRecord(record)
+    				.setRelatedEntity(work);        
+    		builder.build(params);
+    	}
     }
     
     // Logic too complex to add a Builder class

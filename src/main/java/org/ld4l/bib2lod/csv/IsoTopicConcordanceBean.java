@@ -13,11 +13,6 @@ public class IsoTopicConcordanceBean {
 	private String label;
 	private String definition;
 
-	/**
-	 * 
-	 */
-	public IsoTopicConcordanceBean() {}
-
 	public String getTopicKeyword() {
 		return topicKeyword;
 	}

@@ -95,6 +95,7 @@
 							<!-- Resolves warning of re-including dependencies included in parent 
 								shaded JAR -->
 							<include>org.ld4l.bib2lod:*</include>
+							<include>com.opencsv:*</include>
 						</includes>
 					</artifactSet>
 				</configuration>

@@ -13,8 +13,8 @@ import org.ld4l.bib2lod.ontology.Namespace;
 public enum CartographyNamespace implements Namespace {
 
 	GEO("http://www.opengis.net/ont/geosparql#", "geo"),
-    CARTOTEKO("http://ld4l.org/ontology/ld4lcm/", "ld4lcm"),
-//    CARTOTEKO("http://ld4l.org/ontology/cartotek-o/", "cartoteko"),
+//    CARTOTEKO("http://ld4l.org/ontology/ld4lcm/", "metal"),
+    CARTOTEKO("http://ld4l.org/ontology/cartotek-o/", "cart"),
     RDAU("http://rdaregistry.info/Elements/u/", "rdau");
 
     private static final Logger LOGGER = LogManager.getLogger(); 

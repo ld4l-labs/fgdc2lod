@@ -2,13 +2,9 @@
 
 package org.ld4l.bib2lod.csv;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
@@ -19,7 +15,22 @@ import com.opencsv.CSVReader;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 
-public class IsoTopicConcordanceManager {
+public class ConcordanceFileManager {
+	
+	public enum ConcordanceFileType {
+		ISO_19115_CONCORDANCE("ISO_19115_Topic_Keyword_to_URI_mapping.csv"),
+		OTHER_CONCORDANCE("ISO_19115_Topic_Keyword_to_URI_mapping.csv");
+		
+		private String filename;
+		
+		private ConcordanceFileType(String filename) {
+			this.filename = filename;
+		}
+		
+		private String getFilename() {
+			return filename;
+		}
+	}
 	
 	private enum ConcordanceCsvColumn {
 		
@@ -42,21 +53,35 @@ public class IsoTopicConcordanceManager {
 	
 	private final Map<String, IsoTopicConcordanceBean> map;
 	
-	private static final String CONCORANCE_FILE_NAME = "/ISO_19115_Topic_Keyword_to_URI_mapping.csv";
+	private static final String ISO_19115_CONCORANCE_FILE_NAME = "ISO_19115_Topic_Keyword_to_URI_mapping.csv";
+	private static final String OTHER_CONCORANCE_FILE_NAME = "ISO_19115_Topic_Keyword_to_URI_mapping.csv";
+	
+	public static ConcordanceFileManager getFileManager(ConcordanceFileType fileType) throws FileNotFoundException, URISyntaxException {
+		return new ConcordanceFileManager(fileType);
+	}
 
     /**
      * Constructor which loads default CSV file.
+     * 
+	 * @throws FileNotFoundException - If file not found on classpath.
+	 * @throws URISyntaxException - If the URI for the file location is invalid.
      */
-	public IsoTopicConcordanceManager() throws URISyntaxException, IOException {
-		this(CONCORANCE_FILE_NAME);
+//	public ConcordanceFileManager() throws URISyntaxException, FileNotFoundException {
+//		this(ISO_19115_CONCORANCE_FILE_NAME);
+//	}
+	
+	public ConcordanceFileManager(ConcordanceFileType fileType) throws URISyntaxException, FileNotFoundException {
+		this(fileType.getFilename());
 	}
 	
 	/**
 	 * This constructor can be used for unit tests.
 	 * 
 	 * @param fileName - Name of CSV file in classpath to load.
+	 * @throws URISyntaxException 
+	 * @throws FileNotFoundException - If file not found on classpath.
 	 */
-	protected IsoTopicConcordanceManager(String fileName) throws URISyntaxException, IOException {
+	protected ConcordanceFileManager(String fileName) throws URISyntaxException, FileNotFoundException {
 		this.map = new HashMap<>();
 		
 		HeaderColumnNameTranslateMappingStrategy<IsoTopicConcordanceBean> strat = new HeaderColumnNameTranslateMappingStrategy<IsoTopicConcordanceBean>() {
@@ -73,28 +98,18 @@ public class IsoTopicConcordanceManager {
 		strat.setType(IsoTopicConcordanceBean.class);
 
 	    CsvToBean<IsoTopicConcordanceBean> csv = new CsvToBean<>();
-//	    ClassLoader classLoader = getClass().getClassLoader();
-//	    URL url = classLoader.getResource(fileName);
-//	    if (url == null) {
-//	    	throw new FileNotFoundException(fileName + " not found.");
-//	    }
-	    
-//	    File file = new File(url.toURI());
-	    
-	    InputStream is = getClass().getResourceAsStream(fileName);
-	    if (is == null) {
-	    	throw new FileNotFoundException("[" + fileName + "] cannot be found in classpath.");
+	    ClassLoader classLoader = getClass().getClassLoader();
+	    URL url = classLoader.getResource(fileName);
+	    if (url == null) {
+	    	throw new FileNotFoundException(fileName + " not found.");
 	    }
-//	    BufferedReader br = new BufferedReader(new InputStreamReader(is));
-	    
-	    
-	    CSVReader reader = new CSVReader(new InputStreamReader(is));
+	    File file = new File(url.toURI());
+	    CSVReader reader = new CSVReader(new FileReader(file));
 	    List<IsoTopicConcordanceBean> list = csv.parse(strat, reader);
 	    // populate local map of keyword name to Bean
 	    for (IsoTopicConcordanceBean item : list) {
 	    	map.put(item.getTopicKeyword(), item);
 	    }
-	    reader.close();
 	}
 
 	/**

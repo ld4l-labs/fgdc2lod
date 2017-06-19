@@ -71,7 +71,7 @@ public class FgdcToAgentBuilderTest extends AbstractTestClass {
 	}
 	
 	@Test
-	public void nullRecordEntity_ThrowsException() throws Exception {
+	public void nullRelatedEntity_ThrowsException() throws Exception {
 		expectException(EntityBuilderException.class, "A related Entity is required to build a title.");
 		BuildParams params = new BuildParams()
 				.setRelatedEntity(null)

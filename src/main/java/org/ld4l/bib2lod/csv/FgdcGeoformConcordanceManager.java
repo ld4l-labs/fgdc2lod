@@ -2,15 +2,11 @@
 
 package org.ld4l.bib2lod.csv;
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,15 +15,13 @@ import com.opencsv.CSVReader;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 
-public class IsoTopicConcordanceManager {
+public class FgdcGeoformConcordanceManager {
 	
 	private enum ConcordanceCsvColumn {
 		
-		TOPIC_KEYWORD("topicKeyword"),
-		URI("uri"),
-		DOMAIN_CODE("domainCode"),
-		LABEL("label"),
-		DEFINITION("definition");
+		GEOFORM_TEXT("geoformText"),
+		MAPPING_EQUIVALENT("mappingEquivalent"),
+		LABEL("label");
 		
 		private String columnName;
 		
@@ -40,14 +34,16 @@ public class IsoTopicConcordanceManager {
 		}
 	}
 	
-	private final Map<String, IsoTopicConcordanceBean> map;
+	private final Map<String, FgdcGeoformConcordanceBean> map;
 	
-	private static final String CONCORANCE_FILE_NAME = "/ISO_19115_Topic_Keyword_to_URI_mapping.csv";
+	private static final String CONCORANCE_FILE_NAME = "/FGDC_Geospatial_Data_Presentation_Form_to_Cartotek-o_mapping.csv";
 
     /**
      * Constructor which loads default CSV file.
+     * 
+	 * @throws FileNotFoundException - If file not found on classpath.
      */
-	public IsoTopicConcordanceManager() throws URISyntaxException, IOException {
+	public FgdcGeoformConcordanceManager() throws URISyntaxException, IOException {
 		this(CONCORANCE_FILE_NAME);
 	}
 	
@@ -55,14 +51,16 @@ public class IsoTopicConcordanceManager {
 	 * This constructor can be used for unit tests.
 	 * 
 	 * @param fileName - Name of CSV file in classpath to load.
+	 * @throws URISyntaxException 
+	 * @throws FileNotFoundException - If file not found on classpath.
 	 */
-	protected IsoTopicConcordanceManager(String fileName) throws URISyntaxException, IOException {
+	protected FgdcGeoformConcordanceManager(String fileName) throws URISyntaxException, IOException {
 		this.map = new HashMap<>();
 		
-		HeaderColumnNameTranslateMappingStrategy<IsoTopicConcordanceBean> strat = new HeaderColumnNameTranslateMappingStrategy<IsoTopicConcordanceBean>() {
+		HeaderColumnNameTranslateMappingStrategy<FgdcGeoformConcordanceBean> strat = new HeaderColumnNameTranslateMappingStrategy<FgdcGeoformConcordanceBean>() {
 			
 			/**
-			 * Return the column name referring to the IsoTopicConcordanceBean attributes
+			 * Return the column name referring to the FgdcGeoformConcordanceBean attributes
 			 * rather than column names in CSV file.
 			 */
 			@Override
@@ -70,37 +68,27 @@ public class IsoTopicConcordanceManager {
 				return col < ConcordanceCsvColumn.values().length ? ConcordanceCsvColumn.values()[col].getColumnName() : null;
 			}
 		};
-		strat.setType(IsoTopicConcordanceBean.class);
+		strat.setType(FgdcGeoformConcordanceBean.class);
 
-	    CsvToBean<IsoTopicConcordanceBean> csv = new CsvToBean<>();
-//	    ClassLoader classLoader = getClass().getClassLoader();
-//	    URL url = classLoader.getResource(fileName);
-//	    if (url == null) {
-//	    	throw new FileNotFoundException(fileName + " not found.");
-//	    }
-	    
-//	    File file = new File(url.toURI());
-	    
+	    CsvToBean<FgdcGeoformConcordanceBean> csv = new CsvToBean<>();
 	    InputStream is = getClass().getResourceAsStream(fileName);
 	    if (is == null) {
 	    	throw new FileNotFoundException("[" + fileName + "] cannot be found in classpath.");
 	    }
-//	    BufferedReader br = new BufferedReader(new InputStreamReader(is));
-	    
-	    
 	    CSVReader reader = new CSVReader(new InputStreamReader(is));
-	    List<IsoTopicConcordanceBean> list = csv.parse(strat, reader);
+	    List<FgdcGeoformConcordanceBean> list = csv.parse(strat, reader);
 	    // populate local map of keyword name to Bean
-	    for (IsoTopicConcordanceBean item : list) {
-	    	map.put(item.getTopicKeyword(), item);
+	    for (FgdcGeoformConcordanceBean item : list) {
+// TODO: what gets mapped???
+	    	map.put(item.getGeoformText(), item);
 	    }
 	    reader.close();
 	}
 
 	/**
-	 * Map of keyword to IsoTopicConcordanceBean - for use in unit tests.
+	 * Map of keyword to FgdcGeoformConcordanceBean - for use in unit tests.
 	 */
-	protected Map<String, IsoTopicConcordanceBean> getMap() {
+	protected Map<String, FgdcGeoformConcordanceBean> getMap() {
 		return map;
 	}
 	
@@ -110,7 +98,7 @@ public class IsoTopicConcordanceManager {
 	 * @param topicKeyword - The keyword for which an entry is to be returned.
 	 * @return - The corresponding entry if one exists; <code>null</code> otherwise.
 	 */
-	public IsoTopicConcordanceBean getConcordanceEntry(String topicKeyword) {
+	public FgdcGeoformConcordanceBean getConcordanceEntry(String topicKeyword) {
 		return map.get(topicKeyword);
 	}
 

@@ -59,7 +59,7 @@ public class FgdcRecord extends BaseXmlRecord {
             return null;
         }
 
-        // There should be only one title - ignore any others.
+        // There should be only one - ignore any others.
         return new FgdcCiteinfoField((Element)citeinfoNodes.item(0));       
 		
 	}
@@ -71,7 +71,7 @@ public class FgdcRecord extends BaseXmlRecord {
             return null;
         }
 
-        // There should be only one title - ignore any others.
+        // There should be only one - ignore any others.
         return new FgdcBoundingField((Element)boundingNodes.item(0));       
 		
 	}
@@ -83,7 +83,7 @@ public class FgdcRecord extends BaseXmlRecord {
 			return null;
 		}
 		
-		// There should be only one title - ignore any others.
+		// There should be only one - ignore any others.
 		return new FgdcKeywordsField((Element)nodes.item(0));       
 	}
 	
@@ -94,7 +94,7 @@ public class FgdcRecord extends BaseXmlRecord {
             return null;
         }
 
-        // There should be only one title - ignore any others.
+        // There should be only one - ignore any others.
         return new FgdcTextOnlyField((Element)nodes.item(0), field.tagName);       
 	}
 	

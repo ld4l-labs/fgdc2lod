@@ -1,6 +1,7 @@
 package org.ld4l.bib2lod.csv;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Map;
 
@@ -11,7 +12,7 @@ import org.junit.Test;
 
 public class IsoTopicConcordanceManagerTest {
 
-	private static final String TEST_CSV_FILE = "test_concordance.csv";
+	private static final String TEST_CSV_FILE = "/test_ISO_Topic_concordance.csv";
     private static final Logger LOGGER = LogManager.getLogger(); 
 
 	@Test
@@ -24,8 +25,8 @@ public class IsoTopicConcordanceManagerTest {
 	}
 
 	@Test(expected=FileNotFoundException.class)
-	public void readMissingFileIntoManager() throws URISyntaxException, FileNotFoundException {
-		new IsoTopicConcordanceManager("missing-file.csv");
+	public void readMissingFileIntoManager() throws URISyntaxException, IOException {
+		new IsoTopicConcordanceManager("/missing-file.csv");
 		Assert.fail("File should be missing and exception thrown");
 	}
 	
