@@ -7,7 +7,6 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.ld4l.bib2lod.entity.Attribute;
 import org.ld4l.bib2lod.entity.Entity;
 import org.ld4l.bib2lod.entitybuilders.BuildParams;
 import org.ld4l.bib2lod.entitybuilders.EntityBuilder;
@@ -51,10 +50,10 @@ public class FgdcToItemBuilderTest extends AbstractTestClass {
 
 		Assert.assertNotNull(itemEntity);
 		
-		List<Attribute> labels = itemEntity.getValues(Ld4lDatatypeProp.LABEL);
+		List<String> labels = itemEntity.getValues(Ld4lDatatypeProp.LABEL);
 		Assert.assertNotNull(labels);
 		Assert.assertEquals(1, labels.size());
-		Assert.assertEquals(fgdcRecord.getCiteinfoField().getTitle().getTextValue(), labels.get(0).toLiteral().getString());
+		Assert.assertEquals(fgdcRecord.getCiteinfoField().getTitle().getTextValue(), labels.get(0));
 		
 		MapOfLists<ObjectProp, String> externals = itemEntity.getExternalRelationships();
 		Assert.assertNotNull(externals);

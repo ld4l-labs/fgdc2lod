@@ -54,7 +54,7 @@ public class FgdcToGeometryBuilderTest extends AbstractTestClass {
 		
 		Assert.assertNotNull(geometryEntity);
 		
-		List<Attribute> labels = geometryEntity.getValues(Ld4lDatatypeProp.LABEL);
+		List<String> labels = geometryEntity.getValues(Ld4lDatatypeProp.LABEL);
 		Assert.assertNotNull(labels);
 		Assert.assertEquals(0, labels.size()); // no labels on this entity
 		

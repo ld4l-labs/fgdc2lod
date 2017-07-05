@@ -7,7 +7,6 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.ld4l.bib2lod.entity.Attribute;
 import org.ld4l.bib2lod.entity.Entity;
 import org.ld4l.bib2lod.entitybuilders.BuildParams;
 import org.ld4l.bib2lod.entitybuilders.EntityBuilder;
@@ -54,10 +53,10 @@ public class FgdcToAgentBuilderTest extends AbstractTestClass {
 		Assert.assertEquals(1, types.size());
 		Assert.assertEquals(Ld4lAgentType.AGENT, types.get(0));
 		
-		List<Attribute> labels = agentEntity.getValues(Ld4lDatatypeProp.LABEL);
+		List<String> labels = agentEntity.getValues(Ld4lDatatypeProp.LABEL);
 		Assert.assertNotNull(labels);
 		Assert.assertEquals(1, labels.size());
-		Assert.assertEquals("Agent Text", labels.get(0).getValue());
+		Assert.assertEquals("Agent Text", labels.get(0));
 	}
 	
 	@Test

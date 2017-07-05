@@ -8,7 +8,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.ld4l.bib2lod.entity.Attribute;
 import org.ld4l.bib2lod.entity.Entity;
 import org.ld4l.bib2lod.entitybuilders.BuildParams;
 import org.ld4l.bib2lod.entitybuilders.EntityBuilder;
@@ -62,10 +61,10 @@ public class FgdcToInstanceBuilderTest extends AbstractTestClass {
 
 		Assert.assertNotNull(instanceEntity);
 		
-		List<Attribute> labels = instanceEntity.getValues(Ld4lDatatypeProp.LABEL);
+		List<String> labels = instanceEntity.getValues(Ld4lDatatypeProp.LABEL);
 		Assert.assertNotNull(labels);
 		Assert.assertEquals(1, labels.size());
-		Assert.assertEquals(fgdcRecord.getCiteinfoField().getTitle().getTextValue(), labels.get(0).toLiteral().getString());
+		Assert.assertEquals(fgdcRecord.getCiteinfoField().getTitle().getTextValue(), labels.get(0));
 		
 		MapOfLists<ObjectProp, Entity> relationships = instanceEntity.getRelationships();
 		Assert.assertNotNull(relationships);
@@ -84,10 +83,10 @@ public class FgdcToInstanceBuilderTest extends AbstractTestClass {
 		Assert.assertNotNull(activities);
 		Assert.assertEquals(1, activities.size());
 		
-		List<Attribute> editions = instanceEntity.getValues(Ld4lDatatypeProp.EDITION_STATEMENT);
+		List<String> editions = instanceEntity.getValues(Ld4lDatatypeProp.EDITION_STATEMENT);
 		Assert.assertNotNull(editions);
 		Assert.assertEquals(1, editions.size());
-		Assert.assertEquals(fgdcRecord.getCiteinfoField().getEdition().getTextValue(), editions.get(0).toLiteral().getString());
+		Assert.assertEquals(fgdcRecord.getCiteinfoField().getEdition().getTextValue(), editions.get(0));
 	}
 	
 	@Test

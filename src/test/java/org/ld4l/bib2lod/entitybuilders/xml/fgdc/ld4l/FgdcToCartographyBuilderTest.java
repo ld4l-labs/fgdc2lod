@@ -10,7 +10,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.ld4l.bib2lod.entity.Attribute;
 import org.ld4l.bib2lod.entity.Entity;
 import org.ld4l.bib2lod.entitybuilders.BuildParams;
 import org.ld4l.bib2lod.entitybuilders.EntityBuilder;
@@ -74,10 +73,10 @@ public class FgdcToCartographyBuilderTest extends AbstractTestClass {
 		types.contains(CartographyType.DATASET);
 		
 		// labels
-		List<Attribute> labels = cartographyEntity.getValues(Ld4lDatatypeProp.LABEL);
+		List<String> labels = cartographyEntity.getValues(Ld4lDatatypeProp.LABEL);
 		Assert.assertNotNull(labels);
 		Assert.assertEquals(1, labels.size());
-		Assert.assertEquals(fgdcRecord.getCiteinfoField().getTitle().getTextValue(), labels.get(0).toLiteral().getString());
+		Assert.assertEquals(fgdcRecord.getCiteinfoField().getTitle().getTextValue(), labels.get(0));
 		
 		MapOfLists<ObjectProp, Entity> relationships = cartographyEntity.getRelationships();
 		Assert.assertNotNull(relationships);
@@ -111,7 +110,7 @@ public class FgdcToCartographyBuilderTest extends AbstractTestClass {
 		// activities
 		List<Entity> activities = relationships.getValues(Ld4lObjectProp.HAS_ACTIVITY);
 		Assert.assertNotNull(activities);
-		Assert.assertEquals(1, activities.size());
+		Assert.assertEquals(2, activities.size());
 		
 		// annotations
 		List<Entity> annotations = relationships.getValues(Ld4lObjectProp.HAS_ANNOTATION);

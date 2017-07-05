@@ -8,7 +8,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.ld4l.bib2lod.entity.Attribute;
 import org.ld4l.bib2lod.entity.Entity;
 import org.ld4l.bib2lod.entitybuilders.BuildParams;
 import org.ld4l.bib2lod.entitybuilders.EntityBuilder;
@@ -73,10 +72,10 @@ public class FgdcToActivityBuilderTest extends AbstractTestClass {
 		Assert.assertNotNull(types);
 		Assert.assertTrue(types.contains(Ld4lActivityType.ORIGINATOR_ACTIVITY));
 		
-		List<Attribute> labels = activityEntity.getValues(Ld4lDatatypeProp.LABEL);
+		List<String> labels = activityEntity.getValues(Ld4lDatatypeProp.LABEL);
 		Assert.assertNotNull(labels);
 		Assert.assertEquals(1, labels.size());
-		Assert.assertEquals(Ld4lActivityType.ORIGINATOR_ACTIVITY.label(), labels.get(0).toLiteral().getString());
+		Assert.assertEquals(Ld4lActivityType.ORIGINATOR_ACTIVITY.label(), labels.get(0));
 		
 		MapOfLists<ObjectProp, Entity> relationships = activityEntity.getRelationships();
 		Assert.assertNotNull(relationships);
@@ -102,10 +101,10 @@ public class FgdcToActivityBuilderTest extends AbstractTestClass {
 		Assert.assertNotNull(types);
 		Assert.assertTrue(types.contains(Ld4lActivityType.PUBLISHER_ACTIVITY));
 		
-		List<Attribute> labels = activityEntity.getValues(Ld4lDatatypeProp.LABEL);
+		List<String> labels = activityEntity.getValues(Ld4lDatatypeProp.LABEL);
 		Assert.assertNotNull(labels);
 		Assert.assertEquals(1, labels.size());
-		Assert.assertEquals(Ld4lActivityType.PUBLISHER_ACTIVITY.label(), labels.get(0).toLiteral().getString());
+		Assert.assertEquals(Ld4lActivityType.PUBLISHER_ACTIVITY.label(), labels.get(0));
 		
 		MapOfLists<ObjectProp, Entity> relationships = activityEntity.getRelationships();
 		Assert.assertNotNull(relationships);
@@ -119,10 +118,10 @@ public class FgdcToActivityBuilderTest extends AbstractTestClass {
 		Assert.assertNotNull(locations);
 		Assert.assertEquals(1, locations.size());
 		
-		List<Attribute> dates = activityEntity.getValues(Ld4lDatatypeProp.DATE);
+		List<String> dates = activityEntity.getValues(Ld4lDatatypeProp.DATE);
 		Assert.assertNotNull(dates);
 		Assert.assertEquals(1, dates.size());
-		Assert.assertEquals("2014", dates.get(0).toLiteral().getString());
+		Assert.assertEquals("2014", dates.get(0));
 	}
 	
 	@Test

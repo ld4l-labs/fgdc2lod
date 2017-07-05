@@ -7,7 +7,6 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.ld4l.bib2lod.entity.Attribute;
 import org.ld4l.bib2lod.entity.Entity;
 import org.ld4l.bib2lod.entitybuilders.BuildParams;
 import org.ld4l.bib2lod.entitybuilders.EntityBuilder;
@@ -53,7 +52,7 @@ public class FgdcToTitleBuilderTest extends AbstractTestClass {
 		Assert.assertNotNull(types);
 		Assert.assertTrue(types.contains(Ld4lTitleType.TITLE));
 		
-		List<Attribute> labels = titleEntity.getValues(Ld4lDatatypeProp.LABEL);
+		List<String> labels = titleEntity.getValues(Ld4lDatatypeProp.LABEL);
 		Assert.assertNotNull(labels);
 		Assert.assertEquals(1, labels.size());
 	}
