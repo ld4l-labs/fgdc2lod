@@ -2,8 +2,6 @@
 
 package org.ld4l.bib2lod.entitybuilders.xml.fgdc.ld4l;
 
-import java.util.List;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.ld4l.bib2lod.entity.Attribute;
@@ -49,18 +47,18 @@ public class FgdcToActivityBuilder extends FgdcToLd4lEntityBuilder {
         activity.addAttribute(Ld4lDatatypeProp.LABEL, new Attribute(type.label()));
 
     	if (type.equals(Ld4lActivityType.ORIGINATOR_ACTIVITY)){
-    		List<FgdcField> origins = record.getCiteinfoField().getOrigins();
-    		if (origins.size() > 0) {
-    			for (FgdcField agentField : origins) {
-    				EntityBuilder builder = getBuilder(Ld4lAgentType.class);
-    				BuildParams params2 = new BuildParams()
-    						.setRecord(record)
-    						.setField(agentField)
-    						.setRelatedEntity(activity);
-    				builder.build(params2);
-    			}
-    			bibEntity.addRelationship(Ld4lObjectProp.HAS_ACTIVITY, activity);
-    		}
+    		FgdcField originField = (FgdcField)params.getField();
+            if (originField == null) {
+                throw new EntityBuilderException(
+                        "A FgdcField originField is required to build an Activity.");
+            }
+			EntityBuilder builder = getBuilder(Ld4lAgentType.class);
+			BuildParams params2 = new BuildParams()
+					.setRecord(record)
+					.setField(originField)
+					.setRelatedEntity(activity);
+			builder.build(params2);
+			bibEntity.addRelationship(Ld4lObjectProp.HAS_ACTIVITY, activity);
 	    	
     	} else if (type.equals(Ld4lActivityType.PUBLISHER_ACTIVITY)) {
     		FgdcField agentField = record.getCiteinfoField().getPublish();

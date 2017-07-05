@@ -2,9 +2,9 @@
 
 package org.ld4l.bib2lod.entitybuilders.xml.fgdc.ld4l;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.List;
 
 import org.ld4l.bib2lod.csv.IsoTopicConcordanceBean;
 import org.ld4l.bib2lod.csv.IsoTopicConcordanceManager;
@@ -118,11 +118,17 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
     private void buildOriginatorActivity() throws EntityBuilderException {
         
         EntityBuilder builder = getBuilder(Ld4lActivityType.class);
-    	BuildParams params = new BuildParams()
-    			.setRecord(record)     
-    			.setRelatedEntity(work)
-    			.setType(Ld4lActivityType.ORIGINATOR_ACTIVITY);
-    	builder.build(params);
+		List<FgdcField> origins = record.getCiteinfoField().getOrigins();
+		if (origins.size() > 0) {
+			for (FgdcField originField : origins) {
+				BuildParams params = new BuildParams()
+					.setRecord(record)
+					.setField(originField)
+	    			.setRelatedEntity(work)
+	    			.setType(Ld4lActivityType.ORIGINATOR_ACTIVITY);
+				builder.build(params);
+			}
+		}
     }
     
     private void buildAnnotations() throws EntityBuilderException {

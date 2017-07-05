@@ -20,7 +20,9 @@ import org.ld4l.bib2lod.ontology.ld4l.Ld4lActivityType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lDatatypeProp;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lObjectProp;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lWorkType;
+import org.ld4l.bib2lod.record.xml.fgdc.FgdcField;
 import org.ld4l.bib2lod.record.xml.fgdc.FgdcRecord;
+import org.ld4l.bib2lod.record.xml.fgdc.FgdcTextOnlyField;
 import org.ld4l.bib2lod.records.Record.RecordException;
 import org.ld4l.bib2lod.testing.AbstractTestClass;
 import org.ld4l.bib2lod.testing.BaseMockBib2LodObjectFactory;
@@ -37,6 +39,7 @@ public class FgdcToActivityBuilderTest extends AbstractTestClass {
 	private EntityBuilder activityBuilder;
 	private FgdcRecord fgdcRecord;
 	private Entity relatedEntity;
+	private FgdcField originatorField;
 	
     private static BaseMockBib2LodObjectFactory factory;
     
@@ -51,6 +54,7 @@ public class FgdcToActivityBuilderTest extends AbstractTestClass {
         activityBuilder = new FgdcToActivityBuilder();
         fgdcRecord = buildFgdcRecordFromString(FgdcTestData.VALID_ACTIVITIES);
         relatedEntity = new Entity(Ld4lWorkType.CARTOGRAPHY);
+        originatorField = new FgdcTextOnlyField(XmlTestUtils.buildElementFromString(FgdcTestData.VALID_ABSTRACT), "originator");
     }
 	
 	@Test
@@ -59,6 +63,7 @@ public class FgdcToActivityBuilderTest extends AbstractTestClass {
 		BuildParams params = new BuildParams()
 				.setRecord(fgdcRecord)
 				.setRelatedEntity(relatedEntity)
+				.setField(originatorField)
 				.setType(Ld4lActivityType.ORIGINATOR_ACTIVITY);
 		
 		Entity activityEntity = activityBuilder.build(params);
@@ -78,7 +83,7 @@ public class FgdcToActivityBuilderTest extends AbstractTestClass {
 		Assert.assertEquals(1, relationships.keys().size());
 		List<Entity> agents = relationships.getValues(Ld4lObjectProp.HAS_AGENT);
 		Assert.assertNotNull(agents);
-		Assert.assertEquals(2, agents.size());
+		Assert.assertEquals(1, agents.size());
 
 	}
 	
@@ -126,6 +131,18 @@ public class FgdcToActivityBuilderTest extends AbstractTestClass {
 		BuildParams params = new BuildParams()
 				.setRecord(null)
 				.setRelatedEntity(relatedEntity)
+				.setType(Ld4lActivityType.ORIGINATOR_ACTIVITY);
+		
+		activityBuilder.build(params);
+	}
+	
+	@Test
+	public void nullOriginatorFieldEntity_ThrowsException() throws Exception {
+		expectException(EntityBuilderException.class, "A FgdcField originField is required to build an Activity.");
+		BuildParams params = new BuildParams()
+				.setRecord(fgdcRecord)
+				.setRelatedEntity(relatedEntity)
+				.setField(null)
 				.setType(Ld4lActivityType.ORIGINATOR_ACTIVITY);
 		
 		activityBuilder.build(params);
