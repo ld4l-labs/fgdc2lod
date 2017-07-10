@@ -1,6 +1,6 @@
 /* $This file is distributed under the terms of the license in /doc/license.txt$ */
 
-package org.ld4l.bib2lod.csv;
+package org.ld4l.bib2lod.csv.fgdc;
 
 /**
  * This bean represents one row in the concordance ISO_19115_Topic_Keyword_to_URI_mapping.csv file.

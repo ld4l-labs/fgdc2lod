@@ -1,6 +1,6 @@
 /* $This file is distributed under the terms of the license in /doc/license.txt$ */
 
-package org.ld4l.bib2lod.csv;
+package org.ld4l.bib2lod.csv.fgdc;
 
 /**
  * This bean represents one row in the concordance FGDC_Geospatial_Data_Presentation_Form_to_Cartotek-o_mapping.csv file.

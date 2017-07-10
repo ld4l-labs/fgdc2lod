@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 
-import org.ld4l.bib2lod.csv.IsoTopicConcordanceBean;
-import org.ld4l.bib2lod.csv.IsoTopicConcordanceManager;
+import org.ld4l.bib2lod.csv.fgdc.IsoTopicConcordanceBean;
+import org.ld4l.bib2lod.csv.fgdc.IsoTopicConcordanceManager;
 import org.ld4l.bib2lod.entity.Entity;
 import org.ld4l.bib2lod.entitybuilders.BuildParams;
 import org.ld4l.bib2lod.entitybuilders.EntityBuilder;

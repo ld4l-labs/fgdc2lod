@@ -7,8 +7,8 @@ import java.net.URISyntaxException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.ld4l.bib2lod.csv.FgdcGeoformConcordanceBean;
-import org.ld4l.bib2lod.csv.FgdcGeoformConcordanceManager;
+import org.ld4l.bib2lod.csv.fgdc.FgdcGeoformConcordanceBean;
+import org.ld4l.bib2lod.csv.fgdc.FgdcGeoformConcordanceManager;
 import org.ld4l.bib2lod.entity.Entity;
 import org.ld4l.bib2lod.entitybuilders.BuildParams;
 import org.ld4l.bib2lod.ontology.fgdc.CartographySubType;

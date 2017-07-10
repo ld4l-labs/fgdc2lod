@@ -1,9 +1,10 @@
-package org.ld4l.bib2lod.datatypes;
+package org.ld4l.bib2lod.datatypes.fgdc;
 
 import org.apache.jena.datatypes.BaseDatatype;
 import org.apache.jena.datatypes.DatatypeFormatException;
 import org.apache.jena.datatypes.RDFDatatype;
 import org.apache.jena.datatypes.TypeMapper;
+import org.ld4l.bib2lod.datatypes.Datatype;
 
 /**
  * Groups the FGDC custom datatypes together and provides an enum to

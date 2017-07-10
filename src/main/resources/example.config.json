@@ -18,7 +18,10 @@
   "Converter": {
     "class": "org.ld4l.bib2lod.conversion.xml.fgdc.FgdcConverter"
   },
+  "Parser": {
+    "class": "org.ld4l.bib2lod.parsing.xml.fgdc.FgdcParser"
+  },
   "EntityBuilders": {
-    "class": "org.ld4l.bib2lod.entitybuilders.xml.fgdc.ld4l.FgdcToLd4lEntityBuilders"
+    "class": "org.ld4l.bib2lod.entitybuilders.xml.fgdc.ld4l.FgdcToLd4lEntityBuilderFactory"
   }
-}                         
+}

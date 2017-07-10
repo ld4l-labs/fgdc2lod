@@ -4,7 +4,7 @@ package org.ld4l.bib2lod.entitybuilders.xml.fgdc.ld4l;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.ld4l.bib2lod.datatypes.FgdcCustomDatatype;
+import org.ld4l.bib2lod.datatypes.fgdc.FgdcCustomDatatype;
 import org.ld4l.bib2lod.entity.Attribute;
 import org.ld4l.bib2lod.entity.Entity;
 import org.ld4l.bib2lod.entitybuilders.BuildParams;

@@ -3,9 +3,7 @@
 package org.ld4l.bib2lod.io;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,9 +15,6 @@ import org.ld4l.bib2lod.io.OutputService.OutputServiceException;
  * A wrapper for a file-based output item.
  */
 public class FgdcFileOutputDescriptor extends FileOutputDescriptor {
-//    private final File file;
-//    private final Format format;
-//    private FileOutputStream output;
 
     public FgdcFileOutputDescriptor(Format format, File destination,
             String inputName) throws IOException {
@@ -29,10 +24,6 @@ public class FgdcFileOutputDescriptor extends FileOutputDescriptor {
     @Override
     synchronized public void writeModel(Model model)
             throws IOException, OutputServiceException {
-//        if (output == null) {
-//            throw new OutputServiceException(
-//                    "Attempting to write after close.");
-//        }
         
         Map <String, String> map = new HashMap<>();
         map.put("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
@@ -51,7 +42,5 @@ public class FgdcFileOutputDescriptor extends FileOutputDescriptor {
         model.setNsPrefixes(map);
         
         super.writeModel(model);
-        
-//        model.write(output, format.getLanguage());
     }
 }
