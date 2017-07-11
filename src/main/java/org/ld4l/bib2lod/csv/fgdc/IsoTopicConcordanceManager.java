@@ -2,15 +2,11 @@
 
 package org.ld4l.bib2lod.csv.fgdc;
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,20 +69,11 @@ public class IsoTopicConcordanceManager {
 		strat.setType(IsoTopicConcordanceBean.class);
 
 	    CsvToBean<IsoTopicConcordanceBean> csv = new CsvToBean<>();
-//	    ClassLoader classLoader = getClass().getClassLoader();
-//	    URL url = classLoader.getResource(fileName);
-//	    if (url == null) {
-//	    	throw new FileNotFoundException(fileName + " not found.");
-//	    }
-	    
-//	    File file = new File(url.toURI());
 	    
 	    InputStream is = getClass().getResourceAsStream(fileName);
 	    if (is == null) {
 	    	throw new FileNotFoundException("[" + fileName + "] cannot be found in classpath.");
 	    }
-//	    BufferedReader br = new BufferedReader(new InputStreamReader(is));
-	    
 	    
 	    CSVReader reader = new CSVReader(new InputStreamReader(is));
 	    List<IsoTopicConcordanceBean> list = csv.parse(strat, reader);

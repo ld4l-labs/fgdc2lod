@@ -42,15 +42,17 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
     private static final String GENRE_FORM_URI = "http://id.loc.gov/authorities/genreForms/gf2011026297";
     private static final String ENG_LANGUAGE_URI = "http://lexvo.org/id/iso639-3/eng";
     private static final String ISO_TOPIC_CATEGORY_MARKER = "ISO 19115 Topic Category";
-  
-    @Override
-    public Entity build(BuildParams params) throws EntityBuilderException {
-
+    
+    public FgdcToCartographyBuilder() throws EntityBuilderException {
     	try {
 			this.concordanceManager = new IsoTopicConcordanceManager();
 		} catch ( URISyntaxException | IOException e) {
 			throw new EntityBuilderException("Could not instantiate IsoTopicConcordanceManager", e);
 		}
+    }
+  
+    @Override
+    public Entity build(BuildParams params) throws EntityBuilderException {
 
     	this.record = (FgdcRecord) params.getRecord();
         if (record == null) {

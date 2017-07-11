@@ -21,12 +21,22 @@ import org.ld4l.bib2lod.record.xml.fgdc.FgdcRecord;
  */
 public class FgdcToCartographySubtypeBuilder extends FgdcToLd4lEntityBuilder {
 
+	FgdcGeoformConcordanceManager concordanceManager;
+	
     private static final Logger LOGGER = LogManager.getLogger();
+    
+    public FgdcToCartographySubtypeBuilder() throws EntityBuilderException {
+    	try {
+			this.concordanceManager = new FgdcGeoformConcordanceManager();
+		} catch ( URISyntaxException | IOException e) {
+			throw new EntityBuilderException("Could not instantiate FgdcGeoformConcordanceManager", e);
+		}
+	}
     
     @Override
     public Entity build(BuildParams params) throws EntityBuilderException {
 
-    	FgdcGeoformConcordanceManager concordanceManager;
+    	
     	try {
 			concordanceManager = new FgdcGeoformConcordanceManager();
 		} catch (IOException | URISyntaxException e) {

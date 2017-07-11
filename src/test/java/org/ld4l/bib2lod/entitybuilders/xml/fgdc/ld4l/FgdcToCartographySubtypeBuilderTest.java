@@ -27,12 +27,11 @@ import org.w3c.dom.Element;
 public class FgdcToCartographySubtypeBuilderTest extends AbstractTestClass {
     
 	private EntityBuilder subtypeBuilder;
-//	private FgdcField agentField;
 	private FgdcRecord fgdcRecord;
 	private Entity relatedEntity;
 
     @Before
-    public void setUp() throws RecordException {
+    public void setUp() throws RecordException, EntityBuilderException {
         subtypeBuilder = new FgdcToCartographySubtypeBuilder();
         fgdcRecord = buildFgdcRecordFromString(FgdcTestData.VALID_KEYWORDS);
         relatedEntity = new Entity(Ld4lWorkType.CARTOGRAPHY);

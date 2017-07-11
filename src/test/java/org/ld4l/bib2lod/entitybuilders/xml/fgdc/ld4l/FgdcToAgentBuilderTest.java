@@ -32,7 +32,7 @@ public class FgdcToAgentBuilderTest extends AbstractTestClass {
 	private Entity relatedEntity;
 
     @Before
-    public void setUp() throws RecordException {
+    public void setUp() throws RecordException, EntityBuilderException {
         agentBuilder = new FgdcToAgentBuilder();
         agentField = new FgdcTextOnlyField(XmlTestUtils.buildElementFromString(FgdcTestData.VALID_AGENT), Ld4lAgentType.AGENT.toString());
         relatedEntity = new Entity(Ld4lActivityType.ORIGINATOR_ACTIVITY);

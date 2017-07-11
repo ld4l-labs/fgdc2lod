@@ -50,7 +50,7 @@ public class FgdcToCartographyBuilderTest extends AbstractTestClass {
     }
 
     @Before
-    public void setUp() throws RecordException {
+    public void setUp() throws RecordException, EntityBuilderException {
         cartographyBuilder = new FgdcToCartographyBuilder();
         fgdcRecord = buildFgdcRecordFromString(FgdcTestData.VALID_KEYWORDS);
     }

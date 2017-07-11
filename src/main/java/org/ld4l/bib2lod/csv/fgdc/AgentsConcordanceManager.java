@@ -15,12 +15,12 @@ import com.opencsv.CSVReader;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 
-public class FgdcGeoformConcordanceManager {
+public class AgentsConcordanceManager {
 	
 	private enum ConcordanceCsvColumn {
 		
-		GEOFORM_TEXT("geoformText"),
-		MAPPING_EQUIVALENT("mappingEquivalent"),
+		MATCHING_TEXT("matchingText"),
+		URI("uri"),
 		LABEL("label");
 		
 		private String columnName;
@@ -34,16 +34,16 @@ public class FgdcGeoformConcordanceManager {
 		}
 	}
 	
-	private final Map<String, FgdcGeoformConcordanceBean> map;
+	private final Map<String, AgentsConcordanceBean> map;
 	
-	private static final String CONCORANCE_FILE_NAME = "/FGDC_Geospatial_Data_Presentation_Form_to_Cartotek-o_mapping.csv";
+	private static final String CONCORANCE_FILE_NAME = "/Agents_concordance_v1.csv";
 
     /**
      * Constructor which loads default CSV file.
      * 
 	 * @throws FileNotFoundException - If file not found on classpath.
      */
-	public FgdcGeoformConcordanceManager() throws URISyntaxException, IOException {
+	public AgentsConcordanceManager() throws URISyntaxException, IOException {
 		this(CONCORANCE_FILE_NAME);
 	}
 	
@@ -54,13 +54,13 @@ public class FgdcGeoformConcordanceManager {
 	 * @throws URISyntaxException 
 	 * @throws FileNotFoundException - If file not found on classpath.
 	 */
-	protected FgdcGeoformConcordanceManager(String fileName) throws URISyntaxException, IOException {
+	protected AgentsConcordanceManager(String fileName) throws URISyntaxException, IOException {
 		this.map = new HashMap<>();
 		
-		HeaderColumnNameTranslateMappingStrategy<FgdcGeoformConcordanceBean> strat = new HeaderColumnNameTranslateMappingStrategy<FgdcGeoformConcordanceBean>() {
+		HeaderColumnNameTranslateMappingStrategy<AgentsConcordanceBean> strat = new HeaderColumnNameTranslateMappingStrategy<AgentsConcordanceBean>() {
 			
 			/**
-			 * Return the column name referring to the FgdcGeoformConcordanceBean attributes
+			 * Return the column name referring to the AgentsConcordanceBean attributes
 			 * rather than column names in CSV file.
 			 */
 			@Override
@@ -68,26 +68,27 @@ public class FgdcGeoformConcordanceManager {
 				return col < ConcordanceCsvColumn.values().length ? ConcordanceCsvColumn.values()[col].getColumnName() : null;
 			}
 		};
-		strat.setType(FgdcGeoformConcordanceBean.class);
+		strat.setType(AgentsConcordanceBean.class);
 
-	    CsvToBean<FgdcGeoformConcordanceBean> csv = new CsvToBean<>();
+	    CsvToBean<AgentsConcordanceBean> csv = new CsvToBean<>();
 	    InputStream is = getClass().getResourceAsStream(fileName);
 	    if (is == null) {
 	    	throw new FileNotFoundException("[" + fileName + "] cannot be found in classpath.");
 	    }
 	    CSVReader reader = new CSVReader(new InputStreamReader(is));
-	    List<FgdcGeoformConcordanceBean> list = csv.parse(strat, reader);
+//	    CSVReader reader = new CSVReader(new InputStreamReader(is), ',', '\"');
+	    List<AgentsConcordanceBean> list = csv.parse(strat, reader);
 	    // populate local map of keyword name to Bean
-	    for (FgdcGeoformConcordanceBean item : list) {
-	    	map.put(item.getGeoformText(), item);
+	    for (AgentsConcordanceBean item : list) {
+	    	map.put(item.getMatchingText(), item);
 	    }
 	    reader.close();
 	}
 
 	/**
-	 * Map of keyword to FgdcGeoformConcordanceBean - for use in unit tests.
+	 * Map of keyword to AgentsConcordanceBean - for use in unit tests.
 	 */
-	protected Map<String, FgdcGeoformConcordanceBean> getMap() {
+	protected Map<String, AgentsConcordanceBean> getMap() {
 		return map;
 	}
 	
@@ -97,7 +98,7 @@ public class FgdcGeoformConcordanceManager {
 	 * @param topicKeyword - The keyword for which an entry is to be returned.
 	 * @return - The corresponding entry if one exists; <code>null</code> otherwise.
 	 */
-	public FgdcGeoformConcordanceBean getConcordanceEntry(String topicKeyword) {
+	public AgentsConcordanceBean getConcordanceEntry(String topicKeyword) {
 		return map.get(topicKeyword);
 	}
 
