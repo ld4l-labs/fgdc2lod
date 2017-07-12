@@ -4,9 +4,8 @@ package org.ld4l.bib2lod.csv.fgdc;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +14,7 @@ import com.opencsv.CSVReader;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 
-public class AgentsConcordanceManager {
+public class AgentsConcordanceManager extends AbstractConcordanceManager<AgentsConcordanceBean> {
 	
 	private enum ConcordanceCsvColumn {
 		
@@ -29,15 +28,17 @@ public class AgentsConcordanceManager {
 			this.columnName = columnName;
 		}
 		
-		private String getColumnName() {
+		/**
+		 * Must match getters/setters for JavaBean reflection used by OpenCSV.
+		 */
+		public String toString() {
 			return columnName;
 		}
+		
 	}
 	
-	private final Map<String, AgentsConcordanceBean> map;
-	
 	private static final String CONCORANCE_FILE_NAME = "/Agents_concordance_v1.csv";
-
+	
     /**
      * Constructor which loads default CSV file.
      * 
@@ -55,51 +56,46 @@ public class AgentsConcordanceManager {
 	 * @throws FileNotFoundException - If file not found on classpath.
 	 */
 	protected AgentsConcordanceManager(String fileName) throws URISyntaxException, IOException {
-		this.map = new HashMap<>();
-		
-		HeaderColumnNameTranslateMappingStrategy<AgentsConcordanceBean> strat = new HeaderColumnNameTranslateMappingStrategy<AgentsConcordanceBean>() {
-			
-			/**
-			 * Return the column name referring to the AgentsConcordanceBean attributes
-			 * rather than column names in CSV file.
-			 */
-			@Override
-			public String getColumnName(int col) {
-				return col < ConcordanceCsvColumn.values().length ? ConcordanceCsvColumn.values()[col].getColumnName() : null;
-			}
-		};
-		strat.setType(AgentsConcordanceBean.class);
-
-	    CsvToBean<AgentsConcordanceBean> csv = new CsvToBean<>();
-	    InputStream is = getClass().getResourceAsStream(fileName);
-	    if (is == null) {
-	    	throw new FileNotFoundException("[" + fileName + "] cannot be found in classpath.");
-	    }
-	    CSVReader reader = new CSVReader(new InputStreamReader(is));
-//	    CSVReader reader = new CSVReader(new InputStreamReader(is), ',', '\"');
-	    List<AgentsConcordanceBean> list = csv.parse(strat, reader);
-	    // populate local map of keyword name to Bean
-	    for (AgentsConcordanceBean item : list) {
-	    	map.put(item.getMatchingText(), item);
-	    }
-	    reader.close();
-	}
-
-	/**
-	 * Map of keyword to AgentsConcordanceBean - for use in unit tests.
-	 */
-	protected Map<String, AgentsConcordanceBean> getMap() {
-		return map;
+		super(fileName);
 	}
 	
 	/**
-	 * Returns the entry for the topicKeyword; <code>null</code> if there is no entry for the given value;
-	 * 
-	 * @param topicKeyword - The keyword for which an entry is to be returned.
-	 * @return - The corresponding entry if one exists; <code>null</code> otherwise.
+	 * @see org.ld4l.bib2lod.csv.fgdc.AbstractConcordanceManager#initBeanMap(com.opencsv.bean.HeaderColumnNameTranslateMappingStrategy, com.opencsv.CSVReader)
 	 */
-	public AgentsConcordanceBean getConcordanceEntry(String topicKeyword) {
-		return map.get(topicKeyword);
+	@Override
+	protected Map<String, AgentsConcordanceBean> initBeanMap(
+			HeaderColumnNameTranslateMappingStrategy<AgentsConcordanceBean> strat,
+			CSVReader reader) {
+		
+	    CsvToBean<AgentsConcordanceBean> csv = new CsvToBean<>();
+	    List<AgentsConcordanceBean> list = csv.parse(strat, reader);
+	    // populate local map of keyword name to Bean
+	    Map<String, AgentsConcordanceBean> map = new HashMap<>(list.size());
+	    for (AgentsConcordanceBean item : list) {
+	    	map.put(item.getMatchingText(), item);
+	    }
+	    return map;
 	}
 
+	/**
+	 * @see org.ld4l.bib2lod.csv.fgdc.AbstractConcordanceManager#getCsvColumnEnums()
+	 */
+	@SuppressWarnings("rawtypes")
+	@Override
+	protected List<Enum> getCsvColumnEnums() {
+		List<Enum> list = new ArrayList<>();
+		for (ConcordanceCsvColumn val : ConcordanceCsvColumn.values()) {
+			list.add(val);
+		}
+		return list;
+	}
+	
+	/**
+	 * @see org.ld4l.bib2lod.csv.fgdc.AbstractConcordanceManager#getBeanClass()
+	 */
+	@Override
+	protected Class<AgentsConcordanceBean> getBeanClass() {
+		return AgentsConcordanceBean.class;
+	}
+	
 }

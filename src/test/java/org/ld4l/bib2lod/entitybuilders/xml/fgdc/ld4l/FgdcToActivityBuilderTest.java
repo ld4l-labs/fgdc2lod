@@ -108,7 +108,7 @@ public class FgdcToActivityBuilderTest extends AbstractTestClass {
 		
 		MapOfLists<ObjectProp, Entity> relationships = activityEntity.getRelationships();
 		Assert.assertNotNull(relationships);
-		Assert.assertEquals(1, relationships.keys().size());
+		Assert.assertEquals(2, relationships.keys().size());
 		
 		List<Entity> agents = relationships.getValues(Ld4lObjectProp.HAS_AGENT);
 		Assert.assertNotNull(agents);

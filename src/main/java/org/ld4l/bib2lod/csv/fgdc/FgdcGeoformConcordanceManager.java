@@ -4,9 +4,8 @@ package org.ld4l.bib2lod.csv.fgdc;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +14,7 @@ import com.opencsv.CSVReader;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 
-public class FgdcGeoformConcordanceManager {
+public class FgdcGeoformConcordanceManager extends AbstractConcordanceManager<FgdcGeoformConcordanceBean> {
 	
 	private enum ConcordanceCsvColumn {
 		
@@ -29,12 +28,10 @@ public class FgdcGeoformConcordanceManager {
 			this.columnName = columnName;
 		}
 		
-		private String getColumnName() {
+		public String toString() {
 			return columnName;
 		}
 	}
-	
-	private final Map<String, FgdcGeoformConcordanceBean> map;
 	
 	private static final String CONCORANCE_FILE_NAME = "/FGDC_Geospatial_Data_Presentation_Form_to_Cartotek-o_mapping.csv";
 
@@ -55,50 +52,45 @@ public class FgdcGeoformConcordanceManager {
 	 * @throws FileNotFoundException - If file not found on classpath.
 	 */
 	protected FgdcGeoformConcordanceManager(String fileName) throws URISyntaxException, IOException {
-		this.map = new HashMap<>();
-		
-		HeaderColumnNameTranslateMappingStrategy<FgdcGeoformConcordanceBean> strat = new HeaderColumnNameTranslateMappingStrategy<FgdcGeoformConcordanceBean>() {
-			
-			/**
-			 * Return the column name referring to the FgdcGeoformConcordanceBean attributes
-			 * rather than column names in CSV file.
-			 */
-			@Override
-			public String getColumnName(int col) {
-				return col < ConcordanceCsvColumn.values().length ? ConcordanceCsvColumn.values()[col].getColumnName() : null;
-			}
-		};
-		strat.setType(FgdcGeoformConcordanceBean.class);
-
-	    CsvToBean<FgdcGeoformConcordanceBean> csv = new CsvToBean<>();
-	    InputStream is = getClass().getResourceAsStream(fileName);
-	    if (is == null) {
-	    	throw new FileNotFoundException("[" + fileName + "] cannot be found in classpath.");
-	    }
-	    CSVReader reader = new CSVReader(new InputStreamReader(is));
-	    List<FgdcGeoformConcordanceBean> list = csv.parse(strat, reader);
-	    // populate local map of keyword name to Bean
-	    for (FgdcGeoformConcordanceBean item : list) {
-	    	map.put(item.getGeoformText(), item);
-	    }
-	    reader.close();
-	}
-
-	/**
-	 * Map of keyword to FgdcGeoformConcordanceBean - for use in unit tests.
-	 */
-	protected Map<String, FgdcGeoformConcordanceBean> getMap() {
-		return map;
+		super(fileName);
 	}
 	
 	/**
-	 * Returns the entry for the topicKeyword; <code>null</code> if there is no entry for the given value;
-	 * 
-	 * @param topicKeyword - The keyword for which an entry is to be returned.
-	 * @return - The corresponding entry if one exists; <code>null</code> otherwise.
+	 * @see org.ld4l.bib2lod.csv.fgdc.AbstractConcordanceManager#initBeanMap(com.opencsv.bean.HeaderColumnNameTranslateMappingStrategy, com.opencsv.CSVReader)
 	 */
-	public FgdcGeoformConcordanceBean getConcordanceEntry(String topicKeyword) {
-		return map.get(topicKeyword);
+	@Override
+	protected Map<String, FgdcGeoformConcordanceBean> initBeanMap(
+			HeaderColumnNameTranslateMappingStrategy<FgdcGeoformConcordanceBean> strat,
+			CSVReader reader) {
+		
+	    CsvToBean<FgdcGeoformConcordanceBean> csv = new CsvToBean<>();
+	    List<FgdcGeoformConcordanceBean> list = csv.parse(strat, reader);
+	    // populate local map of keyword name to Bean
+	    Map<String, FgdcGeoformConcordanceBean> map = new HashMap<>(list.size());
+	    for (FgdcGeoformConcordanceBean item : list) {
+	    	map.put(item.getGeoformText(), item);
+	    }
+	    return map;
+	}
+
+	/**
+	 * @see org.ld4l.bib2lod.csv.fgdc.AbstractConcordanceManager#getCsvColumnEnums()
+	 */
+	@SuppressWarnings("rawtypes")
+	@Override
+	protected List<Enum> getCsvColumnEnums() {
+		List<Enum> list = new ArrayList<>();
+		for (ConcordanceCsvColumn val : ConcordanceCsvColumn.values()) {
+			list.add(val);
+		}
+		return list;
+	}
+	/**
+	 * @see org.ld4l.bib2lod.csv.fgdc.AbstractConcordanceManager#getBeanClass()
+	 */
+	@Override
+	protected Class<FgdcGeoformConcordanceBean> getBeanClass() {
+		return FgdcGeoformConcordanceBean.class;
 	}
 
 }

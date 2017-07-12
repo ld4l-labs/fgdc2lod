@@ -97,7 +97,7 @@ public class FgdcTestData {
     	                "<edition>2014 revised ed.</edition>" +
     	                "<pubinfo>" +
     	                    "<pubplace>Cambridge, Massachusetts</pubplace>" +
-    	                    "<publish>Cambridge (Mass.). Geographic Information Systems</publish>" +
+    	                    "<publish>Cambridge</publish>" +
     	                "</pubinfo>" +
     	                "<onlink>http://hgl.harvard.edu:8080/HGL/hgl.jsp?action=VColl&amp;VCollName=CAMBRIDGE14PUBLICLIBRARIES</onlink>" +
     					"</citeinfo>" +
