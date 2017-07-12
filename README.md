@@ -1,12 +1,12 @@
 # fgdc2lod
 
-[![Build Status](https://travis-ci.org/ld4l-labs/bib2lod.svg?branch=develop)](https://travis-ci.org/ld4l-labs/bib2lod)
-[![Coverage Status](https://coveralls.io/repos/github/ld4l-labs/bib2lod/badge.svg?branch=develop)](https://coveralls.io/github/ld4l-labs/bib2lod)
+[![Build Status](https://travis-ci.org/ld4l-labs/fgdc2lod.svg?branch=develop)](https://travis-ci.org/ld4l-labs/fgdc2lod)
+[![Coverage Status](https://coveralls.io/repos/github/ld4l-labs/fgdc2lod/badge.svg?branch=develop)](https://coveralls.io/github/ld4l-labs/fgdc2lod)
 
 ## Converts FGDC records to RDF.
   
 ## Build
-* Clone the dependency repository from [https://github.com/ld4l-labs/bib2lod]()
+* Clone the dependency repository from [https://github.com/ld4l-labs/fgdc2lod]()
 * Run `mvn install`
 * Clone this repository into an adjacent directory to bib2lod.
 * Run `mvn install`
@@ -28,5 +28,5 @@
   * One output file will be created for each input file. 
   * The name of the output file will be the same as the corresponding input file, but the extension will be `.nt`.
 * A log directory will be created as `target/logs` in your work location directory. 
-  * A log file of the run will be created as `target/logs/bib2lod.log`
-  * An existing log file will not be overwritten, but will be renamed with a timestamp, such as `bib2lod-2017-03-31-14-38-47-1.log`
+  * A log file of the run will be created as `target/logs/fgdc2lod.log`
+  * An existing log file will not be overwritten, but will be renamed with a timestamp, such as `fgdc2lod-2017-03-31-14-38-47-1.log`
