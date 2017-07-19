@@ -10,7 +10,7 @@ import org.w3c.dom.NodeList;
 /**
  * Container field
  */
-public class FgdcKeywordsField extends FgdcField {
+public class FgdcKeywordsField extends BaseFgdcField {
 
     private enum Field {
     		THEME("theme"),

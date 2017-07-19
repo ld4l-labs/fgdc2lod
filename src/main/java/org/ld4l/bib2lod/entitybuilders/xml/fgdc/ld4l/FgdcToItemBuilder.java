@@ -7,8 +7,8 @@ import org.ld4l.bib2lod.entitybuilders.BuildParams;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lDatatypeProp;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lItemType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lObjectProp;
-import org.ld4l.bib2lod.record.xml.fgdc.FgdcField;
 import org.ld4l.bib2lod.record.xml.fgdc.FgdcRecord;
+import org.ld4l.bib2lod.record.xml.fgdc.FgdcTextField;
 
 public class FgdcToItemBuilder extends FgdcToLd4lEntityBuilder {
 
@@ -25,18 +25,18 @@ public class FgdcToItemBuilder extends FgdcToLd4lEntityBuilder {
                     "A FgdcRecord is required to build an Item.");
         }
 
-        Entity instance = params.getRelatedEntity();
+        Entity instance = params.getParentEntity();
         if (instance == null) {
             throw new EntityBuilderException(
                     "A related Entity is required to build an Item.");
         }
         
         Entity  item = new Entity(Ld4lItemType.superClass());
-        FgdcField electronicLocatorField = record.getCiteinfoField().getOnlink();
+        FgdcTextField electronicLocatorField = record.getCiteinfoField().getOnlink();
         if (electronicLocatorField != null) {
         	item.addExternalRelationship(Ld4lObjectProp.HAS_ELECTRONIC_LOCATOR, electronicLocatorField.getTextValue());
         }
-    	FgdcField titleField = record.getCiteinfoField().getTitle();
+        FgdcTextField titleField = record.getCiteinfoField().getTitle();
 		item.addAttribute(Ld4lDatatypeProp.LABEL, titleField.getTextValue());
         instance.addRelationship(Ld4lObjectProp.HAS_ITEM, item);
         return item;

@@ -55,13 +55,13 @@ public class FgdcTextOnlyFieldTest extends AbstractTestClass {
     
     @Test
     public void validTextNoFieldName_Valid() throws Exception {
-    	FgdcTextOnlyField field = buildTextOnlyFieldFromString(VALID_TITLE, null);
+    	FgdcTextField field = buildTextOnlyFieldFromString(VALID_TITLE, null);
         Assert.assertEquals("", field.getFieldName());
     }
     
     @Test
     public void validTextWithFieldName_Valid() throws Exception {
-    	FgdcTextOnlyField field = buildTextOnlyFieldFromString(VALID_TITLE, FIELD_NAME);
+    	FgdcTextField field = buildTextOnlyFieldFromString(VALID_TITLE, FIELD_NAME);
         Assert.assertEquals(FIELD_NAME, field.getFieldName());
     }
 
@@ -69,10 +69,10 @@ public class FgdcTextOnlyFieldTest extends AbstractTestClass {
     // Helper methods
     // ----------------------------------------------------------------------
     
-    private FgdcTextOnlyField buildTextOnlyFieldFromString(String xmlString, String fieldName) 
+    private FgdcTextField buildTextOnlyFieldFromString(String xmlString, String fieldName) 
             throws RecordException {
     	
     	Element element = XmlTestUtils.buildElementFromString(xmlString);
-		return new FgdcTextOnlyField(element, fieldName);
+		return new FgdcTextField(element, fieldName);
     }
 }

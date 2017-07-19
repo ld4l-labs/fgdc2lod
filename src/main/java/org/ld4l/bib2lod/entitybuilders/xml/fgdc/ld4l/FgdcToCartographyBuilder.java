@@ -24,14 +24,15 @@ import org.ld4l.bib2lod.ontology.ld4l.Ld4lInstanceType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lObjectProp;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lTitleType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lWorkType;
-import org.ld4l.bib2lod.record.xml.fgdc.FgdcField;
+import org.ld4l.bib2lod.record.xml.fgdc.BaseFgdcField;
 import org.ld4l.bib2lod.record.xml.fgdc.FgdcKeywordsField;
 import org.ld4l.bib2lod.record.xml.fgdc.FgdcPlaceField;
 import org.ld4l.bib2lod.record.xml.fgdc.FgdcRecord;
+import org.ld4l.bib2lod.record.xml.fgdc.FgdcTextField;
 import org.ld4l.bib2lod.record.xml.fgdc.FgdcThemeField;
 
 /**
- * Builds an Cartography individual from a Record.
+ * Builds a Cartography individual from a Record.
  */
 public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
     
@@ -85,7 +86,7 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
         EntityBuilder builder = getBuilder(Ld4lTitleType.class);
         BuildParams params = new BuildParams()
                 .setRecord(record)
-                .setRelatedEntity(work);
+                .setParentEntity(work);
         builder.build(params);
     }
     
@@ -95,7 +96,7 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
 
         BuildParams params = new BuildParams()
                 .setRecord(record)
-                .setRelatedEntity(work);        
+                .setParentEntity(work);        
         builder.build(params);
     }
     
@@ -105,7 +106,7 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
 
         BuildParams params = new BuildParams()
                 .setRecord(record)
-                .setRelatedEntity(work);        
+                .setParentEntity(work);        
         builder.build(params);
     }
     
@@ -120,13 +121,13 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
     private void buildOriginatorActivity() throws EntityBuilderException {
         
         EntityBuilder builder = getBuilder(Ld4lActivityType.class);
-		List<FgdcField> origins = record.getCiteinfoField().getOrigins();
+		List<FgdcTextField> origins = record.getCiteinfoField().getOrigins();
 		if (origins.size() > 0) {
-			for (FgdcField originField : origins) {
+			for (BaseFgdcField originField : origins) {
 				BuildParams params = new BuildParams()
 					.setRecord(record)
 					.setField(originField)
-	    			.setRelatedEntity(work)
+	    			.setParentEntity(work)
 	    			.setType(Ld4lActivityType.ORIGINATOR_ACTIVITY);
 				builder.build(params);
 			}
@@ -136,12 +137,12 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
     private void buildAnnotations() throws EntityBuilderException {
         EntityBuilder builder = getBuilder(Ld4lAnnotationType.class);
         
-        FgdcField field = record.getPurposeField();
+        BaseFgdcField field = record.getPurposeField();
         if (field != null) {
         	BuildParams params = new BuildParams()
         			.setRecord(record)
         			.setField(field)
-        			.setRelatedEntity(work);
+        			.setParentEntity(work);
         	builder.build(params);
         }
 
@@ -150,7 +151,7 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
         	BuildParams params = new BuildParams()
         			.setRecord(record)
         			.setField(field)
-        			.setRelatedEntity(work);
+        			.setParentEntity(work);
         	builder.build(params);
         }
     }
@@ -162,7 +163,7 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
     		
     		BuildParams params = new BuildParams()
     				.setRecord(record)
-    				.setRelatedEntity(work);        
+    				.setParentEntity(work);        
     		builder.build(params);
     	}
     }
@@ -179,7 +180,7 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
                 Entity source = new Entity();
                 String themeKtFieldText = themeField.getThemeKt().getTextValue();
                 // check each themekey against concordance file
-                for (FgdcField themeKey : themeField.getThemeKeys()) {
+                for (FgdcTextField themeKey : themeField.getThemeKeys()) {
                 	IsoTopicConcordanceBean concordanceBean = null;
                 	// check to see if themekt is of the type that requires a concordance file check
                 	if (FgdcToCartographyBuilder.ISO_TOPIC_CATEGORY_MARKER.equalsIgnoreCase(themeKtFieldText)) {
@@ -220,7 +221,7 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
                 source.addAttribute(Ld4lDatatypeProp.EDITORIAL_NOTE, editorialNote);
                 
                 // create a GeographicCoverage for each key and add each to Work (Cartography)
-                for (FgdcField key : placeField.getPlaceKeys()) {
+                for (FgdcTextField key : placeField.getPlaceKeys()) {
                 	Entity geographicCoverage = new Entity(GeographicCoverageType.superClass());
                 	geographicCoverage.addAttribute(Ld4lDatatypeProp.LABEL, key.getTextValue());
                 	geographicCoverage.addRelationship(FgdcObjectProp.HAS_SOURCE, source);

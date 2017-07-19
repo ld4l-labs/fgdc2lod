@@ -19,9 +19,9 @@ import org.ld4l.bib2lod.ontology.ld4l.Ld4lActivityType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lDatatypeProp;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lObjectProp;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lWorkType;
-import org.ld4l.bib2lod.record.xml.fgdc.FgdcField;
+import org.ld4l.bib2lod.record.xml.fgdc.BaseFgdcField;
 import org.ld4l.bib2lod.record.xml.fgdc.FgdcRecord;
-import org.ld4l.bib2lod.record.xml.fgdc.FgdcTextOnlyField;
+import org.ld4l.bib2lod.record.xml.fgdc.FgdcTextField;
 import org.ld4l.bib2lod.records.Record.RecordException;
 import org.ld4l.bib2lod.testing.AbstractTestClass;
 import org.ld4l.bib2lod.testing.BaseMockBib2LodObjectFactory;
@@ -38,7 +38,7 @@ public class FgdcToActivityBuilderTest extends AbstractTestClass {
 	private EntityBuilder activityBuilder;
 	private FgdcRecord fgdcRecord;
 	private Entity relatedEntity;
-	private FgdcField originatorField;
+	private BaseFgdcField originatorField;
 	
     private static BaseMockBib2LodObjectFactory factory;
     
@@ -53,7 +53,7 @@ public class FgdcToActivityBuilderTest extends AbstractTestClass {
         activityBuilder = new FgdcToActivityBuilder();
         fgdcRecord = buildFgdcRecordFromString(FgdcTestData.VALID_ACTIVITIES);
         relatedEntity = new Entity(Ld4lWorkType.CARTOGRAPHY);
-        originatorField = new FgdcTextOnlyField(XmlTestUtils.buildElementFromString(FgdcTestData.VALID_ABSTRACT), "originator");
+        originatorField = new FgdcTextField(XmlTestUtils.buildElementFromString(FgdcTestData.VALID_ABSTRACT), "originator");
     }
 	
 	@Test
@@ -61,7 +61,7 @@ public class FgdcToActivityBuilderTest extends AbstractTestClass {
 		
 		BuildParams params = new BuildParams()
 				.setRecord(fgdcRecord)
-				.setRelatedEntity(relatedEntity)
+				.setParentEntity(relatedEntity)
 				.setField(originatorField)
 				.setType(Ld4lActivityType.ORIGINATOR_ACTIVITY);
 		
@@ -91,7 +91,7 @@ public class FgdcToActivityBuilderTest extends AbstractTestClass {
 		
 		BuildParams params = new BuildParams()
 				.setRecord(fgdcRecord)
-				.setRelatedEntity(relatedEntity)
+				.setParentEntity(relatedEntity)
 				.setType(Ld4lActivityType.PUBLISHER_ACTIVITY);
 		
 		Entity activityEntity = activityBuilder.build(params);
@@ -129,7 +129,7 @@ public class FgdcToActivityBuilderTest extends AbstractTestClass {
 		expectException(EntityBuilderException.class, "A FgdcRecord is required to build an Activity.");
 		BuildParams params = new BuildParams()
 				.setRecord(null)
-				.setRelatedEntity(relatedEntity)
+				.setParentEntity(relatedEntity)
 				.setType(Ld4lActivityType.ORIGINATOR_ACTIVITY);
 		
 		activityBuilder.build(params);
@@ -140,7 +140,7 @@ public class FgdcToActivityBuilderTest extends AbstractTestClass {
 		expectException(EntityBuilderException.class, "A FgdcField originField is required to build an Activity.");
 		BuildParams params = new BuildParams()
 				.setRecord(fgdcRecord)
-				.setRelatedEntity(relatedEntity)
+				.setParentEntity(relatedEntity)
 				.setField(null)
 				.setType(Ld4lActivityType.ORIGINATOR_ACTIVITY);
 		
@@ -152,7 +152,7 @@ public class FgdcToActivityBuilderTest extends AbstractTestClass {
 		expectException(EntityBuilderException.class, "A related Entity is required to build an Activity.");
 		BuildParams params = new BuildParams()
 				.setRecord(fgdcRecord)
-				.setRelatedEntity(null)
+				.setParentEntity(null)
 				.setType(Ld4lActivityType.ORIGINATOR_ACTIVITY);
 		
 		activityBuilder.build(params);
@@ -163,7 +163,7 @@ public class FgdcToActivityBuilderTest extends AbstractTestClass {
 		expectException(EntityBuilderException.class, "An Ld4lActivityType is required to build an Activity.");
 		BuildParams params = new BuildParams()
 				.setRecord(fgdcRecord)
-				.setRelatedEntity(relatedEntity)
+				.setParentEntity(relatedEntity)
 				.setType(null);
 		
 		activityBuilder.build(params);
@@ -174,7 +174,7 @@ public class FgdcToActivityBuilderTest extends AbstractTestClass {
 		expectException(EntityBuilderException.class, "Non-specific Activity type not indicated: " + Ld4lActivityType.ACTIVITY.label());
 		BuildParams params = new BuildParams()
 				.setRecord(fgdcRecord)
-				.setRelatedEntity(relatedEntity)
+				.setParentEntity(relatedEntity)
 				.setType(Ld4lActivityType.ACTIVITY);
 		
 		activityBuilder.build(params);

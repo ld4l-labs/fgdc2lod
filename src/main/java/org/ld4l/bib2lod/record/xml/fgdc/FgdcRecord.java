@@ -30,8 +30,8 @@ public class FgdcRecord extends BaseXmlRecord {
     
     private String layerId;
     private FgdcCiteinfoField citeinfoField;
-    private FgdcField abstractField;
-    private FgdcField purposeField;
+    private BaseFgdcField abstractField;
+    private BaseFgdcField purposeField;
     private FgdcBoundingField boundingField;
     private FgdcKeywordsField keywordsField;
 
@@ -87,7 +87,7 @@ public class FgdcRecord extends BaseXmlRecord {
 		return new FgdcKeywordsField((Element)nodes.item(0));       
 	}
 	
-	private FgdcField buildField(Element record, Field field) throws RecordException {
+	private BaseFgdcField buildField(Element record, Field field) throws RecordException {
 		NodeList nodes = 
 				record.getElementsByTagName(field.tagName);
         if (nodes.getLength() == 0) {
@@ -95,7 +95,7 @@ public class FgdcRecord extends BaseXmlRecord {
         }
 
         // There should be only one - ignore any others.
-        return new FgdcTextOnlyField((Element)nodes.item(0), field.tagName);       
+        return new FgdcTextField((Element)nodes.item(0), field.tagName);       
 	}
 	
 	private void isValid() throws RecordFieldException {
@@ -115,11 +115,11 @@ public class FgdcRecord extends BaseXmlRecord {
 		return citeinfoField;
 	}
 
-	public FgdcField getAbstractField() {
+	public BaseFgdcField getAbstractField() {
 		return abstractField;
 	}
 
-	public FgdcField getPurposeField() {
+	public BaseFgdcField getPurposeField() {
 		return purposeField;
 	}
 

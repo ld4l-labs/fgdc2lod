@@ -10,7 +10,7 @@ import org.w3c.dom.NodeList;
 /**
  * Container field
  */
-public class FgdcCiteinfoField extends FgdcField {
+public class FgdcCiteinfoField extends BaseFgdcField {
 
     private enum Field {
     		ORIGIN("origin"),
@@ -29,14 +29,14 @@ public class FgdcCiteinfoField extends FgdcField {
         }       
     }	
 	
-	private List<FgdcField> origins;
-	private FgdcField pubdate;
-	private FgdcField title;
-	private FgdcField edition;
-	private FgdcField pubplace;
-	private FgdcField publish;
-	private FgdcField onlink;
-	private FgdcField geoform;
+	private List<FgdcTextField> origins;
+	private FgdcTextField pubdate;
+	private FgdcTextField title;
+	private FgdcTextField edition;
+	private FgdcTextField pubplace;
+	private FgdcTextField publish;
+	private FgdcTextField onlink;
+	private FgdcTextField geoform;
 
 	public FgdcCiteinfoField(Element element) throws RecordException {
 		super(element);
@@ -57,18 +57,18 @@ public class FgdcCiteinfoField extends FgdcField {
 		}
 	}
 	
-	private List<FgdcField> buildOrigins(Element element) throws RecordException {
-		List<FgdcField> origins = new ArrayList<FgdcField>();
+	private List<FgdcTextField> buildOrigins(Element element) throws RecordException {
+		List<FgdcTextField> origins = new ArrayList<FgdcTextField>();
 		NodeList originsNodes =
 				element.getElementsByTagName(Field.ORIGIN.tagName);
         for (int i = 0; i < originsNodes.getLength(); i++) {
         	origins.add(
-                    new FgdcTextOnlyField((Element) originsNodes.item(i), Field.ORIGIN.tagName));
+                    new FgdcTextField((Element) originsNodes.item(i), Field.ORIGIN.tagName));
         }
 		return origins;
 	}
 	
-	private FgdcField buildField(Element element, Field field) throws RecordException {
+	private FgdcTextField buildField(Element element, Field field) throws RecordException {
 		NodeList nodes = 
 				element.getElementsByTagName(field.tagName);
         if (nodes.getLength() == 0) {
@@ -76,38 +76,38 @@ public class FgdcCiteinfoField extends FgdcField {
         }
 
         // There should be only one title - ignore any others.
-        return new FgdcTextOnlyField((Element)nodes.item(0), field.tagName);       
+        return new FgdcTextField((Element)nodes.item(0), field.tagName);       
 	}
 
-	public List<FgdcField> getOrigins() {
+	public List<FgdcTextField> getOrigins() {
 		return origins;
 	}
 
-	public FgdcField getPubdate() {
+	public FgdcTextField getPubdate() {
 		return pubdate;
 	}
 
-	public FgdcField getTitle() {
+	public FgdcTextField getTitle() {
 		return title;
 	}
 
-	public FgdcField getEdition() {
+	public FgdcTextField getEdition() {
 		return edition;
 	}
 
-	public FgdcField getPubplace() {
+	public FgdcTextField getPubplace() {
 		return pubplace;
 	}
 
-	public FgdcField getPublish() {
+	public FgdcTextField getPublish() {
 		return publish;
 	}
 
-	public FgdcField getOnlink() {
+	public FgdcTextField getOnlink() {
 		return onlink;
 	}
 
-	public FgdcField getGeoform() {
+	public FgdcTextField getGeoform() {
 		return geoform;
 	}
 

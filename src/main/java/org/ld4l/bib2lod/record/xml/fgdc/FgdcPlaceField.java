@@ -4,14 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ld4l.bib2lod.records.Record.RecordException;
-import org.ld4l.bib2lod.records.RecordField.RecordFieldException;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 /**
  * Container field containing one 'key' and one or more 'values'.
  */
-public class FgdcPlaceField extends FgdcField {
+public class FgdcPlaceField extends BaseFgdcField {
 
     private enum Field {
 		PLACE_KT("placekt"),   // The 'one'
@@ -24,8 +23,8 @@ public class FgdcPlaceField extends FgdcField {
         }       
     }	
 	
-	private FgdcField placekt;
-	private List<FgdcField> placekeys;
+	private FgdcTextField placekt;
+	private List<FgdcTextField> placekeys;
 
 	public FgdcPlaceField(Element element) throws RecordException {
 		super(element);
@@ -43,7 +42,7 @@ public class FgdcPlaceField extends FgdcField {
 		}
 	}
 	
-	private FgdcField buildField(Element element, Field field) throws RecordException {
+	private FgdcTextField buildField(Element element, Field field) throws RecordException {
 		NodeList nodes = 
 				element.getElementsByTagName(field.tagName);
         if (nodes.getLength() == 0) {
@@ -51,25 +50,25 @@ public class FgdcPlaceField extends FgdcField {
         }
 
         // There should only be one - ignore any others.
-        return new FgdcTextOnlyField((Element)nodes.item(0), field.tagName);       
+        return new FgdcTextField((Element)nodes.item(0), field.tagName);       
 	}
 	
-	private List<FgdcField> buildThemeKeys(Element element) throws RecordException {
-		List<FgdcField> themeKeys = new ArrayList<FgdcField>();
+	private List<FgdcTextField> buildThemeKeys(Element element) throws RecordException {
+		List<FgdcTextField> themeKeys = new ArrayList<FgdcTextField>();
 		NodeList themeKeyNodes =
 				element.getElementsByTagName(Field.PLACE_KEY.tagName);
         for (int i = 0; i < themeKeyNodes.getLength(); i++) {
         	themeKeys.add(
-                    new FgdcTextOnlyField((Element) themeKeyNodes.item(i), Field.PLACE_KEY.tagName));
+                    new FgdcTextField((Element) themeKeyNodes.item(i), Field.PLACE_KEY.tagName));
         }
 		return themeKeys;
 	}
 
-	public FgdcField getPlaceKt() {
+	public FgdcTextField getPlaceKt() {
 		return placekt;
 	}
 
-	public List<FgdcField> getPlaceKeys() {
+	public List<FgdcTextField> getPlaceKeys() {
 		return placekeys;
 	}
 

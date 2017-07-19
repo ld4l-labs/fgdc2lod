@@ -9,8 +9,8 @@ import org.ld4l.bib2lod.entitybuilders.BuildParams;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lDatatypeProp;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lObjectProp;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lTitleType;
-import org.ld4l.bib2lod.record.xml.fgdc.FgdcField;
 import org.ld4l.bib2lod.record.xml.fgdc.FgdcRecord;
+import org.ld4l.bib2lod.record.xml.fgdc.FgdcTextField;
 
 /**
  * Builds a Title Entity.
@@ -28,18 +28,16 @@ public class FgdcToTitleBuilder extends FgdcToLd4lEntityBuilder {
                     "A FgdcRecord is required to build a title.");
         }
 
-        Entity bibEntity = params.getRelatedEntity();
+        Entity bibEntity = params.getParentEntity();
         if (bibEntity == null) {
             throw new EntityBuilderException(
                     "A related Entity is required to build a title.");
         }
-
-        Entity title = new Entity(Ld4lTitleType.superClass());
         
-        FgdcField fgdcTitle = record.getCiteinfoField().getTitle();
+        FgdcTextField fgdcTitle = record.getCiteinfoField().getTitle();
         
     	String titleValue = fgdcTitle.getTextValue();
-    	title = buildTitleElement(Ld4lTitleType.TITLE, titleValue);
+    	Entity title = buildTitleElement(Ld4lTitleType.TITLE, titleValue);
     	bibEntity.addRelationship(Ld4lObjectProp.HAS_TITLE, title);
     	// add title as label of parent (Cartography)
     	bibEntity.addAttribute(Ld4lDatatypeProp.LABEL, titleValue);

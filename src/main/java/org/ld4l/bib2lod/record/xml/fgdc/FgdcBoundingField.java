@@ -7,7 +7,7 @@ import org.w3c.dom.NodeList;
 /**
  * Container bounding field for coordinates
  */
-public class FgdcBoundingField extends FgdcField {
+public class FgdcBoundingField extends BaseFgdcField {
     
     private enum Field {
     		WEST("westbc"),
@@ -22,10 +22,10 @@ public class FgdcBoundingField extends FgdcField {
         }       
     }	
 	
-	private FgdcField west;
-	private FgdcField east;
-	private FgdcField north;
-	private FgdcField south;
+	private FgdcTextField west;
+	private FgdcTextField east;
+	private FgdcTextField north;
+	private FgdcTextField south;
 
 	public FgdcBoundingField(Element element) throws RecordException {
 		super(element);
@@ -51,7 +51,7 @@ public class FgdcBoundingField extends FgdcField {
 		}
 	}
 	
-	private FgdcField buildField(Element element, Field field) throws RecordException {
+	private FgdcTextField buildField(Element element, Field field) throws RecordException {
 		NodeList nodes = 
 				element.getElementsByTagName(field.tagName);
         if (nodes.getLength() == 0) {
@@ -59,22 +59,22 @@ public class FgdcBoundingField extends FgdcField {
         }
 
         // There should be only one title - ignore any others.
-        return new FgdcTextOnlyField((Element)nodes.item(0), field.tagName);       
+        return new FgdcTextField((Element)nodes.item(0), field.tagName);       
 	}
 
-	public FgdcField getWestBounding() {
+	public BaseFgdcField getWestBounding() {
 		return west;
 	}
 
-	public FgdcField getEastBounding() {
+	public BaseFgdcField getEastBounding() {
 		return east;
 	}
 	
-	public FgdcField getNorthBounding() {
+	public BaseFgdcField getNorthBounding() {
 		return north;
 	}
 
-	public FgdcField getSouthBounding() {
+	public BaseFgdcField getSouthBounding() {
 		return south;
 	}
 	

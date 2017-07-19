@@ -13,8 +13,8 @@ import org.ld4l.bib2lod.entity.Entity;
 import org.ld4l.bib2lod.entitybuilders.BuildParams;
 import org.ld4l.bib2lod.ontology.fgdc.CartographySubType;
 import org.ld4l.bib2lod.record.xml.fgdc.FgdcCiteinfoField;
-import org.ld4l.bib2lod.record.xml.fgdc.FgdcField;
 import org.ld4l.bib2lod.record.xml.fgdc.FgdcRecord;
+import org.ld4l.bib2lod.record.xml.fgdc.FgdcTextField;
 
 /**
  * Builds an CartographySubtype individual from a Record.
@@ -49,7 +49,7 @@ public class FgdcToCartographySubtypeBuilder extends FgdcToLd4lEntityBuilder {
                     "A FgdcRecord is required to build a CartographySubtype.");
         }
         
-        Entity work = params.getRelatedEntity();
+        Entity work = params.getParentEntity();
         if (work == null) {
         	throw new EntityBuilderException("A related Entity is required to build a cartography subtype.");
         }
@@ -60,7 +60,7 @@ public class FgdcToCartographySubtypeBuilder extends FgdcToLd4lEntityBuilder {
         	return work;
         }
         
-        FgdcField geoFormField = citeinfoField.getGeoform();
+        FgdcTextField geoFormField = citeinfoField.getGeoform();
     	FgdcGeoformConcordanceBean concordanceBean = concordanceManager.getConcordanceEntry(geoFormField.getTextValue());
     	// see if field shows up in concordance file
     	if (concordanceBean != null) {

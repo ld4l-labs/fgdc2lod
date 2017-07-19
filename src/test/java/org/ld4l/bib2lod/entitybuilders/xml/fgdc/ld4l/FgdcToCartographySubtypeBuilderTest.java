@@ -42,7 +42,7 @@ public class FgdcToCartographySubtypeBuilderTest extends AbstractTestClass {
 		
 		BuildParams params = new BuildParams()
 				.setRecord(fgdcRecord)
-				.setRelatedEntity(relatedEntity);
+				.setParentEntity(relatedEntity);
 		
 		Entity cartographyEntity = subtypeBuilder.build(params);
 
@@ -61,7 +61,7 @@ public class FgdcToCartographySubtypeBuilderTest extends AbstractTestClass {
 		FgdcRecord noGeoformRecord = buildFgdcRecordFromString(FgdcTestData.VALID_CITEINFO);
 		BuildParams params = new BuildParams()
 				.setRecord(noGeoformRecord)
-				.setRelatedEntity(relatedEntity);
+				.setParentEntity(relatedEntity);
 		
 		Entity cartographyEntity = subtypeBuilder.build(params);
 
@@ -76,7 +76,7 @@ public class FgdcToCartographySubtypeBuilderTest extends AbstractTestClass {
 	public void nullRecord_ThrowsException() throws Exception {
 		expectException(EntityBuilderException.class, "A FgdcRecord is required to build a CartographySubtype.");
 		BuildParams params = new BuildParams()
-				.setRelatedEntity(relatedEntity)
+				.setParentEntity(relatedEntity)
 				.setRecord(null);
 		
 		subtypeBuilder.build(params);
@@ -86,7 +86,7 @@ public class FgdcToCartographySubtypeBuilderTest extends AbstractTestClass {
 	public void nullRelatedEntity_ThrowsException() throws Exception {
 		expectException(EntityBuilderException.class, "A related Entity is required to build a cartography subtype.");
 		BuildParams params = new BuildParams()
-				.setRelatedEntity(null)
+				.setParentEntity(null)
 				.setRecord(fgdcRecord);
 		
 		subtypeBuilder.build(params);

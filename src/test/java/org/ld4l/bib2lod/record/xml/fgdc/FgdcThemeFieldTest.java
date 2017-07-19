@@ -25,9 +25,9 @@ public class FgdcThemeFieldTest extends AbstractTestClass {
     @Test
     public void validThemeField() throws Exception {
     	FgdcThemeField fgdcThemeField = buildFgdcThemeFieldFromString(FgdcTestData.VALID_THEME);
-    	FgdcField themeKt = fgdcThemeField.getThemeKt();
+    	BaseFgdcField themeKt = fgdcThemeField.getThemeKt();
     	Assert.assertNotNull(themeKt);
-    	List<FgdcField> themeKeys = fgdcThemeField.getThemeKeys();
+    	List<FgdcTextField> themeKeys = fgdcThemeField.getThemeKeys();
     	Assert.assertNotNull(themeKeys);
     	Assert.assertEquals(3, themeKeys.size());
     }

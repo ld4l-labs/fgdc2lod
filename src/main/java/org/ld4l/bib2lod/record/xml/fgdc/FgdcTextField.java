@@ -3,24 +3,35 @@
 package org.ld4l.bib2lod.record.xml.fgdc;
 
 import org.ld4l.bib2lod.records.Record.RecordException;
+import org.ld4l.bib2lod.records.xml.XmlTextElement;
 import org.w3c.dom.Element;
 
 /**
  * Represents a generic text-only field in a FGDC record.
  */
-public class FgdcTextOnlyField extends FgdcField {
+public class FgdcTextField extends BaseFgdcField implements XmlTextElement {
 	
+	private String textValue;
 	private String fieldName = "";
 
 	/**
 	 * Constructor giving this generic field a specific name.
 	 */
-	public FgdcTextOnlyField(Element element, String fieldName) throws RecordException {
+	public FgdcTextField(Element element, String fieldName) throws RecordException {
 		super(element);
+		textValue = setTextValue(element);
 		if (fieldName != null && !fieldName.isEmpty()) {
 			this.fieldName = fieldName;
 		}
 		isValid();
+	}
+
+	/**
+	 * @see org.ld4l.bib2lod.records.xml.XmlTextElement#getTextValue()
+	 */
+	@Override
+	public String getTextValue() {
+		return textValue;
 	}
 
 	/**

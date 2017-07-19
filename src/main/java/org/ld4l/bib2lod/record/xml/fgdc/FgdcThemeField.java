@@ -10,7 +10,7 @@ import org.w3c.dom.NodeList;
 /**
  * Container field containing one 'key' and one or more 'values'.
  */
-public class FgdcThemeField extends FgdcField {
+public class FgdcThemeField extends BaseFgdcField {
 
     private enum Field {
 		THEME_KT("themekt"),   // The 'one'
@@ -23,8 +23,8 @@ public class FgdcThemeField extends FgdcField {
         }       
     }	
 	
-	private FgdcField themekt;
-	private List<FgdcField> themekeys;
+	private FgdcTextField themekt;
+	private List<FgdcTextField> themekeys;
 
 	public FgdcThemeField(Element element) throws RecordException {
 		super(element);
@@ -42,7 +42,7 @@ public class FgdcThemeField extends FgdcField {
 		}
 	}
 	
-	private FgdcField buildField(Element element, Field field) throws RecordException {
+	private FgdcTextField buildField(Element element, Field field) throws RecordException {
 		NodeList nodes = 
 				element.getElementsByTagName(field.tagName);
         if (nodes.getLength() == 0) {
@@ -50,25 +50,25 @@ public class FgdcThemeField extends FgdcField {
         }
 
         // There should only be one - ignore any others.
-        return new FgdcTextOnlyField((Element)nodes.item(0), field.tagName);       
+        return new FgdcTextField((Element)nodes.item(0), field.tagName);       
 	}
 	
-	private List<FgdcField> buildThemeKeys(Element element) throws RecordException {
-		List<FgdcField> themeKeys = new ArrayList<FgdcField>();
+	private List<FgdcTextField> buildThemeKeys(Element element) throws RecordException {
+		List<FgdcTextField> themeKeys = new ArrayList<FgdcTextField>();
 		NodeList themeKeyNodes =
 				element.getElementsByTagName(Field.THEME_KEY.tagName);
         for (int i = 0; i < themeKeyNodes.getLength(); i++) {
         	themeKeys.add(
-                    new FgdcTextOnlyField((Element) themeKeyNodes.item(i), Field.THEME_KEY.tagName));
+                    new FgdcTextField((Element) themeKeyNodes.item(i), Field.THEME_KEY.tagName));
         }
 		return themeKeys;
 	}
 
-	public FgdcField getThemeKt() {
+	public FgdcTextField getThemeKt() {
 		return themekt;
 	}
 
-	public List<FgdcField> getThemeKeys() {
+	public List<FgdcTextField> getThemeKeys() {
 		return themekeys;
 	}
 

@@ -11,8 +11,8 @@ import org.ld4l.bib2lod.ontology.ld4l.Ld4lInstanceType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lItemType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lObjectProp;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lTitleType;
-import org.ld4l.bib2lod.record.xml.fgdc.FgdcField;
 import org.ld4l.bib2lod.record.xml.fgdc.FgdcRecord;
+import org.ld4l.bib2lod.record.xml.fgdc.FgdcTextField;
 
 /**
  * Builds an Instance individual from a Record.
@@ -32,7 +32,7 @@ public class FgdcToInstanceBuilder extends FgdcToLd4lEntityBuilder {
 					"A FgdcRecord is required to build an Instance.");
 		}
 
-		this.work = params.getRelatedEntity();
+		this.work = params.getParentEntity();
         if (work == null) {
             throw new EntityBuilderException(
                     "A related Entity is required to build an Instance.");
@@ -55,7 +55,7 @@ public class FgdcToInstanceBuilder extends FgdcToLd4lEntityBuilder {
         EntityBuilder builder = getBuilder(Ld4lTitleType.class);
         BuildParams params = new BuildParams()
                 .setRecord(record)
-                .setRelatedEntity(instance);
+                .setParentEntity(instance);
         builder.build(params);
     }
     
@@ -65,7 +65,7 @@ public class FgdcToInstanceBuilder extends FgdcToLd4lEntityBuilder {
 
         BuildParams params = new BuildParams()
                 .setRecord(record)
-                .setRelatedEntity(instance);        
+                .setParentEntity(instance);        
         builder.build(params);
     }   
     
@@ -75,13 +75,13 @@ public class FgdcToInstanceBuilder extends FgdcToLd4lEntityBuilder {
         
         BuildParams params = new BuildParams()
                 .setRecord(record)     
-                .setRelatedEntity(instance)
+                .setParentEntity(instance)
                 .setType(Ld4lActivityType.PUBLISHER_ACTIVITY);
         builder.build(params);
     }
     
     private void buildEditionStatement() {
-    	FgdcField field = record.getCiteinfoField().getEdition();
+    	FgdcTextField field = record.getCiteinfoField().getEdition();
     	if (field != null) {
     		instance.addAttribute(Ld4lDatatypeProp.EDITION_STATEMENT, field.getTextValue());
     	}

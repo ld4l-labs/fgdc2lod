@@ -25,9 +25,9 @@ public class FgdcPlaceFieldTest extends AbstractTestClass {
     @Test
     public void validPlaceField() throws Exception {
     	FgdcPlaceField fgdcPlaceField = buildFgdcPlaceFieldFromString(FgdcTestData.VALID_PLACE);
-    	FgdcField placeKt = fgdcPlaceField.getPlaceKt();
+    	BaseFgdcField placeKt = fgdcPlaceField.getPlaceKt();
     	Assert.assertNotNull(placeKt);
-    	List<FgdcField> placeKeys = fgdcPlaceField.getPlaceKeys();
+    	List<FgdcTextField> placeKeys = fgdcPlaceField.getPlaceKeys();
     	Assert.assertNotNull(placeKeys);
     	Assert.assertEquals(2, placeKeys.size());
     }

@@ -15,8 +15,8 @@ import org.ld4l.bib2lod.ontology.Type;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lActivityType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lAgentType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lDatatypeProp;
-import org.ld4l.bib2lod.record.xml.fgdc.FgdcField;
-import org.ld4l.bib2lod.record.xml.fgdc.FgdcTextOnlyField;
+import org.ld4l.bib2lod.record.xml.fgdc.BaseFgdcField;
+import org.ld4l.bib2lod.record.xml.fgdc.FgdcTextField;
 import org.ld4l.bib2lod.records.Record.RecordException;
 import org.ld4l.bib2lod.testing.AbstractTestClass;
 import org.ld4l.bib2lod.testing.FgdcTestData;
@@ -28,13 +28,13 @@ import org.ld4l.bib2lod.testing.xml.XmlTestUtils;
 public class FgdcToAgentBuilderTest extends AbstractTestClass {
     
 	private EntityBuilder agentBuilder;
-	private FgdcField agentField;
+	private BaseFgdcField agentField;
 	private Entity relatedEntity;
 
     @Before
     public void setUp() throws RecordException, EntityBuilderException {
         agentBuilder = new FgdcToAgentBuilder();
-        agentField = new FgdcTextOnlyField(XmlTestUtils.buildElementFromString(FgdcTestData.VALID_AGENT), Ld4lAgentType.AGENT.toString());
+        agentField = new FgdcTextField(XmlTestUtils.buildElementFromString(FgdcTestData.VALID_AGENT), Ld4lAgentType.AGENT.toString());
         relatedEntity = new Entity(Ld4lActivityType.ORIGINATOR_ACTIVITY);
     }
 	
@@ -43,7 +43,7 @@ public class FgdcToAgentBuilderTest extends AbstractTestClass {
 		
 		BuildParams params = new BuildParams()
 				.setField(agentField)
-				.setRelatedEntity(relatedEntity);
+				.setParentEntity(relatedEntity);
 		
 		Entity agentEntity = agentBuilder.build(params);
 
@@ -63,7 +63,7 @@ public class FgdcToAgentBuilderTest extends AbstractTestClass {
 	public void nullAgent_ThrowsException() throws Exception {
 		expectException(EntityBuilderException.class, "An agentField is required to build an Agent.");
 		BuildParams params = new BuildParams()
-				.setRelatedEntity(relatedEntity)
+				.setParentEntity(relatedEntity)
 				.setField(null);
 		
 		agentBuilder.build(params);
@@ -73,7 +73,7 @@ public class FgdcToAgentBuilderTest extends AbstractTestClass {
 	public void nullRelatedEntity_ThrowsException() throws Exception {
 		expectException(EntityBuilderException.class, "A related Entity is required to build a title.");
 		BuildParams params = new BuildParams()
-				.setRelatedEntity(null)
+				.setParentEntity(null)
 				.setField(agentField);
 		
 		agentBuilder.build(params);

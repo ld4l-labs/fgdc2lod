@@ -18,9 +18,9 @@ import org.ld4l.bib2lod.ontology.ld4l.Ld4lDatatypeProp;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lNamedIndividual;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lObjectProp;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lWorkType;
-import org.ld4l.bib2lod.record.xml.fgdc.FgdcField;
+import org.ld4l.bib2lod.record.xml.fgdc.BaseFgdcField;
 import org.ld4l.bib2lod.record.xml.fgdc.FgdcKeywordsField;
-import org.ld4l.bib2lod.record.xml.fgdc.FgdcTextOnlyField;
+import org.ld4l.bib2lod.record.xml.fgdc.FgdcTextField;
 import org.ld4l.bib2lod.records.Record.RecordException;
 import org.ld4l.bib2lod.testing.AbstractTestClass;
 import org.ld4l.bib2lod.testing.FgdcTestData;
@@ -33,16 +33,16 @@ import org.ld4l.bib2lod.util.collections.MapOfLists;
 public class FgdcToAnnotationBuilderTest extends AbstractTestClass {
     
 	private EntityBuilder annotationBuilder;
-	private FgdcTextOnlyField abstractField;
-	private FgdcTextOnlyField purposeField;
+	private FgdcTextField abstractField;
+	private FgdcTextField purposeField;
 	
 	private Entity relatedEntity;
 
     @Before
     public void setUp() throws RecordException {
         annotationBuilder = new FgdcToAnnotationBuilder();
-        abstractField = new FgdcTextOnlyField(XmlTestUtils.buildElementFromString(FgdcTestData.VALID_ABSTRACT), "abstract");
-        purposeField = new FgdcTextOnlyField(XmlTestUtils.buildElementFromString(FgdcTestData.VALID_ABSTRACT), "purpose");
+        abstractField = new FgdcTextField(XmlTestUtils.buildElementFromString(FgdcTestData.VALID_ABSTRACT), "abstract");
+        purposeField = new FgdcTextField(XmlTestUtils.buildElementFromString(FgdcTestData.VALID_ABSTRACT), "purpose");
         relatedEntity = new Entity(Ld4lWorkType.CARTOGRAPHY);
     }
 	
@@ -51,7 +51,7 @@ public class FgdcToAnnotationBuilderTest extends AbstractTestClass {
 		
 		BuildParams params = new BuildParams()
 				.setField(purposeField)
-				.setRelatedEntity(relatedEntity);
+				.setParentEntity(relatedEntity);
 		
 		Entity purposeEntity = annotationBuilder.build(params);
 
@@ -82,7 +82,7 @@ public class FgdcToAnnotationBuilderTest extends AbstractTestClass {
 		
 		BuildParams params = new BuildParams()
 				.setField(abstractField)
-				.setRelatedEntity(relatedEntity);
+				.setParentEntity(relatedEntity);
 		
 		Entity abstractRecordEntity = annotationBuilder.build(params);
 
@@ -112,7 +112,7 @@ public class FgdcToAnnotationBuilderTest extends AbstractTestClass {
 	public void nullAgent_ThrowsException() throws Exception {
 		expectException(EntityBuilderException.class, "field is null");
 		BuildParams params = new BuildParams()
-				.setRelatedEntity(relatedEntity)
+				.setParentEntity(relatedEntity)
 				.setField(null);
 		
 		annotationBuilder.build(params);
@@ -122,7 +122,7 @@ public class FgdcToAnnotationBuilderTest extends AbstractTestClass {
 	public void nullRecordEntity_ThrowsException() throws Exception {
 		expectException(EntityBuilderException.class, "A related Entity is required to build an Annotation.");
 		BuildParams params = new BuildParams()
-				.setRelatedEntity(null)
+				.setParentEntity(null)
 				.setField(purposeField);
 		
 		annotationBuilder.build(params);
@@ -132,7 +132,7 @@ public class FgdcToAnnotationBuilderTest extends AbstractTestClass {
 	public void nullField_ThrowsException() throws Exception {
 		expectException(EntityBuilderException.class, "field is null");
 		BuildParams params = new BuildParams()
-				.setRelatedEntity(relatedEntity)
+				.setParentEntity(relatedEntity)
 				.setField(null);
 		
 		annotationBuilder.build(params);
@@ -140,10 +140,10 @@ public class FgdcToAnnotationBuilderTest extends AbstractTestClass {
 	
 	@Test
 	public void wrongFieldType_ThrowsException() throws Exception {
-		FgdcField keywordsField = new FgdcKeywordsField(XmlTestUtils.buildElementFromString(FgdcTestData.VALID_KEYWORDS));
+		BaseFgdcField keywordsField = new FgdcKeywordsField(XmlTestUtils.buildElementFromString(FgdcTestData.VALID_KEYWORDS));
 		expectException(EntityBuilderException.class, "field not instanceof FgdcTextOnlyField");
 		BuildParams params = new BuildParams()
-				.setRelatedEntity(relatedEntity)
+				.setParentEntity(relatedEntity)
 				.setField(keywordsField);
 		
 		annotationBuilder.build(params);
@@ -151,10 +151,10 @@ public class FgdcToAnnotationBuilderTest extends AbstractTestClass {
 	
 	@Test
 	public void unknownAnnotationTypeField_ThrowsException() throws Exception {
-		FgdcTextOnlyField unknownFieldName = new FgdcTextOnlyField(XmlTestUtils.buildElementFromString(FgdcTestData.VALID_ABSTRACT), "unknown");
+		FgdcTextField unknownFieldName = new FgdcTextField(XmlTestUtils.buildElementFromString(FgdcTestData.VALID_ABSTRACT), "unknown");
 		expectException(EntityBuilderException.class, unknownFieldName.getFieldName() + " type Annotation not yet supported.");
 		BuildParams params = new BuildParams()
-				.setRelatedEntity(relatedEntity)
+				.setParentEntity(relatedEntity)
 				.setField(unknownFieldName);
 		
 		annotationBuilder.build(params);

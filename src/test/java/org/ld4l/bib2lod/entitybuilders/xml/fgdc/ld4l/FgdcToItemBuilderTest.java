@@ -44,7 +44,7 @@ public class FgdcToItemBuilderTest extends AbstractTestClass {
 		
 		BuildParams params = new BuildParams()
 				.setRecord(fgdcRecord)
-				.setRelatedEntity(relatedEntity);
+				.setParentEntity(relatedEntity);
 		
 		Entity itemEntity = itemBuilder.build(params);
 
@@ -69,7 +69,7 @@ public class FgdcToItemBuilderTest extends AbstractTestClass {
 		expectException(EntityBuilderException.class, "A FgdcRecord is required to build an Item.");
 		BuildParams params = new BuildParams()
 				.setRecord(null)
-				.setRelatedEntity(relatedEntity);
+				.setParentEntity(relatedEntity);
 		
 		itemBuilder.build(params);
 	}
@@ -79,7 +79,7 @@ public class FgdcToItemBuilderTest extends AbstractTestClass {
 		expectException(EntityBuilderException.class, "A related Entity is required to build an Item.");
 		BuildParams params = new BuildParams()
 				.setRecord(fgdcRecord)
-				.setRelatedEntity(null);
+				.setParentEntity(null);
 		
 		itemBuilder.build(params);
 	}

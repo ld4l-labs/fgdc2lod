@@ -14,7 +14,7 @@ import org.ld4l.bib2lod.entitybuilders.BuildParams;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lAgentType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lDatatypeProp;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lObjectProp;
-import org.ld4l.bib2lod.record.xml.fgdc.FgdcField;
+import org.ld4l.bib2lod.record.xml.fgdc.FgdcTextField;
 
 /**
  * Builds an Agent Entity.
@@ -36,12 +36,12 @@ public class FgdcToAgentBuilder extends FgdcToLd4lEntityBuilder {
     @Override
     public Entity build(BuildParams params) throws EntityBuilderException {
         
-        Entity bibEntity = params.getRelatedEntity();
+        Entity bibEntity = params.getParentEntity();
         if (bibEntity == null) {
         	throw new EntityBuilderException("A related Entity is required to build a title.");
         }
         
-        FgdcField agentField = (FgdcField)params.getField();
+        FgdcTextField agentField = (FgdcTextField)params.getField();
         if (agentField == null) {
         	throw new EntityBuilderException("An agentField is required to build an Agent.");
         }

@@ -9,7 +9,7 @@ import org.ld4l.bib2lod.ontology.ld4l.Ld4lDatatypeProp;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lNamedIndividual;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lObjectProp;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lTextualBodyType;
-import org.ld4l.bib2lod.record.xml.fgdc.FgdcTextOnlyField;
+import org.ld4l.bib2lod.record.xml.fgdc.FgdcTextField;
 
 /**
  * Builds an Annotation Entity.
@@ -22,7 +22,7 @@ public class FgdcToAnnotationBuilder extends FgdcToLd4lEntityBuilder {
 	@Override
 	public Entity build(BuildParams params) throws EntityBuilderException {
         
-        Entity bibEntity = params.getRelatedEntity();
+        Entity bibEntity = params.getParentEntity();
         if (bibEntity == null) {
             throw new EntityBuilderException(
                     "A related Entity is required to build an Annotation.");
@@ -31,10 +31,10 @@ public class FgdcToAnnotationBuilder extends FgdcToLd4lEntityBuilder {
         if (params.getField() == null) {
         	throw new EntityBuilderException("field is null");
         }
-        if ( !(params.getField() instanceof FgdcTextOnlyField)) {
+        if ( !(params.getField() instanceof FgdcTextField)) {
         	throw new EntityBuilderException("field not instanceof FgdcTextOnlyField");
         }
-        FgdcTextOnlyField field = (FgdcTextOnlyField) params.getField();
+        FgdcTextField field = (FgdcTextField) params.getField();
         
         Entity annotation = new Entity(Ld4lAnnotationType.ANNOTATION);
         Entity textualBody = new Entity(Ld4lTextualBodyType.TEXTUAL_BODY);

@@ -8,14 +8,14 @@ import org.w3c.dom.Element;
 /**
  * Represents a field in a FGDC input record.
  */
-public abstract class FgdcField extends BaseXmlElement {
+public abstract class BaseFgdcField extends BaseXmlElement {
 
 	/**
 	 * Constructor
 	 * 
 	 * @param element
 	 */
-	public FgdcField(Element element) {
+	public BaseFgdcField(Element element) {
 		super(element);
 	}
 

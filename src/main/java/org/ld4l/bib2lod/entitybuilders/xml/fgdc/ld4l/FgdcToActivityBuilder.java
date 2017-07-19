@@ -13,8 +13,9 @@ import org.ld4l.bib2lod.ontology.ld4l.Ld4lAgentType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lDatatypeProp;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lLocationType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lObjectProp;
-import org.ld4l.bib2lod.record.xml.fgdc.FgdcField;
+import org.ld4l.bib2lod.record.xml.fgdc.BaseFgdcField;
 import org.ld4l.bib2lod.record.xml.fgdc.FgdcRecord;
+import org.ld4l.bib2lod.record.xml.fgdc.FgdcTextField;
 
 /**
  * Builds a Geometry Entity.
@@ -32,7 +33,7 @@ public class FgdcToActivityBuilder extends FgdcToLd4lEntityBuilder {
                     "A FgdcRecord is required to build an Activity.");
         }
 
-        Entity bibEntity = params.getRelatedEntity();
+        Entity bibEntity = params.getParentEntity();
         if (bibEntity == null) {
             throw new EntityBuilderException(
                     "A related Entity is required to build an Activity.");
@@ -47,7 +48,7 @@ public class FgdcToActivityBuilder extends FgdcToLd4lEntityBuilder {
         activity.addAttribute(Ld4lDatatypeProp.LABEL, new Attribute(type.label()));
 
     	if (type.equals(Ld4lActivityType.ORIGINATOR_ACTIVITY)){
-    		FgdcField originField = (FgdcField)params.getField();
+    		BaseFgdcField originField = (BaseFgdcField)params.getField();
             if (originField == null) {
                 throw new EntityBuilderException(
                         "A FgdcField originField is required to build an Activity.");
@@ -56,14 +57,14 @@ public class FgdcToActivityBuilder extends FgdcToLd4lEntityBuilder {
 			BuildParams params2 = new BuildParams()
 					.setRecord(record)
 					.setField(originField)
-					.setRelatedEntity(activity);
+					.setParentEntity(activity);
 			builder.build(params2);
 			bibEntity.addRelationship(Ld4lObjectProp.HAS_ACTIVITY, activity);
 	    	
     	} else if (type.equals(Ld4lActivityType.PUBLISHER_ACTIVITY)) {
-    		FgdcField agentField = record.getCiteinfoField().getPublish();
-    		FgdcField pubplaceField = record.getCiteinfoField().getPubplace();
-    		FgdcField pubdateField = record.getCiteinfoField().getPubdate();
+    		FgdcTextField agentField = record.getCiteinfoField().getPublish();
+    		FgdcTextField pubplaceField = record.getCiteinfoField().getPubplace();
+    		FgdcTextField pubdateField = record.getCiteinfoField().getPubdate();
     		boolean atLeastOneField = false;
 
     		if (agentField != null) {
@@ -71,7 +72,7 @@ public class FgdcToActivityBuilder extends FgdcToLd4lEntityBuilder {
     	        BuildParams params2 = new BuildParams()
     	                .setRecord(record)
     	                .setField(agentField)
-    	                .setRelatedEntity(activity);
+    	                .setParentEntity(activity);
     	        builder.build(params2);
 				atLeastOneField = true;
 			}
