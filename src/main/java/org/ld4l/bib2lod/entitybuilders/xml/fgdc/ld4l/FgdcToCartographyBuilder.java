@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import org.ld4l.bib2lod.csv.fgdc.FASTConcordanceBean;
+import org.ld4l.bib2lod.csv.fgdc.FASTConcordanceManager;
 import org.ld4l.bib2lod.csv.fgdc.IsoTopicConcordanceBean;
 import org.ld4l.bib2lod.csv.fgdc.IsoTopicConcordanceManager;
 import org.ld4l.bib2lod.entity.Entity;
@@ -38,17 +40,23 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
     
     private FgdcRecord record;
     private Entity work;
-    private IsoTopicConcordanceManager concordanceManager;
+    private IsoTopicConcordanceManager isoTopicConcordanceManager;
+    private FASTConcordanceManager fastConcordanceManager;
     
     private static final String GENRE_FORM_URI = "http://id.loc.gov/authorities/genreForms/gf2011026297";
     private static final String ENG_LANGUAGE_URI = "http://lexvo.org/id/iso639-3/eng";
     private static final String ISO_TOPIC_CATEGORY_MARKER = "ISO 19115 Topic Category";
+    private static final String LCSH_MARKER = "LCSH";
     
     public FgdcToCartographyBuilder() throws EntityBuilderException {
+    	String concordanceManagerName = "";
     	try {
-			this.concordanceManager = new IsoTopicConcordanceManager();
+    		concordanceManagerName = IsoTopicConcordanceManager.class.getSimpleName();
+			this.isoTopicConcordanceManager = new IsoTopicConcordanceManager();
+			concordanceManagerName = FASTConcordanceManager.class.getSimpleName();
+			this.fastConcordanceManager = new FASTConcordanceManager();
 		} catch ( URISyntaxException | IOException e) {
-			throw new EntityBuilderException("Could not instantiate IsoTopicConcordanceManager", e);
+			throw new EntityBuilderException("Could not instantiate " + concordanceManagerName, e);
 		}
     }
   
@@ -181,17 +189,26 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
                 String themeKtFieldText = themeField.getThemeKt().getTextValue();
                 // check each themekey against concordance file
                 for (FgdcTextField themeKey : themeField.getThemeKeys()) {
-                	IsoTopicConcordanceBean concordanceBean = null;
+                	IsoTopicConcordanceBean isoTopicConcordanceBean = null;
+                	FASTConcordanceBean fastConcordanceBean = null;
+                	String concordanceUri = null;
                 	// check to see if themekt is of the type that requires a concordance file check
                 	if (FgdcToCartographyBuilder.ISO_TOPIC_CATEGORY_MARKER.equalsIgnoreCase(themeKtFieldText)) {
                 		// expect only one
-                		concordanceBean = concordanceManager.getConcordanceEntry(themeKey.getTextValue());
+                		isoTopicConcordanceBean = isoTopicConcordanceManager.getConcordanceEntry(themeKey.getTextValue());
+                    	if (isoTopicConcordanceBean != null) {
+                    		concordanceUri = isoTopicConcordanceBean.getUri();
+                    	}
+                	} else if (FgdcToCartographyBuilder.LCSH_MARKER.equalsIgnoreCase(themeKtFieldText)) {
+                		fastConcordanceBean = fastConcordanceManager.getConcordanceEntry(themeKey.getTextValue());
+                    	if (fastConcordanceBean != null) {
+                    		concordanceUri = fastConcordanceBean.getUri();
+                    	}
                 	}
                 	
-                	if (concordanceBean != null) {
+                	if (concordanceUri != null) {
                 		// for concordance match add external relationship to corresponding URI
-                		String uri = concordanceBean.getUri();
-                		work.addExternalRelationship(Ld4lObjectProp.HAS_SUBJECT, uri);
+                		work.addExternalRelationship(Ld4lObjectProp.HAS_SUBJECT, concordanceUri);
                 	} else {
                 		// if no concordance, create a Concept for each key, add source,
                 		// and add each to Work (Cartography)

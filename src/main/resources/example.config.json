@@ -2,7 +2,7 @@
   "localNamespace": "http://localhost:8080/bibframe/individual/",
   "InputService": {
     "class": "org.ld4l.bib2lod.io.FileInputService",
-    "source": "src/main/resources/MinimalFGDC_Title.xml",
+    "source": "src/main/resources/9_CoreFGDC_AgentURIs.xml",
     "extension": "xml"
   }, 
   "OutputService": {

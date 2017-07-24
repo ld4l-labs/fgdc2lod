@@ -120,7 +120,14 @@ public class FgdcToCartographyBuilderTest extends AbstractTestClass {
 		// theme keywords
 		List<Entity> subjects = relationships.getValues(Ld4lObjectProp.HAS_SUBJECT);
 		Assert.assertNotNull(subjects);
-		Assert.assertEquals(5, subjects.size());
+		Assert.assertEquals(4, subjects.size());
+
+		// external URI's from concordance files
+		MapOfLists<ObjectProp, String> externals = cartographyEntity.getExternalRelationships();
+		Assert.assertNotNull(externals);
+		List<String> externalUris = externals.getValues(Ld4lObjectProp.HAS_SUBJECT);
+		Assert.assertNotNull(externalUris);
+		Assert.assertEquals(2, externalUris.size());
 		
 		// place keywords
 		List<Entity> geographicCoverages = relationships.getValues(FgdcObjectProp.GEOGRAPHIC_COVERAGE);

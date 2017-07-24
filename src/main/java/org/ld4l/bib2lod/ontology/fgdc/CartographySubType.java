@@ -4,7 +4,6 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.ld4l.bib2lod.ontology.Namespace;
 import org.ld4l.bib2lod.ontology.Type;
-import org.ld4l.bib2lod.ontology.ld4l.Ld4lNamespace;
 
 /**
  * Enumerates the cartography sub-types used in the LD4L BIBFRAME 2 extensions and

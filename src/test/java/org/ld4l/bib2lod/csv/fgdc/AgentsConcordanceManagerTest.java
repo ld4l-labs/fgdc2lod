@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class AgentsConcordanceConcordanceManagerTest {
+public class AgentsConcordanceManagerTest {
 
 	private static final String TEST_CSV_FILE = "/test_Agents_concordance_v1.csv";
     private static final Logger LOGGER = LogManager.getLogger();
