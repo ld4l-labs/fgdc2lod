@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.ld4l.bib2lod.csv.AbstractConcordanceManager;
+
 import com.opencsv.CSVReader;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
@@ -51,7 +53,7 @@ public class FASTConcordanceManager extends AbstractConcordanceManager<FASTConco
 	}
 	
 	/**
-	 * @see org.ld4l.bib2lod.csv.fgdc.AbstractConcordanceManager#initBeanMap(com.opencsv.bean.HeaderColumnNameTranslateMappingStrategy, com.opencsv.CSVReader)
+	 * @see org.ld4l.bib2lod.csv.AbstractConcordanceManager#initBeanMap(com.opencsv.bean.HeaderColumnNameTranslateMappingStrategy, com.opencsv.CSVReader)
 	 */
 	@Override
 	protected Map<String, FASTConcordanceBean> initBeanMap(
@@ -69,7 +71,7 @@ public class FASTConcordanceManager extends AbstractConcordanceManager<FASTConco
 	}
 
 	/**
-	 * @see org.ld4l.bib2lod.csv.fgdc.AbstractConcordanceManager#getCsvColumnEnums()
+	 * @see org.ld4l.bib2lod.csv.AbstractConcordanceManager#getCsvColumnEnums()
 	 */
 	@SuppressWarnings("rawtypes")
 	@Override
@@ -82,7 +84,7 @@ public class FASTConcordanceManager extends AbstractConcordanceManager<FASTConco
 	}
 	
 	/**
-	 * @see org.ld4l.bib2lod.csv.fgdc.AbstractConcordanceManager#getBeanClass()
+	 * @see org.ld4l.bib2lod.csv.AbstractConcordanceManager#getBeanClass()
 	 */
 	@Override
 	protected Class<FASTConcordanceBean> getBeanClass() {

@@ -1,6 +1,6 @@
 /* $This file is distributed under the terms of the license in /doc/license.txt$ */
 
-package org.ld4l.bib2lod.csv.fgdc;
+package org.ld4l.bib2lod.csv;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -77,7 +77,7 @@ abstract public class AbstractConcordanceManager<T> {
 	/**
 	 * Map of keyword to AgentsConcordanceBean - for use in unit tests.
 	 */
-	protected Map<String, T> getMap() {
+	public Map<String, T> getMap() {
 		return map;
 	}
 	
