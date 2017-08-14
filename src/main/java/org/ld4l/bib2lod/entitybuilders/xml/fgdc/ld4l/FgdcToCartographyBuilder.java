@@ -82,7 +82,7 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
         buildSubtype();
         
         // add genericForm
-        this.work.addExternalRelationship(FgdcObjectProp.GENRE_FORM, FgdcToCartographyBuilder.GENRE_FORM_URI);
+        this.work.addExternalRelationship(Ld4lObjectProp.GENRE_FORM, FgdcToCartographyBuilder.GENRE_FORM_URI);
         // add language
         this.work.addExternalRelationship(Ld4lObjectProp.HAS_LANGUAGE, ENG_LANGUAGE_URI);
 

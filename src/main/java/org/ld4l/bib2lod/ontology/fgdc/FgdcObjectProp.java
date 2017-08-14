@@ -8,7 +8,6 @@ import org.ld4l.bib2lod.ontology.ld4l.Ld4lNamespace;
 
 public enum FgdcObjectProp implements ObjectProp {
 
-    GENRE_FORM(Ld4lNamespace.BIBFRAME, "genreForm"),
     GEOGRAPHIC_COVERAGE(Ld4lNamespace.BIBFRAME, "geographicCoverage"),
     HAS_COORDINATES(CartographyNamespace.RDAU, "P60109"),
     HAS_PROJECTION(Ld4lNamespace.BIBFRAME, "projection"), // TODO: move to bib2lod project?
