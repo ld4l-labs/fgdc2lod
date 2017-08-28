@@ -49,7 +49,7 @@ public class FgdcToCartographySubtypeBuilder extends FgdcToLd4lEntityBuilder {
                     "A FgdcRecord is required to build a CartographySubtype.");
         }
         
-        Entity work = params.getParentEntity();
+        Entity work = params.getParent();
         if (work == null) {
         	throw new EntityBuilderException("A related Entity is required to build a cartography subtype.");
         }

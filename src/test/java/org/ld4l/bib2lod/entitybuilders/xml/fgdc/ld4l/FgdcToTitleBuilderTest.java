@@ -43,7 +43,7 @@ public class FgdcToTitleBuilderTest extends AbstractTestClass {
 		
 		BuildParams params = new BuildParams();
 		params.setRecord(fgdcRecord);
-		params.setParentEntity(relatedEntity);
+		params.setParent(relatedEntity);
 		
 		Entity titleEntity = titleBuilder.build(params);
 
@@ -62,7 +62,7 @@ public class FgdcToTitleBuilderTest extends AbstractTestClass {
 		expectException(EntityBuilderException.class, "A FgdcRecord is required to build a title.");
 		BuildParams params = new BuildParams();
 		params.setRecord(null);
-		params.setParentEntity(relatedEntity);
+		params.setParent(relatedEntity);
 		
 		titleBuilder.build(params);
 	}
@@ -72,7 +72,7 @@ public class FgdcToTitleBuilderTest extends AbstractTestClass {
 		expectException(EntityBuilderException.class, "A related Entity is required to build a title.");
 		BuildParams params = new BuildParams();
 		params.setRecord(fgdcRecord);
-		params.setParentEntity(null);
+		params.setParent(null);
 		
 		titleBuilder.build(params);
 	}

@@ -91,30 +91,30 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
     
     private void buildTitle() throws EntityBuilderException { 
         
-        EntityBuilder builder = getBuilder(Ld4lTitleType.class);
+        EntityBuilder builder = getBuilder(Ld4lTitleType.TITLE);
         BuildParams params = new BuildParams()
                 .setRecord(record)
-                .setParentEntity(work);
+                .setParent(work);
         builder.build(params);
     }
     
     private void buildInstances() throws EntityBuilderException {
         
-        EntityBuilder builder = getBuilder(Ld4lInstanceType.class);
+        EntityBuilder builder = getBuilder(Ld4lInstanceType.INSTANCE);
 
         BuildParams params = new BuildParams()
                 .setRecord(record)
-                .setParentEntity(work);        
+                .setParent(work);        
         builder.build(params);
     }
     
     private void buildGeometry() throws EntityBuilderException {
         
-        EntityBuilder builder = getBuilder(CartographyType.class);
+        EntityBuilder builder = getBuilder(CartographyType.GEOMETRY);
 
         BuildParams params = new BuildParams()
                 .setRecord(record)
-                .setParentEntity(work);        
+                .setParent(work);        
         builder.build(params);
     }
     
@@ -128,14 +128,14 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
     
     private void buildOriginatorActivity() throws EntityBuilderException {
         
-        EntityBuilder builder = getBuilder(Ld4lActivityType.class);
+        EntityBuilder builder = getBuilder(Ld4lActivityType.ACTIVITY);
 		List<FgdcTextField> origins = record.getCiteinfoField().getOrigins();
 		if (origins.size() > 0) {
 			for (BaseFgdcField originField : origins) {
 				BuildParams params = new BuildParams()
 					.setRecord(record)
 					.setField(originField)
-	    			.setParentEntity(work)
+	    			.setParent(work)
 	    			.setType(Ld4lActivityType.ORIGINATOR_ACTIVITY);
 				builder.build(params);
 			}
@@ -143,14 +143,14 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
     }
     
     private void buildAnnotations() throws EntityBuilderException {
-        EntityBuilder builder = getBuilder(Ld4lAnnotationType.class);
+        EntityBuilder builder = getBuilder(Ld4lAnnotationType.ANNOTATION);
         
         BaseFgdcField field = record.getPurposeField();
         if (field != null) {
         	BuildParams params = new BuildParams()
         			.setRecord(record)
         			.setField(field)
-        			.setParentEntity(work);
+        			.setParent(work);
         	builder.build(params);
         }
 
@@ -159,7 +159,7 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
         	BuildParams params = new BuildParams()
         			.setRecord(record)
         			.setField(field)
-        			.setParentEntity(work);
+        			.setParent(work);
         	builder.build(params);
         }
     }
@@ -167,11 +167,11 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
     private void buildSubtype() throws EntityBuilderException {
         
     	if (record.getCiteinfoField() != null) {
-    		EntityBuilder builder = getBuilder(CartographySubType.class);
+    		EntityBuilder builder = getBuilder(CartographySubType.CART_SUBTYPE);
     		
     		BuildParams params = new BuildParams()
     				.setRecord(record)
-    				.setParentEntity(work);        
+    				.setParent(work);        
     		builder.build(params);
     	}
     }

@@ -32,7 +32,7 @@ public class FgdcToInstanceBuilder extends FgdcToLd4lEntityBuilder {
 					"A FgdcRecord is required to build an Instance.");
 		}
 
-		this.work = params.getParentEntity();
+		this.work = params.getParent();
         if (work == null) {
             throw new EntityBuilderException(
                     "A related Entity is required to build an Instance.");
@@ -52,30 +52,30 @@ public class FgdcToInstanceBuilder extends FgdcToLd4lEntityBuilder {
     
     private void buildTitle() throws EntityBuilderException { 
         
-        EntityBuilder builder = getBuilder(Ld4lTitleType.class);
+        EntityBuilder builder = getBuilder(Ld4lTitleType.TITLE);
         BuildParams params = new BuildParams()
                 .setRecord(record)
-                .setParentEntity(instance);
+                .setParent(instance);
         builder.build(params);
     }
     
     private void buildItem() throws EntityBuilderException {
         
-        EntityBuilder builder = getBuilder(Ld4lItemType.class);
+        EntityBuilder builder = getBuilder(Ld4lItemType.ITEM);
 
         BuildParams params = new BuildParams()
                 .setRecord(record)
-                .setParentEntity(instance);        
+                .setParent(instance);        
         builder.build(params);
     }   
     
     private void buildPublisherActivity() throws EntityBuilderException {
         
-        EntityBuilder builder = getBuilder(Ld4lActivityType.class);
+        EntityBuilder builder = getBuilder(Ld4lActivityType.ACTIVITY);
         
         BuildParams params = new BuildParams()
                 .setRecord(record)     
-                .setParentEntity(instance)
+                .setParent(instance)
                 .setType(Ld4lActivityType.PUBLISHER_ACTIVITY);
         builder.build(params);
     }

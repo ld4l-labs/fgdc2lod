@@ -48,7 +48,7 @@ public class FgdcToGeometryBuilderTest extends AbstractTestClass {
 
 		BuildParams params = new BuildParams();
 		params.setRecord(fgdcRecord);
-		params.setParentEntity(relatedEntity);
+		params.setParent(relatedEntity);
 		
 		Entity geometryEntity = geometryBuilder.build(params);
 		
@@ -89,7 +89,7 @@ public class FgdcToGeometryBuilderTest extends AbstractTestClass {
 		expectException(EntityBuilderException.class, "A FgdcRecord is required to build a geometry.");
 		BuildParams params = new BuildParams();
 		params.setRecord(null);
-		params.setParentEntity(relatedEntity);
+		params.setParent(relatedEntity);
 		
 		geometryBuilder.build(params);
 	}
@@ -99,7 +99,7 @@ public class FgdcToGeometryBuilderTest extends AbstractTestClass {
 		expectException(EntityBuilderException.class, "A related Entity is required to build a geometry.");
 		BuildParams params = new BuildParams();
 		params.setRecord(fgdcRecord);
-		params.setParentEntity(null);
+		params.setParent(null);
 		
 		geometryBuilder.build(params);
 	}

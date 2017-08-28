@@ -28,7 +28,7 @@ public class FgdcToTitleBuilder extends FgdcToLd4lEntityBuilder {
                     "A FgdcRecord is required to build a title.");
         }
 
-        Entity bibEntity = params.getParentEntity();
+        Entity bibEntity = params.getParent();
         if (bibEntity == null) {
             throw new EntityBuilderException(
                     "A related Entity is required to build a title.");

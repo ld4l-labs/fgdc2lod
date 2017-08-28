@@ -32,7 +32,7 @@ public class FgdcToGeometryBuilder extends FgdcToLd4lEntityBuilder {
                     "A FgdcRecord is required to build a geometry.");
         }
 
-        Entity cartography = params.getParentEntity();
+        Entity cartography = params.getParent();
         if (cartography == null) {
             throw new EntityBuilderException(
                     "A related Entity is required to build a geometry.");

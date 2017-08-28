@@ -61,7 +61,7 @@ public class FgdcToActivityBuilderTest extends AbstractTestClass {
 		
 		BuildParams params = new BuildParams()
 				.setRecord(fgdcRecord)
-				.setParentEntity(relatedEntity)
+				.setParent(relatedEntity)
 				.setField(originatorField)
 				.setType(Ld4lActivityType.ORIGINATOR_ACTIVITY);
 		
@@ -91,7 +91,7 @@ public class FgdcToActivityBuilderTest extends AbstractTestClass {
 		
 		BuildParams params = new BuildParams()
 				.setRecord(fgdcRecord)
-				.setParentEntity(relatedEntity)
+				.setParent(relatedEntity)
 				.setType(Ld4lActivityType.PUBLISHER_ACTIVITY);
 		
 		Entity activityEntity = activityBuilder.build(params);
@@ -114,7 +114,7 @@ public class FgdcToActivityBuilderTest extends AbstractTestClass {
 		Assert.assertNotNull(agents);
 		Assert.assertEquals(1, agents.size());
 		
-		List<Entity> locations = relationships.getValues(Ld4lObjectProp.IS_AT_LOCATION);
+		List<Entity> locations = relationships.getValues(Ld4lObjectProp.HAS_LOCATION);
 		Assert.assertNotNull(locations);
 		Assert.assertEquals(1, locations.size());
 		
@@ -129,7 +129,7 @@ public class FgdcToActivityBuilderTest extends AbstractTestClass {
 		expectException(EntityBuilderException.class, "A FgdcRecord is required to build an Activity.");
 		BuildParams params = new BuildParams()
 				.setRecord(null)
-				.setParentEntity(relatedEntity)
+				.setParent(relatedEntity)
 				.setType(Ld4lActivityType.ORIGINATOR_ACTIVITY);
 		
 		activityBuilder.build(params);
@@ -140,7 +140,7 @@ public class FgdcToActivityBuilderTest extends AbstractTestClass {
 		expectException(EntityBuilderException.class, "A FgdcField originField is required to build an Activity.");
 		BuildParams params = new BuildParams()
 				.setRecord(fgdcRecord)
-				.setParentEntity(relatedEntity)
+				.setParent(relatedEntity)
 				.setField(null)
 				.setType(Ld4lActivityType.ORIGINATOR_ACTIVITY);
 		
@@ -152,7 +152,7 @@ public class FgdcToActivityBuilderTest extends AbstractTestClass {
 		expectException(EntityBuilderException.class, "A related Entity is required to build an Activity.");
 		BuildParams params = new BuildParams()
 				.setRecord(fgdcRecord)
-				.setParentEntity(null)
+				.setParent(null)
 				.setType(Ld4lActivityType.ORIGINATOR_ACTIVITY);
 		
 		activityBuilder.build(params);
@@ -163,7 +163,7 @@ public class FgdcToActivityBuilderTest extends AbstractTestClass {
 		expectException(EntityBuilderException.class, "An Ld4lActivityType is required to build an Activity.");
 		BuildParams params = new BuildParams()
 				.setRecord(fgdcRecord)
-				.setParentEntity(relatedEntity)
+				.setParent(relatedEntity)
 				.setType(null);
 		
 		activityBuilder.build(params);
@@ -174,7 +174,7 @@ public class FgdcToActivityBuilderTest extends AbstractTestClass {
 		expectException(EntityBuilderException.class, "Non-specific Activity type not indicated: " + Ld4lActivityType.ACTIVITY.label());
 		BuildParams params = new BuildParams()
 				.setRecord(fgdcRecord)
-				.setParentEntity(relatedEntity)
+				.setParent(relatedEntity)
 				.setType(Ld4lActivityType.ACTIVITY);
 		
 		activityBuilder.build(params);

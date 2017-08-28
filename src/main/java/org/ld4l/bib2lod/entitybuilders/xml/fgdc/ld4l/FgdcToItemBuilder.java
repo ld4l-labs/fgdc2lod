@@ -25,7 +25,7 @@ public class FgdcToItemBuilder extends FgdcToLd4lEntityBuilder {
                     "A FgdcRecord is required to build an Item.");
         }
 
-        Entity instance = params.getParentEntity();
+        Entity instance = params.getParent();
         if (instance == null) {
             throw new EntityBuilderException(
                     "A related Entity is required to build an Item.");

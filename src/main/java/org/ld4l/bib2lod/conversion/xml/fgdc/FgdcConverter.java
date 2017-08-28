@@ -33,7 +33,7 @@ public class FgdcConverter extends BaseConverter {
 	@Override
 	protected Entity buildEntity(Record record)
 			throws EntityBuilderException {
-        EntityBuilder cartographyBuilder = getBuilder(Ld4lWorkType.class);
+        EntityBuilder cartographyBuilder = getBuilder(Ld4lWorkType.CARTOGRAPHY);
         BuildParams params = new BuildParams()
                 .setRecord(record);
         return cartographyBuilder.build(params);

@@ -13,7 +13,6 @@ import org.ld4l.bib2lod.ontology.ld4l.Ld4lNamespace;
 public enum CartographyType implements Type {
     
 	GEOMETRY(CartographyNamespace.GEO, "Geometry"),
-	CARTOGRAPIC(Ld4lNamespace.BIBFRAME, "Cartographic"),
 	DATASET(Ld4lNamespace.BIBFRAME, "Dataset"),
 	EPSG_CODE(CartographyNamespace.CARTOTEKO, "EpsgCode"),
     PROJECTION(Ld4lNamespace.BIBFRAME, "Projection");

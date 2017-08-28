@@ -36,7 +36,7 @@ public class FgdcToAgentBuilder extends FgdcToLd4lEntityBuilder {
     @Override
     public Entity build(BuildParams params) throws EntityBuilderException {
         
-        Entity bibEntity = params.getParentEntity();
+        Entity bibEntity = params.getParent();
         if (bibEntity == null) {
         	throw new EntityBuilderException("A related Entity is required to build a title.");
         }

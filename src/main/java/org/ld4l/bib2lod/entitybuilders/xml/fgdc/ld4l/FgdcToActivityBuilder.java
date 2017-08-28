@@ -33,7 +33,7 @@ public class FgdcToActivityBuilder extends FgdcToLd4lEntityBuilder {
                     "A FgdcRecord is required to build an Activity.");
         }
 
-        Entity bibEntity = params.getParentEntity();
+        Entity bibEntity = params.getParent();
         if (bibEntity == null) {
             throw new EntityBuilderException(
                     "A related Entity is required to build an Activity.");
@@ -53,11 +53,11 @@ public class FgdcToActivityBuilder extends FgdcToLd4lEntityBuilder {
                 throw new EntityBuilderException(
                         "A FgdcField originField is required to build an Activity.");
             }
-			EntityBuilder builder = getBuilder(Ld4lAgentType.class);
+			EntityBuilder builder = getBuilder(Ld4lAgentType.AGENT);
 			BuildParams params2 = new BuildParams()
 					.setRecord(record)
 					.setField(originField)
-					.setParentEntity(activity);
+					.setParent(activity);
 			builder.build(params2);
 			bibEntity.addRelationship(Ld4lObjectProp.HAS_ACTIVITY, activity);
 	    	
@@ -68,11 +68,11 @@ public class FgdcToActivityBuilder extends FgdcToLd4lEntityBuilder {
     		boolean atLeastOneField = false;
 
     		if (agentField != null) {
-    			EntityBuilder builder = getBuilder(Ld4lAgentType.class);
+    			EntityBuilder builder = getBuilder(Ld4lAgentType.AGENT);
     	        BuildParams params2 = new BuildParams()
     	                .setRecord(record)
     	                .setField(agentField)
-    	                .setParentEntity(activity);
+    	                .setParent(activity);
     	        builder.build(params2);
 				atLeastOneField = true;
 			}
@@ -81,7 +81,7 @@ public class FgdcToActivityBuilder extends FgdcToLd4lEntityBuilder {
 			if (pubplaceField != null) {
 				Entity location = new Entity(Ld4lLocationType.LOCATION);
 				location.addAttribute(Ld4lDatatypeProp.LABEL, pubplaceField.getTextValue());
-				activity.addRelationship(Ld4lObjectProp.IS_AT_LOCATION, location);
+				activity.addRelationship(Ld4lObjectProp.HAS_LOCATION, location);
 				atLeastOneField = true;
 			}
 			

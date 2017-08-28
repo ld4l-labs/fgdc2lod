@@ -43,7 +43,7 @@ public class FgdcToAgentBuilderTest extends AbstractTestClass {
 		
 		BuildParams params = new BuildParams()
 				.setField(agentField)
-				.setParentEntity(relatedEntity);
+				.setParent(relatedEntity);
 		
 		Entity agentEntity = agentBuilder.build(params);
 
@@ -63,7 +63,7 @@ public class FgdcToAgentBuilderTest extends AbstractTestClass {
 	public void nullAgent_ThrowsException() throws Exception {
 		expectException(EntityBuilderException.class, "An agentField is required to build an Agent.");
 		BuildParams params = new BuildParams()
-				.setParentEntity(relatedEntity)
+				.setParent(relatedEntity)
 				.setField(null);
 		
 		agentBuilder.build(params);
@@ -73,7 +73,7 @@ public class FgdcToAgentBuilderTest extends AbstractTestClass {
 	public void nullRelatedEntity_ThrowsException() throws Exception {
 		expectException(EntityBuilderException.class, "A related Entity is required to build a title.");
 		BuildParams params = new BuildParams()
-				.setParentEntity(null)
+				.setParent(null)
 				.setField(agentField);
 		
 		agentBuilder.build(params);
