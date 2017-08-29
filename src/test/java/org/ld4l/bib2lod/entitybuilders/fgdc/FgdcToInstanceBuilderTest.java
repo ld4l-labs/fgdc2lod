@@ -1,6 +1,6 @@
 /* $This file is distributed under the terms of the license in /doc/license.txt$ */
 
-package org.ld4l.bib2lod.entitybuilders.xml.fgdc.ld4l;
+package org.ld4l.bib2lod.entitybuilders.fgdc;
 
 import java.util.List;
 
@@ -12,6 +12,8 @@ import org.ld4l.bib2lod.entity.Entity;
 import org.ld4l.bib2lod.entitybuilders.BuildParams;
 import org.ld4l.bib2lod.entitybuilders.EntityBuilder;
 import org.ld4l.bib2lod.entitybuilders.EntityBuilder.EntityBuilderException;
+import org.ld4l.bib2lod.entitybuilders.fgdc.FgdcToInstanceBuilder;
+import org.ld4l.bib2lod.entitybuilders.fgdc.FgdcToLd4lEntityBuilderFactory;
 import org.ld4l.bib2lod.entitybuilders.EntityBuilderFactory;
 import org.ld4l.bib2lod.ontology.ObjectProp;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lDatatypeProp;
