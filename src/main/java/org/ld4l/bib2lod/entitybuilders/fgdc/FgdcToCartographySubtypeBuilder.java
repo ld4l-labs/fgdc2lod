@@ -9,9 +9,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.ld4l.bib2lod.csv.fgdc.FgdcGeoformConcordanceBean;
 import org.ld4l.bib2lod.csv.fgdc.FgdcGeoformConcordanceManager;
+import org.ld4l.bib2lod.datatypes.Ld4lCustomDatatypes;
+import org.ld4l.bib2lod.entity.Attribute;
 import org.ld4l.bib2lod.entity.Entity;
 import org.ld4l.bib2lod.entitybuilders.BuildParams;
 import org.ld4l.bib2lod.ontology.fgdc.CartographySubType;
+import org.ld4l.bib2lod.ontology.ld4l.Ld4lDatatypeProp;
 import org.ld4l.bib2lod.record.xml.fgdc.FgdcCiteinfoField;
 import org.ld4l.bib2lod.record.xml.fgdc.FgdcRecord;
 import org.ld4l.bib2lod.record.xml.fgdc.FgdcTextField;
@@ -35,13 +38,6 @@ public class FgdcToCartographySubtypeBuilder extends FgdcToLd4lEntityBuilder {
     
     @Override
     public Entity build(BuildParams params) throws EntityBuilderException {
-
-    	
-    	try {
-			concordanceManager = new FgdcGeoformConcordanceManager();
-		} catch (IOException | URISyntaxException e) {
-			throw new EntityBuilderException("Could not instantiate FgdcGeoformConcordanceManager", e);
-		}
 
     	FgdcRecord record = (FgdcRecord) params.getRecord();
         if (record == null) {
@@ -76,7 +72,11 @@ public class FgdcToCartographySubtypeBuilder extends FgdcToLd4lEntityBuilder {
     		}
     		
     	} else {
-    		// TODO: when no match in concordance file
+    		// If no concordance match, create a comment attribute with text that doesn't find a match.
+    		String editorialNote = "geospatial data presentation form literal: " + geoFormField.getTextValue();
+        	Attribute commentAttr = new Attribute(editorialNote,
+        			Ld4lCustomDatatypes.BibDatatype.LEGACY_SOURCE_DATA);
+        	work.addAttribute(Ld4lDatatypeProp.COMMENT, commentAttr);
     	}
     	
         return work;

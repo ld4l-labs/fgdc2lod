@@ -7,13 +7,15 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.ld4l.bib2lod.datatypes.Ld4lCustomDatatypes;
+import org.ld4l.bib2lod.entity.Attribute;
 import org.ld4l.bib2lod.entity.Entity;
 import org.ld4l.bib2lod.entitybuilders.BuildParams;
 import org.ld4l.bib2lod.entitybuilders.EntityBuilder;
 import org.ld4l.bib2lod.entitybuilders.EntityBuilder.EntityBuilderException;
-import org.ld4l.bib2lod.entitybuilders.fgdc.FgdcToCartographySubtypeBuilder;
 import org.ld4l.bib2lod.ontology.Type;
 import org.ld4l.bib2lod.ontology.fgdc.CartographySubType;
+import org.ld4l.bib2lod.ontology.ld4l.Ld4lDatatypeProp;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lWorkType;
 import org.ld4l.bib2lod.record.xml.fgdc.FgdcRecord;
 import org.ld4l.bib2lod.records.Record.RecordException;
@@ -54,6 +56,30 @@ public class FgdcToCartographySubtypeBuilderTest extends AbstractTestClass {
 		// Only check subtypes
 		Assert.assertTrue(types.contains(CartographySubType.CART_MAPS));
 		Assert.assertTrue(types.contains(CartographySubType.CART_GEOREFERENCED_RESOURCES));
+	}
+	
+	@Test
+	public void validButNonMatchingConcordanceRecord() throws Exception {
+
+		fgdcRecord = buildFgdcRecordFromString(FgdcTestData.VALID_BUT_NON_MATCHING_CONCORDANCE_SUBTYPE);
+		
+		BuildParams params = new BuildParams()
+				.setRecord(fgdcRecord)
+				.setParent(relatedEntity);
+		
+		Entity cartographyEntity = subtypeBuilder.build(params);
+
+		Assert.assertNotNull(cartographyEntity);
+		List<Type> types = cartographyEntity.getTypes();
+		Assert.assertNotNull(types);
+		Assert.assertFalse(types.contains(CartographySubType.CART_MAPS));
+		Assert.assertFalse(types.contains(CartographySubType.CART_GEOREFERENCED_RESOURCES));
+		
+		Attribute commentAttr = cartographyEntity.getAttribute(Ld4lDatatypeProp.COMMENT);
+		Assert.assertNotNull(commentAttr);
+		Assert.assertTrue(commentAttr.getValue().contains(FgdcTestData.NON_MATCHING_CONCORDANCE_SUBTYPE_TEXT));
+		Assert.assertNotNull(commentAttr.getDatatype());
+		Assert.assertEquals(Ld4lCustomDatatypes.BibDatatype.LEGACY_SOURCE_DATA, commentAttr.getDatatype());
 	}
 	
 	@Test

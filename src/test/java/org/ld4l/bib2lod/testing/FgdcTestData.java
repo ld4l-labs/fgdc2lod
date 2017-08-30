@@ -162,6 +162,22 @@ public class FgdcTestData {
 			"</idinfo>" +
 		"</metadata>";
 
+	public static final String NON_MATCHING_CONCORDANCE_SUBTYPE_TEXT = "BOGUS";
+	public static final String VALID_BUT_NON_MATCHING_CONCORDANCE_SUBTYPE = 
+        "<metadata layerid='CAMBRIDGE14PUBLICLIBRARIES'>" +
+			"<idinfo>" +
+				"<citation>" +
+					"<citeinfo>" +
+						"<origin>Cambridge (Mass.). Geographic Information Systems</origin>" +
+						"<origin>Cambridge (Mass.). Public Library</origin>" +
+						"<pubdate>2014</pubdate>" +
+						"<title>Public Libraries, Cambridge, Massachusetts, 2014</title>" +
+						"<geoform>" + NON_MATCHING_CONCORDANCE_SUBTYPE_TEXT + "</geoform>" +
+					"</citeinfo>" +
+				"</citation>" +
+			"</idinfo>" +
+		"</metadata>";
+
 	public static final String VALID_THEME = 
 		"<theme>" +
 			"<themekt>LCSH</themekt>" +
