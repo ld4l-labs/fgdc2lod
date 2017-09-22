@@ -50,4 +50,9 @@ public enum CartographySubType implements Type {
     	return null;
     }
 
+	@Override
+	public Type superclass() {
+		return null;
+	}
+
 }

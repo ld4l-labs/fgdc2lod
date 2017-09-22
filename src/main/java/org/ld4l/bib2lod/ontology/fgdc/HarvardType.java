@@ -32,6 +32,11 @@ public enum HarvardType implements Type {
     @Override
     public Resource ontClass() {
         return ontClass;
-    } 
+    }
+
+	@Override
+	public Type superclass() {
+		return null;
+	} 
 
 }

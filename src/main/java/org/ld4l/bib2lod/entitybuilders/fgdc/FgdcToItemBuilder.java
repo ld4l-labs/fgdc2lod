@@ -31,7 +31,7 @@ public class FgdcToItemBuilder extends FgdcToLd4lEntityBuilder {
                     "A related Entity is required to build an Item.");
         }
         
-        Entity  item = new Entity(Ld4lItemType.superClass());
+        Entity  item = new Entity(Ld4lItemType.defaultType());
         FgdcTextField electronicLocatorField = record.getCiteinfoField().getOnlink();
         if (electronicLocatorField != null) {
         	item.addExternalRelationship(Ld4lObjectProp.HAS_ELECTRONIC_LOCATOR, electronicLocatorField.getTextValue());

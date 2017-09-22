@@ -39,4 +39,9 @@ public enum GeographicCoverageType implements Type {
         return GEOGRAPHIC_COVERAGE;
     }
 
+	@Override
+	public Type superclass() {
+		return GEOGRAPHIC_COVERAGE;
+	}
+
 }

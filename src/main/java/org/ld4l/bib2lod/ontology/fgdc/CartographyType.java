@@ -42,4 +42,9 @@ public enum CartographyType implements Type {
         return GEOMETRY;
     }
 
+	@Override
+	public Type superclass() {
+		return null;
+	}
+
 }

@@ -215,7 +215,7 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
                 		source.addAttribute(Ld4lDatatypeProp.LABEL, themeKtFieldText);
                 		String editorialNote = "Harvard FGDC themekey derived from " + themeKtFieldText;
                 		source.addAttribute(Ld4lDatatypeProp.EDITORIAL_NOTE, editorialNote);
-            			Entity concept = new Entity(Ld4lConceptType.superClass());
+            			Entity concept = new Entity(Ld4lConceptType.defaultType());
             			concept.addAttribute(Ld4lDatatypeProp.LABEL, themeKey.getTextValue());
             			concept.addRelationship(FgdcObjectProp.HAS_SOURCE, source);
             			work.addRelationship(Ld4lObjectProp.HAS_SUBJECT, concept);
