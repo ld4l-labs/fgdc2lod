@@ -217,7 +217,7 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
                 		source.addAttribute(Ld4lDatatypeProp.EDITORIAL_NOTE, editorialNote);
             			Entity concept = new Entity(Ld4lConceptType.defaultType());
             			concept.addAttribute(Ld4lDatatypeProp.LABEL, themeKey.getTextValue());
-            			concept.addRelationship(FgdcObjectProp.HAS_SOURCE, source);
+            			concept.addRelationship(Ld4lObjectProp.HAS_SOURCE, source);
             			work.addRelationship(Ld4lObjectProp.HAS_SUBJECT, concept);
                 	}
                 }
@@ -241,7 +241,7 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
                 for (FgdcTextField key : placeField.getPlaceKeys()) {
                 	Entity geographicCoverage = new Entity(GeographicCoverageType.superClass());
                 	geographicCoverage.addAttribute(Ld4lDatatypeProp.LABEL, key.getTextValue());
-                	geographicCoverage.addRelationship(FgdcObjectProp.HAS_SOURCE, source);
+                	geographicCoverage.addRelationship(Ld4lObjectProp.HAS_SOURCE, source);
                 	work.addRelationship(FgdcObjectProp.GEOGRAPHIC_COVERAGE, geographicCoverage);
                 }
         	}

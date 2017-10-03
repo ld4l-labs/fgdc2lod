@@ -10,8 +10,7 @@ public enum FgdcObjectProp implements ObjectProp {
 
     GEOGRAPHIC_COVERAGE(Ld4lNamespace.BIBFRAME, "geographicCoverage"),
     HAS_COORDINATES(CartographyNamespace.RDAU, "P60109"),
-    HAS_PROJECTION(Ld4lNamespace.BIBFRAME, "projection"), // TODO: move to bib2lod project?
-    HAS_SOURCE(Ld4lNamespace.BIBLIOTEKO, "hasSource"); // TODO: move to bib2lod project?
+    HAS_PROJECTION(Ld4lNamespace.BIBFRAME, "projection");
    
     private String uri;
     private Property property;

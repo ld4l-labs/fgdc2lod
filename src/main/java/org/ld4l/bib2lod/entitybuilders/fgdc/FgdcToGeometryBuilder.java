@@ -13,6 +13,7 @@ import org.ld4l.bib2lod.ontology.fgdc.CartographyType;
 import org.ld4l.bib2lod.ontology.fgdc.FgdcDatatypeProp;
 import org.ld4l.bib2lod.ontology.fgdc.FgdcNamedIndividualType;
 import org.ld4l.bib2lod.ontology.fgdc.FgdcObjectProp;
+import org.ld4l.bib2lod.ontology.ld4l.Ld4lObjectProp;
 import org.ld4l.bib2lod.record.xml.fgdc.FgdcBoundingField;
 import org.ld4l.bib2lod.record.xml.fgdc.FgdcRecord;
 
@@ -49,7 +50,7 @@ public class FgdcToGeometryBuilder extends FgdcToLd4lEntityBuilder {
         	addProjection(geometry);
 
         	// when converting FGDC record, the Geometry always has its Cartography as source
-        	geometry.addRelationship(FgdcObjectProp.HAS_SOURCE, cartography);
+        	geometry.addRelationship(Ld4lObjectProp.HAS_SOURCE, cartography);
         	cartography.addRelationship(FgdcObjectProp.HAS_COORDINATES, geometry);
         }
         

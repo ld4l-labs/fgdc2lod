@@ -13,12 +13,12 @@ import org.ld4l.bib2lod.entity.Entity;
 import org.ld4l.bib2lod.entitybuilders.BuildParams;
 import org.ld4l.bib2lod.entitybuilders.EntityBuilder;
 import org.ld4l.bib2lod.entitybuilders.EntityBuilder.EntityBuilderException;
-import org.ld4l.bib2lod.entitybuilders.fgdc.FgdcToGeometryBuilder;
 import org.ld4l.bib2lod.ontology.DatatypeProp;
 import org.ld4l.bib2lod.ontology.ObjectProp;
 import org.ld4l.bib2lod.ontology.fgdc.FgdcDatatypeProp;
 import org.ld4l.bib2lod.ontology.fgdc.FgdcObjectProp;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lDatatypeProp;
+import org.ld4l.bib2lod.ontology.ld4l.Ld4lObjectProp;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lWorkType;
 import org.ld4l.bib2lod.record.xml.fgdc.FgdcRecord;
 import org.ld4l.bib2lod.records.Record.RecordException;
@@ -75,7 +75,7 @@ public class FgdcToGeometryBuilderTest extends AbstractTestClass {
 		Assert.assertNotNull(relationships);
 		Set<ObjectProp> objectProps = relationships.keys();
 		Assert.assertNotNull(objectProps);
-		Assert.assertTrue(objectProps.contains(FgdcObjectProp.HAS_SOURCE));
+		Assert.assertTrue(objectProps.contains(Ld4lObjectProp.HAS_SOURCE));
 		
 		// check external properties
 		MapOfLists<ObjectProp, String> externals = geometryEntity.getExternalRelationships();
