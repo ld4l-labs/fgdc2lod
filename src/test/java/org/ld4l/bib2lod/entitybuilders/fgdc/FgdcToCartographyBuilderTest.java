@@ -21,6 +21,7 @@ import org.ld4l.bib2lod.ontology.ObjectProp;
 import org.ld4l.bib2lod.ontology.Type;
 import org.ld4l.bib2lod.ontology.fgdc.CartographyType;
 import org.ld4l.bib2lod.ontology.fgdc.FgdcObjectProp;
+import org.ld4l.bib2lod.ontology.fgdc.HarvardType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lDatatypeProp;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lObjectProp;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lWorkType;
@@ -104,10 +105,14 @@ public class FgdcToCartographyBuilderTest extends AbstractTestClass {
 		Assert.assertEquals(1, geometries.size());
 		
 		// layer ID
-		List<Entity> layerIds = relationships.getValues(Ld4lObjectProp.IDENTIFIED_BY);
-		Assert.assertNotNull(layerIds);
-		Assert.assertEquals(1, layerIds.size());
-		Assert.assertEquals(fgdcRecord.getLayerId(), layerIds.get(0).getAttribute(Ld4lDatatypeProp.VALUE).getValue());
+		Entity layerId = cartographyEntity.getChild(Ld4lObjectProp.IDENTIFIED_BY, HarvardType.HGLID);
+		Assert.assertNotNull(layerId);
+		Assert.assertEquals(fgdcRecord.getLayerId(), layerId.getAttribute(Ld4lDatatypeProp.VALUE).getValue());
+
+		// Hollis number
+		Entity hollisNumber = cartographyEntity.getChild(Ld4lObjectProp.IDENTIFIED_BY, HarvardType.HOLLIS_NUMBER);
+		Assert.assertNotNull(hollisNumber);
+		Assert.assertEquals(fgdcRecord.getHollisNumber(), hollisNumber.getAttribute(Ld4lDatatypeProp.VALUE).getValue());
 		
 		// activities
 		List<Entity> activities = relationships.getValues(Ld4lObjectProp.HAS_ACTIVITY);

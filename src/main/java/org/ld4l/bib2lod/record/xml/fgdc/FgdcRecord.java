@@ -13,6 +13,7 @@ import org.w3c.dom.NodeList;
 public class FgdcRecord extends BaseXmlRecord {
     
     private static final String LAYER_ID_ATTRIBUTE_NAME = "layerid";
+    private static final String HOLLIS_NUMBER_ATTRIBUTE_NAME = "hollisno";
     
     private enum Field {
     		CITEINFO("citeinfo"),
@@ -29,6 +30,7 @@ public class FgdcRecord extends BaseXmlRecord {
     }
     
     private String layerId;
+    private String hollisNumber;
     private FgdcCiteinfoField citeinfoField;
     private BaseFgdcField abstractField;
     private BaseFgdcField purposeField;
@@ -49,6 +51,7 @@ public class FgdcRecord extends BaseXmlRecord {
 		boundingField = buildFgdcBoundingField(record);
 		keywordsField = buildFgdcKeywordsField(record);
 		layerId = record.getAttribute(LAYER_ID_ATTRIBUTE_NAME);
+		hollisNumber = record.getAttribute(HOLLIS_NUMBER_ATTRIBUTE_NAME);
 		isValid();
 	}
 	
@@ -111,6 +114,10 @@ public class FgdcRecord extends BaseXmlRecord {
 		return layerId;
 	}
 	
+	public String getHollisNumber() {
+		return hollisNumber;
+	}
+
 	public FgdcCiteinfoField getCiteinfoField() {
 		return citeinfoField;
 	}
@@ -136,6 +143,8 @@ public class FgdcRecord extends BaseXmlRecord {
 		StringBuilder builder = new StringBuilder();
 		builder.append("FgdcRecord [layerId=");
 		builder.append(layerId);
+		builder.append(", hollisNumber=");
+		builder.append(hollisNumber);
 		builder.append(", citeinfoField=");
 		builder.append(citeinfoField);
 		builder.append(", abstractField=");

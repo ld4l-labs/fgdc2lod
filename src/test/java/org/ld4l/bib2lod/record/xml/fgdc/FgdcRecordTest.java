@@ -1,5 +1,6 @@
 package org.ld4l.bib2lod.record.xml.fgdc;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.ld4l.bib2lod.records.Record.RecordException;
 import org.ld4l.bib2lod.records.RecordField.RecordFieldException;
@@ -18,7 +19,7 @@ public class FgdcRecordTest extends AbstractTestClass {
             "<metadata layerid=''></metadata>";
       
     private static final String VALID_record = 
-            "<metadata layerid='some_value'></metadata>";
+            "<metadata layerid='some_value' hollisno='1234'></metadata>";
 
  
     // ----------------------------------------------------------------------
@@ -40,7 +41,11 @@ public class FgdcRecordTest extends AbstractTestClass {
     @Test
     public void validRecord_Valid() throws Exception {
         // No exception
-    	buildFgdcRecordFromString(VALID_record);
+    	FgdcRecord record = buildFgdcRecordFromString(VALID_record);
+    	Assert.assertNotNull(record);
+    	String hollisNumber = record.getHollisNumber();
+    	Assert.assertNotNull(hollisNumber);
+    	Assert.assertEquals("1234", hollisNumber);
     }
 
     // ----------------------------------------------------------------------

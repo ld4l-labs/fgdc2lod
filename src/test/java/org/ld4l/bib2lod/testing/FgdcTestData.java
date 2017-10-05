@@ -109,7 +109,7 @@ public class FgdcTestData {
 ////////////////
 
 	public static final String VALID_KEYWORDS = 
-        "<metadata layerid='CAMBRIDGE14PUBLICLIBRARIES'>" +
+        "<metadata layerid='CAMBRIDGE14PUBLICLIBRARIES' hollisno='014266502'>" +
 			"<idinfo>" +
 				"<citation>" +
 					"<citeinfo>" +

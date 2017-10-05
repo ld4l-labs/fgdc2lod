@@ -124,6 +124,13 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
 		String layerId = record.getLayerId(); // should be validated as non-null
 		identifier.addAttribute(Ld4lDatatypeProp.VALUE, layerId);
 		work.addRelationship(Ld4lObjectProp.IDENTIFIED_BY, identifier);
+    	
+		identifier = new Entity(HarvardType.HOLLIS_NUMBER);
+		String hollisNumber = record.getHollisNumber(); // could be null or empty
+		if (hollisNumber != null && hollisNumber.length() > 0) {
+			identifier.addAttribute(Ld4lDatatypeProp.VALUE, hollisNumber);
+			work.addRelationship(Ld4lObjectProp.IDENTIFIED_BY, identifier);
+		}
     }
     
     private void buildOriginatorActivity() throws EntityBuilderException {
