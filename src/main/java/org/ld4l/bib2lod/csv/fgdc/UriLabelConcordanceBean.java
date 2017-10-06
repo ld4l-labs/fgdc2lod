@@ -3,9 +3,10 @@
 package org.ld4l.bib2lod.csv.fgdc;
 
 /**
- * This bean represents one row in the concordance Agents_concordance_v1.csv file.
+ * This bean represents one row in a concordance file that contains 3 columns: a look-up value,
+ * a URI and a label.
  */
-public class AgentsConcordanceBean {
+public class UriLabelConcordanceBean {
 	
 	private String matchingText;
 	private String uri;

@@ -9,12 +9,11 @@ import org.ld4l.bib2lod.ontology.Namespace;
 /**
  * Define the FGDC-related ontology namespaces.
  */
-// TODO See if we can use ontology files to define these instead.
 public enum CartographyNamespace implements Namespace {
 
 	GEO("http://www.opengis.net/ont/geosparql#", "geo"),
-//    CARTOTEKO("http://ld4l.org/ontology/ld4lcm/", "metal"),
-    CARTOTEKO("http://ld4l.org/ontology/cartotek-o/", "cart"),
+	// FIXME: This needs a correct namespace
+	CARTOTEKO("http://ld4l.org/ontology/cartotek-o/", "cart"),
     RDAU("http://rdaregistry.info/Elements/u/", "rdau");
 
     private static final Logger LOGGER = LogManager.getLogger(); 

@@ -2,8 +2,7 @@
 
 package org.ld4l.bib2lod.entitybuilders.fgdc;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
+import java.io.FileNotFoundException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,7 +30,7 @@ public class FgdcToCartographySubtypeBuilder extends FgdcToLd4lEntityBuilder {
     public FgdcToCartographySubtypeBuilder() throws EntityBuilderException {
     	try {
 			this.concordanceManager = new FgdcGeoformConcordanceManager();
-		} catch ( URISyntaxException | IOException e) {
+		} catch ( FileNotFoundException e) {
 			throw new EntityBuilderException("Could not instantiate FgdcGeoformConcordanceManager", e);
 		}
 	}

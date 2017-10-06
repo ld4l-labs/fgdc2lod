@@ -3,7 +3,6 @@
 package org.ld4l.bib2lod.csv.fgdc;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,7 +41,7 @@ public class FgdcGeoformConcordanceManager extends AbstractConcordanceManager<Fg
      * 
 	 * @throws FileNotFoundException - If file not found on classpath.
      */
-	public FgdcGeoformConcordanceManager() throws URISyntaxException, IOException {
+	public FgdcGeoformConcordanceManager() throws FileNotFoundException {
 		this(CONCORANCE_FILE_NAME);
 	}
 	
@@ -53,7 +52,7 @@ public class FgdcGeoformConcordanceManager extends AbstractConcordanceManager<Fg
 	 * @throws URISyntaxException 
 	 * @throws FileNotFoundException - If file not found on classpath.
 	 */
-	protected FgdcGeoformConcordanceManager(String fileName) throws URISyntaxException, IOException {
+	protected FgdcGeoformConcordanceManager(String fileName) throws FileNotFoundException {
 		super(fileName);
 	}
 	

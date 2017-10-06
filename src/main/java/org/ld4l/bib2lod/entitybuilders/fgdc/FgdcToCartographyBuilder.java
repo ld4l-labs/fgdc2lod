@@ -2,14 +2,13 @@
 
 package org.ld4l.bib2lod.entitybuilders.fgdc;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
+import java.io.FileNotFoundException;
 import java.util.List;
 
-import org.ld4l.bib2lod.csv.fgdc.FASTConcordanceBean;
-import org.ld4l.bib2lod.csv.fgdc.FASTConcordanceManager;
 import org.ld4l.bib2lod.csv.fgdc.IsoTopicConcordanceBean;
 import org.ld4l.bib2lod.csv.fgdc.IsoTopicConcordanceManager;
+import org.ld4l.bib2lod.csv.fgdc.UriLabelConcordanceBean;
+import org.ld4l.bib2lod.csv.fgdc.UriLabelConcordanceManager;
 import org.ld4l.bib2lod.entity.Entity;
 import org.ld4l.bib2lod.entitybuilders.BuildParams;
 import org.ld4l.bib2lod.entitybuilders.EntityBuilder;
@@ -41,7 +40,7 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
     private FgdcRecord record;
     private Entity work;
     private IsoTopicConcordanceManager isoTopicConcordanceManager;
-    private FASTConcordanceManager fastConcordanceManager;
+    private UriLabelConcordanceManager fastConcordanceManager;
     
     private static final String GENRE_FORM_URI = "http://id.loc.gov/authorities/genreForms/gf2011026297";
     private static final String ENG_LANGUAGE_URI = "http://lexvo.org/id/iso639-3/eng";
@@ -53,9 +52,9 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
     	try {
     		concordanceManagerName = IsoTopicConcordanceManager.class.getSimpleName();
 			this.isoTopicConcordanceManager = new IsoTopicConcordanceManager();
-			concordanceManagerName = FASTConcordanceManager.class.getSimpleName();
-			this.fastConcordanceManager = new FASTConcordanceManager();
-		} catch ( URISyntaxException | IOException e) {
+			concordanceManagerName = UriLabelConcordanceManager.class.getSimpleName();
+			this.fastConcordanceManager = UriLabelConcordanceManager.getFastConcordanceManager();
+		} catch ( FileNotFoundException e) {
 			throw new EntityBuilderException("Could not instantiate " + concordanceManagerName, e);
 		}
     }
@@ -197,7 +196,7 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
                 // check each themekey against concordance file
                 for (FgdcTextField themeKey : themeField.getThemeKeys()) {
                 	IsoTopicConcordanceBean isoTopicConcordanceBean = null;
-                	FASTConcordanceBean fastConcordanceBean = null;
+                	UriLabelConcordanceBean fastConcordanceBean = null;
                 	String concordanceUri = null;
                 	// check to see if themekt is of the type that requires a concordance file check
                 	if (FgdcToCartographyBuilder.ISO_TOPIC_CATEGORY_MARKER.equalsIgnoreCase(themeKtFieldText)) {

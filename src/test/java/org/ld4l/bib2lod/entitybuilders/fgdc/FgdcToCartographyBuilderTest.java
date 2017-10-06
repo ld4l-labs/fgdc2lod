@@ -127,6 +127,9 @@ public class FgdcToCartographyBuilderTest extends AbstractTestClass {
 		// theme keywords
 		List<Entity> subjects = relationships.getValues(Ld4lObjectProp.HAS_SUBJECT);
 		Assert.assertNotNull(subjects);
+		for (Entity e : subjects) {
+			LOGGER.warn("Subject type: [{}] Label: [{}]", e.getType(), e.getAttribute(Ld4lDatatypeProp.LABEL).getValue());
+		}
 		Assert.assertEquals(4, subjects.size());
 
 		// external URI's from concordance files

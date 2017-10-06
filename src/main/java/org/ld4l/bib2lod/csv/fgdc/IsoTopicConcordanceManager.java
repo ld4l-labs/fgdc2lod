@@ -2,8 +2,7 @@
 
 package org.ld4l.bib2lod.csv.fgdc;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,8 +39,10 @@ public class IsoTopicConcordanceManager extends AbstractConcordanceManager<IsoTo
 
     /**
      * Constructor which loads default CSV file.
+	 * 
+	 * @param fileName - Name of CSV file in classpath to load.
      */
-	public IsoTopicConcordanceManager() throws URISyntaxException, IOException {
+	public IsoTopicConcordanceManager() throws FileNotFoundException {
 		this(CONCORANCE_FILE_NAME);
 	}
 	
@@ -50,7 +51,7 @@ public class IsoTopicConcordanceManager extends AbstractConcordanceManager<IsoTo
 	 * 
 	 * @param fileName - Name of CSV file in classpath to load.
 	 */
-	protected IsoTopicConcordanceManager(String fileName) throws URISyntaxException, IOException {
+	protected IsoTopicConcordanceManager(String fileName) throws FileNotFoundException {
 		super(fileName);
 	}
 	

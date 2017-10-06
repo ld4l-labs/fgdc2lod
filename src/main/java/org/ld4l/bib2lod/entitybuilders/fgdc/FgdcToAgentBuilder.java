@@ -2,13 +2,12 @@
 
 package org.ld4l.bib2lod.entitybuilders.fgdc;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
+import java.io.FileNotFoundException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.ld4l.bib2lod.csv.fgdc.AgentsConcordanceBean;
-import org.ld4l.bib2lod.csv.fgdc.AgentsConcordanceManager;
+import org.ld4l.bib2lod.csv.fgdc.UriLabelConcordanceBean;
+import org.ld4l.bib2lod.csv.fgdc.UriLabelConcordanceManager;
 import org.ld4l.bib2lod.entity.Entity;
 import org.ld4l.bib2lod.entitybuilders.BuildParams;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lAgentType;
@@ -21,14 +20,14 @@ import org.ld4l.bib2lod.record.xml.fgdc.FgdcTextField;
  */
 public class FgdcToAgentBuilder extends FgdcToLd4lEntityBuilder {
 
-    private AgentsConcordanceManager concordanceManager;
+    private UriLabelConcordanceManager concordanceManager;
 
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	public FgdcToAgentBuilder() throws EntityBuilderException {
     	try {
-			this.concordanceManager = new AgentsConcordanceManager();
-		} catch ( URISyntaxException | IOException e) {
+			this.concordanceManager = UriLabelConcordanceManager.getAgentsConcordanceManager();
+		} catch ( FileNotFoundException e) {
 			throw new EntityBuilderException("Could not instantiate AgentsConcordanceManager", e);
 		}
 	}
@@ -47,7 +46,7 @@ public class FgdcToAgentBuilder extends FgdcToLd4lEntityBuilder {
         }
         
         Entity agentEntity = null;
-        AgentsConcordanceBean concordanceBean = null;
+        UriLabelConcordanceBean concordanceBean = null;
         concordanceBean = concordanceManager.getConcordanceEntry(agentField.getTextValue());
         if (concordanceBean != null) {
     		// for concordance match add external relationship to corresponding URI

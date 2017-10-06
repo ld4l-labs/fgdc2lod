@@ -9,6 +9,9 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.opencsv.CSVReader;
 import com.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 
@@ -25,7 +28,9 @@ abstract public class AbstractConcordanceManager<T> {
 	// encapsulates CSV file to be ingested
 	private CSVReader reader;
 
-	protected AbstractConcordanceManager(String fileName) throws IOException {
+	private static final Logger LOGGER = LogManager.getLogger();
+
+	protected AbstractConcordanceManager(String fileName) throws FileNotFoundException {
 
 		HeaderColumnNameTranslateMappingStrategy<T> strat = new HeaderColumnNameTranslateMappingStrategy<T>() {
 			
@@ -46,8 +51,13 @@ abstract public class AbstractConcordanceManager<T> {
 	    }
 	    
 	    reader = new CSVReader(new InputStreamReader(is));
-	    map = initBeanMap(strat, reader);    
-	    reader.close();
+	    map = initBeanMap(strat, reader);
+	    try {
+	    	reader.close();
+	    } catch (IOException ioe) {
+	    	// nothing to do but report
+	    	LOGGER.warn("Could not close file: " + fileName, ioe);
+	    }
 	}
 
 	/**
