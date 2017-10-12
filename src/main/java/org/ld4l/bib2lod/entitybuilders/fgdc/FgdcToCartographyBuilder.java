@@ -5,8 +5,11 @@ package org.ld4l.bib2lod.entitybuilders.fgdc;
 import java.io.FileNotFoundException;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ld4l.bib2lod.csv.fgdc.IsoTopicConcordanceBean;
 import org.ld4l.bib2lod.csv.fgdc.IsoTopicConcordanceManager;
+import org.ld4l.bib2lod.csv.fgdc.PlaceKeyConcordanceBean;
+import org.ld4l.bib2lod.csv.fgdc.PlaceKeyConcordanceManager;
 import org.ld4l.bib2lod.csv.fgdc.UriLabelConcordanceBean;
 import org.ld4l.bib2lod.csv.fgdc.UriLabelConcordanceManager;
 import org.ld4l.bib2lod.entity.Entity;
@@ -41,6 +44,7 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
     private Entity work;
     private IsoTopicConcordanceManager isoTopicConcordanceManager;
     private UriLabelConcordanceManager fastConcordanceManager;
+    private PlaceKeyConcordanceManager placeKeyConcordanceManager;
     
     private static final String GENRE_FORM_URI = "http://id.loc.gov/authorities/genreForms/gf2011026297";
     private static final String ENG_LANGUAGE_URI = "http://lexvo.org/id/iso639-3/eng";
@@ -54,6 +58,7 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
 			this.isoTopicConcordanceManager = new IsoTopicConcordanceManager();
 			concordanceManagerName = UriLabelConcordanceManager.class.getSimpleName();
 			this.fastConcordanceManager = UriLabelConcordanceManager.getFastConcordanceManager();
+			this.placeKeyConcordanceManager = new PlaceKeyConcordanceManager();
 		} catch ( FileNotFoundException e) {
 			throw new EntityBuilderException("Could not instantiate " + concordanceManagerName, e);
 		}
@@ -182,12 +187,23 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
     	}
     }
     
-    // Logic too complex to add a Builder class
     private void addKeywords() throws EntityBuilderException {
         
         FgdcKeywordsField keywordsField = record.getKeywordsField();
+                
+        // add theme keywords
+        if (keywordsField != null && keywordsField.getThemes().size() > 0) {
+        	addThemes(keywordsField);
+        }
         
-        // First check for theme keywords
+        // add place keywords
+        if (keywordsField != null && keywordsField.getPlaces().size() > 0) {
+        	addPlaces(keywordsField);
+        }
+    }
+    
+    private void addThemes(FgdcKeywordsField keywordsField) {
+    	
         if (keywordsField != null && keywordsField.getThemes() != null) {
         	for (FgdcThemeField themeField : keywordsField.getThemes()) {
         		
@@ -219,7 +235,7 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
                 		// if no concordance, create a Concept for each key, add source,
                 		// and add each to Work (Cartography)
                 		source.addAttribute(Ld4lDatatypeProp.LABEL, themeKtFieldText);
-                		String editorialNote = "Harvard FGDC themekey derived from " + themeKtFieldText;
+                		String editorialNote = "Harvard FGDC themekey derived from: " + themeKtFieldText;
                 		source.addAttribute(Ld4lDatatypeProp.EDITORIAL_NOTE, editorialNote);
             			Entity concept = new Entity(Ld4lConceptType.defaultType());
             			concept.addAttribute(Ld4lDatatypeProp.LABEL, themeKey.getTextValue());
@@ -229,27 +245,47 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
                 }
         	}
         }
-        
-        // Next check for place keywords
-        if (keywordsField != null && keywordsField.getPlaces() != null) {
-        	// field.getPlaces() could be empty
-        	// if not, already validation that each place will have at least one
-        	// each of 'placekt' and 'placekey'
-        	for (FgdcPlaceField placeField : keywordsField.getPlaces()) {
-        		
-                Entity source = new Entity();
-                String placeKtFieldText = placeField.getPlaceKt().getTextValue();
-                source.addAttribute(Ld4lDatatypeProp.LABEL, placeKtFieldText);
-                String editorialNote = "Harvard FGDC placekey derived from " + placeKtFieldText;
-                source.addAttribute(Ld4lDatatypeProp.EDITORIAL_NOTE, editorialNote);
-                
-                // create a GeographicCoverage for each key and add each to Work (Cartography)
-                for (FgdcTextField key : placeField.getPlaceKeys()) {
-                	Entity geographicCoverage = new Entity(GeographicCoverageType.superClass());
-                	geographicCoverage.addAttribute(Ld4lDatatypeProp.LABEL, key.getTextValue());
-                	geographicCoverage.addRelationship(Ld4lObjectProp.HAS_SOURCE, source);
-                	work.addRelationship(FgdcObjectProp.GEOGRAPHIC_COVERAGE, geographicCoverage);
-                }
+    }
+    
+    private void addPlaces(FgdcKeywordsField keywordsField) {
+    	
+        if (keywordsField != null && keywordsField.getPlaces().size() > 0) {
+        	String layerId = record.getLayerId();
+        	List<PlaceKeyConcordanceBean> beans = placeKeyConcordanceManager.getConcordanceEntries(layerId);
+        	if (beans.size() > 0) {
+        		for (PlaceKeyConcordanceBean bean : beans) {
+        			String source = bean.getSource();
+        			String uri = bean.getUri();
+        			if (!StringUtils.isEmpty(uri)) {
+        				work.addExternalRelationship(FgdcObjectProp.GEOGRAPHIC_COVERAGE, uri);
+        			} else {
+         				Entity geographicCoverage = new Entity(GeographicCoverageType.GEOGRAPHIC_COVERAGE);
+         				geographicCoverage.addAttribute(Ld4lDatatypeProp.LABEL, bean.getLabel());
+         				Entity sourceEntity = new Entity();
+         				sourceEntity.addAttribute(Ld4lDatatypeProp.LABEL, source);
+            			String editorialNote = "Harvard FGDC placekey derived from: " + source;
+            			sourceEntity.addAttribute(Ld4lDatatypeProp.EDITORIAL_NOTE, editorialNote);
+            			geographicCoverage.addRelationship(Ld4lObjectProp.HAS_SOURCE, sourceEntity);
+            			work.addRelationship(FgdcObjectProp.GEOGRAPHIC_COVERAGE, geographicCoverage);
+        			}
+        		}
+        	} else {
+        		for (FgdcPlaceField placeField : keywordsField.getPlaces()) {
+        			
+        			Entity source = new Entity();
+        			String placeKtFieldText = placeField.getPlaceKt().getTextValue();
+        			source.addAttribute(Ld4lDatatypeProp.LABEL, placeKtFieldText);
+        			String editorialNote = "Harvard FGDC placekey derived from: " + placeKtFieldText;
+        			source.addAttribute(Ld4lDatatypeProp.EDITORIAL_NOTE, editorialNote);
+        			
+        			// create a GeographicCoverage for each key and add each to Work (Cartography)
+        			for (FgdcTextField key : placeField.getPlaceKeys()) {
+        				Entity geographicCoverage = new Entity(GeographicCoverageType.GEOGRAPHIC_COVERAGE);
+        				geographicCoverage.addAttribute(Ld4lDatatypeProp.LABEL, key.getTextValue());
+        				geographicCoverage.addRelationship(Ld4lObjectProp.HAS_SOURCE, source);
+        				work.addRelationship(FgdcObjectProp.GEOGRAPHIC_COVERAGE, geographicCoverage);
+        			}
+        		}
         	}
         }
     }

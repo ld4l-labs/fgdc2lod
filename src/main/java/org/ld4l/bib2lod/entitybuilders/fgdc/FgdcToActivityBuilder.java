@@ -2,8 +2,12 @@
 
 package org.ld4l.bib2lod.entitybuilders.fgdc;
 
+import java.io.FileNotFoundException;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.ld4l.bib2lod.csv.fgdc.UriLabelConcordanceBean;
+import org.ld4l.bib2lod.csv.fgdc.UriLabelConcordanceManager;
 import org.ld4l.bib2lod.entity.Attribute;
 import org.ld4l.bib2lod.entity.Entity;
 import org.ld4l.bib2lod.entitybuilders.BuildParams;
@@ -22,8 +26,18 @@ import org.ld4l.bib2lod.record.xml.fgdc.FgdcTextField;
  */
 public class FgdcToActivityBuilder extends FgdcToLd4lEntityBuilder {
 
+    private UriLabelConcordanceManager placesConcordanceManager;
+
     private static final Logger LOGGER = LogManager.getLogger();
 
+    public FgdcToActivityBuilder() throws EntityBuilderException {
+    	try {
+			this.placesConcordanceManager = UriLabelConcordanceManager.getPlacesConcordanceManager();
+		} catch ( FileNotFoundException e) {
+			throw new EntityBuilderException("Could not instantiate placesConcordanceManager", e);
+		}
+    }
+    
     @Override
     public Entity build(BuildParams params) throws EntityBuilderException {
         
@@ -33,8 +47,8 @@ public class FgdcToActivityBuilder extends FgdcToLd4lEntityBuilder {
                     "A FgdcRecord is required to build an Activity.");
         }
 
-        Entity bibEntity = params.getParent();
-        if (bibEntity == null) {
+        Entity parentEntity = params.getParent();
+        if (parentEntity == null) {
             throw new EntityBuilderException(
                     "A related Entity is required to build an Activity.");
         }
@@ -59,7 +73,7 @@ public class FgdcToActivityBuilder extends FgdcToLd4lEntityBuilder {
 					.setField(originField)
 					.setParent(activity);
 			builder.build(params2);
-			bibEntity.addRelationship(Ld4lObjectProp.HAS_ACTIVITY, activity);
+			parentEntity.addRelationship(Ld4lObjectProp.HAS_ACTIVITY, activity);
 	    	
     	} else if (type.equals(Ld4lActivityType.PUBLISHER_ACTIVITY)) {
     		FgdcTextField agentField = record.getCiteinfoField().getPublish();
@@ -79,9 +93,17 @@ public class FgdcToActivityBuilder extends FgdcToLd4lEntityBuilder {
 			
 			// create and add location
 			if (pubplaceField != null) {
-				Entity location = new Entity(Ld4lLocationType.LOCATION);
-				location.addAttribute(Ld4lDatatypeProp.LABEL, pubplaceField.getTextValue());
-				activity.addRelationship(Ld4lObjectProp.HAS_LOCATION, location);
+				
+				// see if in concordance for URI
+				UriLabelConcordanceBean bean = placesConcordanceManager.getConcordanceEntry(pubplaceField.getTextValue());
+				if (bean != null) {
+					String uri = bean.getUri();
+					activity.addExternalRelationship(Ld4lObjectProp.HAS_LOCATION, uri);
+				} else {
+					Entity location = new Entity(Ld4lLocationType.LOCATION);
+					location.addAttribute(Ld4lDatatypeProp.LABEL, pubplaceField.getTextValue());
+					activity.addRelationship(Ld4lObjectProp.HAS_LOCATION, location);
+				}
 				atLeastOneField = true;
 			}
 			
@@ -92,7 +114,7 @@ public class FgdcToActivityBuilder extends FgdcToLd4lEntityBuilder {
 			}
 			
 	    	if (atLeastOneField) {
-	    		bibEntity.addRelationship(Ld4lObjectProp.HAS_ACTIVITY, activity);
+	    		parentEntity.addRelationship(Ld4lObjectProp.HAS_ACTIVITY, activity);
 	    	}
 	    	
     	} else {

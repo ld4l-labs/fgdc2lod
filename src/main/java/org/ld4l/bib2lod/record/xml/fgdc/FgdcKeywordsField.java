@@ -58,10 +58,16 @@ public class FgdcKeywordsField extends BaseFgdcField {
 		return places;
 	}
 
+	/**
+	 * Will never return <code>null</code> if no themes, just an empty List.
+	 */
 	public List<FgdcThemeField> getThemes() {
 		return themes;
 	}
 
+	/**
+	 * Will never return <code>null</code> if no themes, just an empty List.
+	 */
 	public List<FgdcPlaceField> getPlaces() {
 		return places;
 	}

@@ -35,10 +35,6 @@ public enum GeographicCoverageType implements Type {
         return ontClass;
     } 
 
-    public static Type superClass() {
-        return GEOGRAPHIC_COVERAGE;
-    }
-
 	@Override
 	public Type superclass() {
 		return GEOGRAPHIC_COVERAGE;

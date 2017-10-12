@@ -8,12 +8,11 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.ld4l.bib2lod.entity.Attribute;
 import org.ld4l.bib2lod.entity.Entity;
 import org.ld4l.bib2lod.entitybuilders.BuildParams;
 import org.ld4l.bib2lod.entitybuilders.EntityBuilder;
 import org.ld4l.bib2lod.entitybuilders.EntityBuilder.EntityBuilderException;
-import org.ld4l.bib2lod.entitybuilders.fgdc.FgdcToActivityBuilder;
-import org.ld4l.bib2lod.entitybuilders.fgdc.FgdcToLd4lEntityBuilderFactory;
 import org.ld4l.bib2lod.entitybuilders.EntityBuilderFactory;
 import org.ld4l.bib2lod.ontology.ObjectProp;
 import org.ld4l.bib2lod.ontology.Type;
@@ -51,7 +50,7 @@ public class FgdcToActivityBuilderTest extends AbstractTestClass {
     }
 
     @Before
-    public void setUp() throws RecordException {
+    public void setUp() throws RecordException, EntityBuilderException {
         activityBuilder = new FgdcToActivityBuilder();
         fgdcRecord = buildFgdcRecordFromString(FgdcTestData.VALID_ACTIVITIES);
         relatedEntity = new Entity(Ld4lWorkType.CARTOGRAPHY);
@@ -110,6 +109,46 @@ public class FgdcToActivityBuilderTest extends AbstractTestClass {
 		
 		MapOfLists<ObjectProp, Entity> relationships = activityEntity.getRelationships();
 		Assert.assertNotNull(relationships);
+		Assert.assertEquals(1, relationships.keys().size());
+		
+		List<Entity> agents = relationships.getValues(Ld4lObjectProp.HAS_AGENT);
+		Assert.assertNotNull(agents);
+		Assert.assertEquals(1, agents.size());
+		
+		String location = activityEntity.getExternal(Ld4lObjectProp.HAS_LOCATION);
+		Assert.assertNotNull(location);
+		Assert.assertEquals("http://sws.geonames.org/4932004", location);
+		
+		List<String> dates = activityEntity.getValues(Ld4lDatatypeProp.DATE);
+		Assert.assertNotNull(dates);
+		Assert.assertEquals(1, dates.size());
+		Assert.assertEquals("2014", dates.get(0));
+	}
+	
+	@Test
+	public void validPublisherActivityRecordNoConcordanceMatch() throws Exception {
+
+        fgdcRecord = buildFgdcRecordFromString(FgdcTestData.VALID_ACTIVITIES_NO_CONCORDANCE_MATCH);
+
+		BuildParams params = new BuildParams()
+				.setRecord(fgdcRecord)
+				.setParent(relatedEntity)
+				.setType(Ld4lActivityType.PUBLISHER_ACTIVITY);
+		
+		Entity activityEntity = activityBuilder.build(params);
+
+		Assert.assertNotNull(activityEntity);
+		List<Type> types = activityEntity.getTypes();
+		Assert.assertNotNull(types);
+		Assert.assertTrue(types.contains(Ld4lActivityType.PUBLISHER_ACTIVITY));
+		
+		List<String> labels = activityEntity.getValues(Ld4lDatatypeProp.LABEL);
+		Assert.assertNotNull(labels);
+		Assert.assertEquals(1, labels.size());
+		Assert.assertEquals(Ld4lActivityType.PUBLISHER_ACTIVITY.label(), labels.get(0));
+		
+		MapOfLists<ObjectProp, Entity> relationships = activityEntity.getRelationships();
+		Assert.assertNotNull(relationships);
 		Assert.assertEquals(2, relationships.keys().size());
 		
 		List<Entity> agents = relationships.getValues(Ld4lObjectProp.HAS_AGENT);
@@ -119,6 +158,9 @@ public class FgdcToActivityBuilderTest extends AbstractTestClass {
 		List<Entity> locations = relationships.getValues(Ld4lObjectProp.HAS_LOCATION);
 		Assert.assertNotNull(locations);
 		Assert.assertEquals(1, locations.size());
+		Attribute locationAttr = locations.get(0).getAttribute(Ld4lDatatypeProp.LABEL);
+		Assert.assertNotNull(locationAttr);
+		Assert.assertEquals("Upper Slabovia", locationAttr.getValue());
 		
 		List<String> dates = activityEntity.getValues(Ld4lDatatypeProp.DATE);
 		Assert.assertNotNull(dates);

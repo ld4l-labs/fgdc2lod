@@ -142,7 +142,10 @@ public class FgdcToCartographyBuilderTest extends AbstractTestClass {
 		// place keywords
 		List<Entity> geographicCoverages = relationships.getValues(FgdcObjectProp.GEOGRAPHIC_COVERAGE);
 		Assert.assertNotNull(geographicCoverages);
-		Assert.assertEquals(2, geographicCoverages.size());
+		Assert.assertEquals(1, geographicCoverages.size());
+		
+		String uri = cartographyEntity.getExternal(FgdcObjectProp.GEOGRAPHIC_COVERAGE);
+		Assert.assertNotNull(uri);
 		
 		// language
 		String language = cartographyEntity.getExternal(Ld4lObjectProp.HAS_LANGUAGE);

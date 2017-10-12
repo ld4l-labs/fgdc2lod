@@ -104,6 +104,26 @@ public class FgdcTestData {
     				"</citation>" +
     			"</idinfo>" +
     		"</metadata>";
+		
+		public static final String VALID_ACTIVITIES_NO_CONCORDANCE_MATCH =
+	        "<metadata layerid='CAMBRIDGE14PUBLICLIBRARIES'>" +
+            	"<idinfo>" +
+    				"<citation>" +
+    					"<citeinfo>" +
+    	                "<origin>Cambridge (Mass.). Geographic Information Systems</origin>" +
+    	                "<origin>Cambridge (Mass.). Public Library</origin>" +
+    	                "<pubdate>2014</pubdate>" +
+    	                "<title>Public Libraries, Cambridge, Massachusetts, 2014</title>" +
+    	                "<edition>2014 revised ed.</edition>" +
+    	                "<pubinfo>" +
+    	                    "<pubplace>Upper Slabovia</pubplace>" +
+    	                    "<publish>Cambridge</publish>" +
+    	                "</pubinfo>" +
+    	                "<onlink>http://hgl.harvard.edu:8080/HGL/hgl.jsp?action=VColl&amp;VCollName=CAMBRIDGE14PUBLICLIBRARIES</onlink>" +
+    					"</citeinfo>" +
+    				"</citation>" +
+    			"</idinfo>" +
+    		"</metadata>";
 
 				
 ////////////////
