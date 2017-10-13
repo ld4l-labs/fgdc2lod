@@ -4,8 +4,12 @@ package org.ld4l.bib2lod.entitybuilders.fgdc;
 
 import java.io.FileNotFoundException;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.ld4l.bib2lod.caching.CachingService;
+import org.ld4l.bib2lod.caching.CachingService.CachingServiceException;
+import org.ld4l.bib2lod.caching.CachingService.MapType;
 import org.ld4l.bib2lod.csv.fgdc.IsoTopicConcordanceBean;
 import org.ld4l.bib2lod.csv.fgdc.IsoTopicConcordanceManager;
 import org.ld4l.bib2lod.csv.fgdc.PlaceKeyConcordanceBean;
@@ -34,6 +38,7 @@ import org.ld4l.bib2lod.record.xml.fgdc.FgdcPlaceField;
 import org.ld4l.bib2lod.record.xml.fgdc.FgdcRecord;
 import org.ld4l.bib2lod.record.xml.fgdc.FgdcTextField;
 import org.ld4l.bib2lod.record.xml.fgdc.FgdcThemeField;
+import org.ld4l.bib2lod.uris.UriService;
 
 /**
  * Builds a Cartography individual from a Record.
@@ -45,6 +50,7 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
     private IsoTopicConcordanceManager isoTopicConcordanceManager;
     private UriLabelConcordanceManager fastConcordanceManager;
     private PlaceKeyConcordanceManager placeKeyConcordanceManager;
+    private CachingService cachingService;
     
     private static final String GENRE_FORM_URI = "http://id.loc.gov/authorities/genreForms/gf2011026297";
     private static final String ENG_LANGUAGE_URI = "http://lexvo.org/id/iso639-3/eng";
@@ -66,6 +72,8 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
   
     @Override
     public Entity build(BuildParams params) throws EntityBuilderException {
+        
+    	this.cachingService = CachingService.instance();
 
     	this.record = (FgdcRecord) params.getRecord();
         if (record == null) {
@@ -122,18 +130,47 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
         builder.build(params);
     }
     
-    private void addIdentifiers() {
+    private void addIdentifiers() throws EntityBuilderException {
+
+    	Map<String, String> mapToUriCache = cachingService.getMap(MapType.NAMES_TO_URI);
+
+    	// create and add HGLD identifier
+    	String layerId = record.getLayerId(); // should be validated as non-null
+        String cachedHglIdUri = mapToUriCache.get(layerId);
+
+        Entity hglIdentifier =  new Entity(HarvardType.HGLID);
+        hglIdentifier.addAttribute(Ld4lDatatypeProp.VALUE, layerId);
+        if (cachedHglIdUri == null) {
+        	String uri = UriService.getUri(hglIdentifier);
+        	hglIdentifier.buildResource(uri);
+        	try {
+				cachingService.putUri(MapType.NAMES_TO_URI, layerId, uri);
+			} catch (CachingServiceException e) {
+				throw new EntityBuilderException(e);
+			}
+        } else {
+        	hglIdentifier.buildResource(cachedHglIdUri);
+        }
+        work.addRelationship(Ld4lObjectProp.IDENTIFIED_BY, hglIdentifier);
     	
-		Entity identifier = new Entity(HarvardType.HGLID);
-		String layerId = record.getLayerId(); // should be validated as non-null
-		identifier.addAttribute(Ld4lDatatypeProp.VALUE, layerId);
-		work.addRelationship(Ld4lObjectProp.IDENTIFIED_BY, identifier);
-    	
-		identifier = new Entity(HarvardType.HOLLIS_NUMBER);
+    	// create and add Hollis number identifier
 		String hollisNumber = record.getHollisNumber(); // could be null or empty
-		if (hollisNumber != null && hollisNumber.length() > 0) {
-			identifier.addAttribute(Ld4lDatatypeProp.VALUE, hollisNumber);
-			work.addRelationship(Ld4lObjectProp.IDENTIFIED_BY, identifier);
+		if ( !StringUtils.isEmpty(hollisNumber)) {
+			String cachedHollisUri = mapToUriCache.get(layerId);
+			Entity hollisIdentifier = new Entity(HarvardType.HOLLIS_NUMBER);
+			hollisIdentifier.addAttribute(Ld4lDatatypeProp.VALUE, hollisNumber);
+	        if (cachedHollisUri == null) {
+	        	String uri = UriService.getUri(hollisIdentifier);
+	        	hollisIdentifier.buildResource(uri);
+	        	try {
+					cachingService.putUri(MapType.NAMES_TO_URI, hollisNumber, uri);
+				} catch (CachingServiceException e) {
+					throw new EntityBuilderException(e);
+				}
+	        } else {
+	        	hollisIdentifier.buildResource(cachedHollisUri);
+	        }
+			work.addRelationship(Ld4lObjectProp.IDENTIFIED_BY, hollisIdentifier);
 		}
     }
     

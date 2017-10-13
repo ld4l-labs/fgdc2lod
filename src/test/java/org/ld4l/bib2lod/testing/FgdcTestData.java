@@ -6,11 +6,22 @@ package org.ld4l.bib2lod.testing;
 public class FgdcTestData {
     
 	public static final String VALID_CITEINFO = 
-        "<metadata layerid='CAMBRIDGE14PUBLICLIBRARIES'>" +
+        "<metadata layerid='CAMBRIDGE14PUBLICLIBRARIES' hollisno='014266502'>" +
         	"<idinfo>" +
 				"<citation>" +
 					"<citeinfo>" +
 						"<title>Public Libraries, Cambridge, Massachusetts, 2014</title>" +
+					"</citeinfo>" +
+				"</citation>" +
+			"</idinfo>" +
+		"</metadata>";
+    
+	public static final String VALID_CITEINFO_DUPLICATE_LAYER_ID_AND_HOLLIS = 
+        "<metadata layerid='CAMBRIDGE14PUBLICLIBRARIES' hollisno='014266502'>" +
+        	"<idinfo>" +
+				"<citation>" +
+					"<citeinfo>" +
+						"<title>Private Libraries, East Podunk, Mississippi, 2015</title>" +
 					"</citeinfo>" +
 				"</citation>" +
 			"</idinfo>" +
@@ -267,7 +278,10 @@ public class FgdcTestData {
 //////////
 	public static final String VALID_AGENT =
 		"<agent>Agent Text</agent>";
-	
+
+	public static final String VALID_DUPLICATE_AGENT =
+			"<agent>Agent Text</agent>";
+
 ///////////
 	public static final String VALID_ABSTRACT =
 		"<abstract>Abstract text</abstract>";

@@ -8,6 +8,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.ld4l.bib2lod.caching.CachingService;
+import org.ld4l.bib2lod.caching.MapCachingService;
+import org.ld4l.bib2lod.configuration.ConfigurationNode;
 import org.ld4l.bib2lod.entity.Attribute;
 import org.ld4l.bib2lod.entity.Entity;
 import org.ld4l.bib2lod.entitybuilders.BuildParams;
@@ -28,6 +31,8 @@ import org.ld4l.bib2lod.testing.AbstractTestClass;
 import org.ld4l.bib2lod.testing.BaseMockBib2LodObjectFactory;
 import org.ld4l.bib2lod.testing.FgdcTestData;
 import org.ld4l.bib2lod.testing.xml.XmlTestUtils;
+import org.ld4l.bib2lod.uris.RandomUriMinter;
+import org.ld4l.bib2lod.uris.UriService;
 import org.ld4l.bib2lod.util.collections.MapOfLists;
 import org.w3c.dom.Element;
 
@@ -47,6 +52,10 @@ public class FgdcToActivityBuilderTest extends AbstractTestClass {
     public static void setUpClass() throws Exception {
         factory = new BaseMockBib2LodObjectFactory();
         factory.addInstance(EntityBuilderFactory.class, new FgdcToLd4lEntityBuilderFactory());
+        ConfigurationNode config = new ConfigurationNode.Builder()
+        		.addAttribute("localNamespace", "http://localhost/individual/").build();
+        factory.addInstance(UriService.class, new RandomUriMinter(), config);
+        factory.addInstance(CachingService.class, new MapCachingService());
     }
 
     @Before
