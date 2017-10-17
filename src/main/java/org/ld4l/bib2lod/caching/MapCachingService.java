@@ -39,7 +39,7 @@ public class MapCachingService implements CachingService {
 	@Override
 	public String putUri(MapType mapType, String name, String uri) throws CachingServiceException {
 		if (mapType == null || name == null || uri == null) {
-			throw new CachingServiceException("no parameters cannot be null");
+			throw new CachingServiceException("no parameters can be null");
 		}
 		Map<String, String> map = mapOfMaps.get(mapType);
 		return map.put(name, uri);

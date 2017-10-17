@@ -189,6 +189,58 @@ public class FgdcTestData {
 						"<placekey>Massachusetts</placekey>" +
 						"<placekey>Cambridge</placekey>" +
 					"</place>" +
+		            "<place>" +
+		                "<placekt>LCNA</placekt>" +
+		                "<placekey>Masschusetts</placekey>" +
+		                "<placekey>Cambridge</placekey>" +
+		            "</place>" +
+				"</keywords>" +
+			"</idinfo>" +
+		"</metadata>";
+
+	public static final String VALID_DUPLICATE_KEYWORDS = 
+        "<metadata layerid='CAMBRIDGE14PUBLICLIBRARIES' hollisno='014266502'>" +
+			"<idinfo>" +
+				"<citation>" +
+					"<citeinfo>" +
+						"<origin>Cambridge (Mass.). Geographic Information Systems</origin>" +
+						"<origin>Cambridge (Mass.). Public Library</origin>" +
+						"<pubdate>2014</pubdate>" +
+						"<title>Public Libraries, Cambridge, Massachusetts, 2014</title>" +
+						"<geoform>map</geoform>" +
+						"<edition>2014 revised ed.</edition>" +
+						"<pubinfo>" +
+							"<pubplace>Cambridge, Massachusetts</pubplace>" +
+							"<publish>Cambridge (Mass.). Geographic Information Systems</publish>" +
+						"</pubinfo>" +
+					"</citeinfo>" +
+				"</citation>" +
+				"<keywords>" +
+					"<theme>" +
+						"<themekt>LCSH</themekt>" +
+						"<themekey>Libraries</themekey>" +
+						"<themekey>Public libraries</themekey>" +
+					"</theme>" +
+					"<theme>" +
+						"<themekt>ISO 19115 Topic Category</themekt>" +
+						"<themekey>structure</themekey>" +
+					"</theme>" +
+					"<theme>" +
+						"<themekt>None</themekt>" +
+						"<themekey>City of Cambridge</themekey>" +
+						"<themekey>Libraries</themekey>" +
+						"<themekey>public libraries</themekey>" +
+					"</theme>" +
+					"<place>" +
+						"<placekt>GNIS</placekt>" +
+						"<placekey>Massachusetts</placekey>" +
+						"<placekey>Cambridge</placekey>" +
+					"</place>" +
+		            "<place>" +
+		                "<placekt>LCNA</placekt>" +
+		                "<placekey>Masschusetts</placekey>" +
+		                "<placekey>Cambridge</placekey>" +
+		            "</place>" +
 				"</keywords>" +
 			"</idinfo>" +
 		"</metadata>";

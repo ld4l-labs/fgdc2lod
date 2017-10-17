@@ -21,6 +21,9 @@
   "Parser": {
     "class": "org.ld4l.bib2lod.parsing.xml.fgdc.FgdcParser"
   },
+  "CachingService": {
+    "class": "org.ld4l.bib2lod.caching.MapCachingService"
+  },
   "EntityBuilderFactory": {
     "class": "org.ld4l.bib2lod.entitybuilders.fgdc.FgdcToLd4lEntityBuilderFactory"
   }

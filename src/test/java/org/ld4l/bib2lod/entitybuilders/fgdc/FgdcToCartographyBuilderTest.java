@@ -23,7 +23,9 @@ import org.ld4l.bib2lod.ontology.ObjectProp;
 import org.ld4l.bib2lod.ontology.Type;
 import org.ld4l.bib2lod.ontology.fgdc.CartographyType;
 import org.ld4l.bib2lod.ontology.fgdc.FgdcObjectProp;
+import org.ld4l.bib2lod.ontology.fgdc.GeographicCoverageType;
 import org.ld4l.bib2lod.ontology.fgdc.HarvardType;
+import org.ld4l.bib2lod.ontology.ld4l.Ld4lConceptType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lDatatypeProp;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lObjectProp;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lWorkType;
@@ -160,6 +162,91 @@ public class FgdcToCartographyBuilderTest extends AbstractTestClass {
 		Assert.assertNotNull(language);
 		Assert.assertEquals("http://lexvo.org/id/iso639-3/eng", language);
 	}
+	
+	@Test
+	public void validDuplicateThemeAndPlaceKeywords() throws Exception {
+		
+		BuildParams params = new BuildParams()
+				.setRecord(fgdcRecord);
+		
+		Entity cartographyEntity = cartographyBuilder.build(params);
+		Assert.assertNotNull(cartographyEntity);
+		
+		FgdcRecord anotherFgdcRecord = buildFgdcRecordFromString(FgdcTestData.VALID_DUPLICATE_KEYWORDS);
+		params.setRecord(anotherFgdcRecord);
+		Entity anotherCartographyEntity = cartographyBuilder.build(params);
+		Assert.assertNotNull(anotherCartographyEntity);		
+		
+		// test themes that are the same and should have same URI values
+		int expectedConceptSize = 4;
+		
+		List<Entity> conceptEntities = cartographyEntity.getChildren(Ld4lObjectProp.HAS_SUBJECT, Ld4lConceptType.CONCEPT);
+		Assert.assertEquals(expectedConceptSize, conceptEntities.size());
+		
+		List<Entity> otherConceptEntities = anotherCartographyEntity.getChildren(Ld4lObjectProp.HAS_SUBJECT, Ld4lConceptType.defaultType());
+		Assert.assertEquals(expectedConceptSize, otherConceptEntities.size());
+		
+		for (int i = 0; i < expectedConceptSize; i++) {
+			Entity concept = conceptEntities.get(i);
+			Entity otherConcept = otherConceptEntities.get(i);
+			
+			Assert.assertEquals(concept.getAttribute(Ld4lDatatypeProp.LABEL).getValue(),
+					otherConcept.getAttribute(Ld4lDatatypeProp.LABEL).getValue());
+			
+			Assert.assertEquals(concept.getResource().getURI(),
+					otherConcept.getResource().getURI());
+			
+			Entity source = concept.getChild(Ld4lObjectProp.HAS_SOURCE);
+			Assert.assertNotNull(source);
+			Entity otherSource = otherConcept.getChild(Ld4lObjectProp.HAS_SOURCE);
+			Assert.assertNotNull(otherSource);
+			
+			Assert.assertEquals(source.getAttribute(Ld4lDatatypeProp.LABEL).getValue(),
+					otherSource.getAttribute(Ld4lDatatypeProp.LABEL).getValue());
+			
+			Assert.assertEquals(source.getResource().getURI(),
+					otherSource.getResource().getURI());
+			
+			Assert.assertEquals(source.getAttribute(Ld4lDatatypeProp.EDITORIAL_NOTE).getValue(),
+					otherSource.getAttribute(Ld4lDatatypeProp.EDITORIAL_NOTE).getValue());
+		}
+		
+		// test places that are the same and should have same URI values
+		int expectedGeographicCoverageSize = 1;
+		
+		List<Entity> geographicCoverageEntities = cartographyEntity.getChildren(FgdcObjectProp.GEOGRAPHIC_COVERAGE, GeographicCoverageType.GEOGRAPHIC_COVERAGE);
+		Assert.assertEquals(expectedGeographicCoverageSize, geographicCoverageEntities.size());
+
+		List<Entity> otherGeographicCoverageEntities = anotherCartographyEntity.getChildren(FgdcObjectProp.GEOGRAPHIC_COVERAGE, GeographicCoverageType.GEOGRAPHIC_COVERAGE);
+		Assert.assertEquals(expectedGeographicCoverageSize, otherGeographicCoverageEntities.size());
+		
+		for (int i = 0; i < expectedGeographicCoverageSize; i++) {
+			Entity geographicEntity = geographicCoverageEntities.get(i);
+			Entity othergeographicEntity = otherGeographicCoverageEntities.get(i);
+			
+			Assert.assertEquals(geographicEntity.getAttribute(Ld4lDatatypeProp.LABEL).getValue(),
+					othergeographicEntity.getAttribute(Ld4lDatatypeProp.LABEL).getValue());
+			
+			Assert.assertEquals(geographicEntity.getResource().getURI(),
+					othergeographicEntity.getResource().getURI());
+			
+			Entity source = geographicEntity.getChild(Ld4lObjectProp.HAS_SOURCE);
+			Assert.assertNotNull(source);
+			Entity otherSource = othergeographicEntity.getChild(Ld4lObjectProp.HAS_SOURCE);
+			Assert.assertNotNull(otherSource);
+			
+			Assert.assertEquals(source.getAttribute(Ld4lDatatypeProp.LABEL).getValue(),
+					otherSource.getAttribute(Ld4lDatatypeProp.LABEL).getValue());
+			
+			Assert.assertEquals(source.getResource().getURI(),
+					otherSource.getResource().getURI());
+			
+			Assert.assertEquals(source.getAttribute(Ld4lDatatypeProp.EDITORIAL_NOTE).getValue(),
+					otherSource.getAttribute(Ld4lDatatypeProp.EDITORIAL_NOTE).getValue());
+		}
+
+		
+}
 	
 	@Test
 	public void nullRecord_ThrowsException() throws Exception {

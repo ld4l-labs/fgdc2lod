@@ -31,7 +31,22 @@ public interface CachingService {
     }
     
     public static enum MapType {
-    	NAMES_TO_URI;
+    	ISO_THEME_THESAURUS_KEYWORD_TO_URI("ISO 19115 Topic Category"),
+    	LCSH_THEME_THESAURUS_KEYWORD_TO_URI("LCSH"),
+    	OTHER_THEME_THESAURUS_KEYWORK_TO_URI(""),
+    	GNIS_PLACE_THESAURUS_KEYWORD_TO_URI("GNIS"),
+    	LCNA_PLACE_THESAURUS_KEYWORD_TO_URI("LCNA"),
+    	NAMES_TO_URI("");
+    	
+    	private String marker;
+    	
+    	private MapType(String marker) {
+    		this.marker = marker;
+    	}
+    	
+    	public String marker() {
+    		return marker;
+    	}
     }
 
     /**

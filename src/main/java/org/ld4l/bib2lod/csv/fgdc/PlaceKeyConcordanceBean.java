@@ -55,8 +55,8 @@ public class PlaceKeyConcordanceBean {
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("IsoTopicConcordanceBean [layerId=");
+		StringBuilder builder = new StringBuilder(getClass().getSimpleName());
+		builder.append(" [layerId=");
 		builder.append(layerId);
 		builder.append(", uri=");
 		builder.append(uri);

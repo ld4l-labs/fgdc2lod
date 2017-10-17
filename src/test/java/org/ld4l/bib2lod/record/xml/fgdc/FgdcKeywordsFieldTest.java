@@ -29,7 +29,7 @@ public class FgdcKeywordsFieldTest extends AbstractTestClass {
     	Assert.assertEquals(3, themes.size());
     	List<FgdcPlaceField> places = fgdcKeywordsField.getPlaces();
     	Assert.assertNotNull(places);
-    	Assert.assertEquals(1, places.size());
+    	Assert.assertEquals(2, places.size());
     }
 
     // ----------------------------------------------------------------------

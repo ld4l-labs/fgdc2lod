@@ -38,7 +38,6 @@ import org.ld4l.bib2lod.record.xml.fgdc.FgdcPlaceField;
 import org.ld4l.bib2lod.record.xml.fgdc.FgdcRecord;
 import org.ld4l.bib2lod.record.xml.fgdc.FgdcTextField;
 import org.ld4l.bib2lod.record.xml.fgdc.FgdcThemeField;
-import org.ld4l.bib2lod.uris.UriService;
 
 /**
  * Builds a Cartography individual from a Record.
@@ -54,8 +53,6 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
     
     private static final String GENRE_FORM_URI = "http://id.loc.gov/authorities/genreForms/gf2011026297";
     private static final String ENG_LANGUAGE_URI = "http://lexvo.org/id/iso639-3/eng";
-    private static final String ISO_TOPIC_CATEGORY_MARKER = "ISO 19115 Topic Category";
-    private static final String LCSH_MARKER = "LCSH";
     
     public FgdcToCartographyBuilder() throws EntityBuilderException {
     	String concordanceManagerName = "";
@@ -141,8 +138,8 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
         Entity hglIdentifier =  new Entity(HarvardType.HGLID);
         hglIdentifier.addAttribute(Ld4lDatatypeProp.VALUE, layerId);
         if (cachedHglIdUri == null) {
-        	String uri = UriService.getUri(hglIdentifier);
-        	hglIdentifier.buildResource(uri);
+        	hglIdentifier.buildResource();
+        	String uri = hglIdentifier.getResource().getURI();
         	try {
 				cachingService.putUri(MapType.NAMES_TO_URI, layerId, uri);
 			} catch (CachingServiceException e) {
@@ -156,12 +153,12 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
     	// create and add Hollis number identifier
 		String hollisNumber = record.getHollisNumber(); // could be null or empty
 		if ( !StringUtils.isEmpty(hollisNumber)) {
-			String cachedHollisUri = mapToUriCache.get(layerId);
+			String cachedHollisUri = mapToUriCache.get(hollisNumber);
 			Entity hollisIdentifier = new Entity(HarvardType.HOLLIS_NUMBER);
 			hollisIdentifier.addAttribute(Ld4lDatatypeProp.VALUE, hollisNumber);
 	        if (cachedHollisUri == null) {
-	        	String uri = UriService.getUri(hollisIdentifier);
-	        	hollisIdentifier.buildResource(uri);
+	        	hollisIdentifier.buildResource();
+	        	String uri = hollisIdentifier.getResource().getURI();
 	        	try {
 					cachingService.putUri(MapType.NAMES_TO_URI, hollisNumber, uri);
 				} catch (CachingServiceException e) {
@@ -230,36 +227,46 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
                 
         // add theme keywords
         if (keywordsField != null && keywordsField.getThemes().size() > 0) {
-        	addThemes(keywordsField);
+        	try {
+				addThemes(keywordsField);
+			} catch (CachingServiceException e) {
+				throw new EntityBuilderException(e);
+			}
         }
         
         // add place keywords
         if (keywordsField != null && keywordsField.getPlaces().size() > 0) {
-        	addPlaces(keywordsField);
+        	try {
+				addPlaces(keywordsField);
+			} catch (CachingServiceException e) {
+				throw new EntityBuilderException(e);
+			}
         }
     }
     
-    private void addThemes(FgdcKeywordsField keywordsField) {
+    private void addThemes(FgdcKeywordsField keywordsField) throws CachingServiceException {
     	
-        if (keywordsField != null && keywordsField.getThemes() != null) {
+        if (keywordsField != null && keywordsField.getThemes().size() > 0) {
         	for (FgdcThemeField themeField : keywordsField.getThemes()) {
         		
-                Entity source = new Entity();
+                Entity sourceEntity = new Entity();
                 String themeKtFieldText = themeField.getThemeKt().getTextValue();
                 // check each themekey against concordance file
                 for (FgdcTextField themeKey : themeField.getThemeKeys()) {
+                	String themeKeyFieldText = themeKey.getTextValue();
                 	IsoTopicConcordanceBean isoTopicConcordanceBean = null;
                 	UriLabelConcordanceBean fastConcordanceBean = null;
                 	String concordanceUri = null;
                 	// check to see if themekt is of the type that requires a concordance file check
-                	if (FgdcToCartographyBuilder.ISO_TOPIC_CATEGORY_MARKER.equalsIgnoreCase(themeKtFieldText)) {
+                	if (MapType.ISO_THEME_THESAURUS_KEYWORD_TO_URI.marker().equalsIgnoreCase(themeKtFieldText)) {
                 		// expect only one
-                		isoTopicConcordanceBean = isoTopicConcordanceManager.getConcordanceEntry(themeKey.getTextValue());
+                		isoTopicConcordanceBean = isoTopicConcordanceManager.getConcordanceEntry(themeKeyFieldText);
                     	if (isoTopicConcordanceBean != null) {
                     		concordanceUri = isoTopicConcordanceBean.getUri();
                     	}
-                	} else if (FgdcToCartographyBuilder.LCSH_MARKER.equalsIgnoreCase(themeKtFieldText)) {
-                		fastConcordanceBean = fastConcordanceManager.getConcordanceEntry(themeKey.getTextValue());
+                	} else if (MapType.LCSH_THEME_THESAURUS_KEYWORD_TO_URI.marker().equalsIgnoreCase(themeKtFieldText)) {
+                		// expect only one
+                		fastConcordanceBean = fastConcordanceManager.getConcordanceEntry(themeKeyFieldText);
                     	if (fastConcordanceBean != null) {
                     		concordanceUri = fastConcordanceBean.getUri();
                     	}
@@ -269,14 +276,53 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
                 		// for concordance match add external relationship to corresponding URI
                 		work.addExternalRelationship(Ld4lObjectProp.HAS_SUBJECT, concordanceUri);
                 	} else {
+                		// check cache for thesaurus URI already created
+                		Map<String, String> keywordToUri;
+                		CachingService.MapType cacheMapType;
+                		
+                		if (MapType.ISO_THEME_THESAURUS_KEYWORD_TO_URI.marker().equalsIgnoreCase(themeKtFieldText)) {
+                			cacheMapType = MapType.ISO_THEME_THESAURUS_KEYWORD_TO_URI;
+                			keywordToUri = cachingService.getMap(MapType.ISO_THEME_THESAURUS_KEYWORD_TO_URI);
+                		} else if (MapType.LCSH_THEME_THESAURUS_KEYWORD_TO_URI.marker().equalsIgnoreCase(themeKtFieldText)) {
+                			cacheMapType = MapType.LCSH_THEME_THESAURUS_KEYWORD_TO_URI;
+                			keywordToUri = cachingService.getMap(MapType.LCSH_THEME_THESAURUS_KEYWORD_TO_URI);
+                		}  else {
+                			// If the 'themekt' value is neither of the above, use another catch-all cache
+                			cacheMapType = MapType.OTHER_THEME_THESAURUS_KEYWORK_TO_URI;
+                			keywordToUri = cachingService.getMap(MapType.OTHER_THEME_THESAURUS_KEYWORK_TO_URI);
+                		}
+                		
+                		
                 		// if no concordance, create a Concept for each key, add source,
                 		// and add each to Work (Cartography)
-                		source.addAttribute(Ld4lDatatypeProp.LABEL, themeKtFieldText);
-                		String editorialNote = "Harvard FGDC themekey derived from: " + themeKtFieldText;
-                		source.addAttribute(Ld4lDatatypeProp.EDITORIAL_NOTE, editorialNote);
+            			sourceEntity.addAttribute(Ld4lDatatypeProp.LABEL, themeKtFieldText);
+            			String editorialNote = "Harvard FGDC themekey derived from: " + themeKtFieldText;
+            			sourceEntity.addAttribute(Ld4lDatatypeProp.EDITORIAL_NOTE, editorialNote);
+            			
+            			// Look for URI in cache for 'themekt' value. If none, create and store in cache
+            			String cachedSourceUri = keywordToUri.get(themeKtFieldText);
+            			if (cachedSourceUri != null) {
+            				sourceEntity.buildResource(cachedSourceUri);
+            			} else {
+            				sourceEntity.buildResource();
+            				String sourceUri = sourceEntity.getResource().getURI();
+            				cachingService.putUri(cacheMapType, themeKtFieldText, sourceUri);
+            			}
+
             			Entity concept = new Entity(Ld4lConceptType.defaultType());
-            			concept.addAttribute(Ld4lDatatypeProp.LABEL, themeKey.getTextValue());
-            			concept.addRelationship(Ld4lObjectProp.HAS_SOURCE, source);
+            			concept.addAttribute(Ld4lDatatypeProp.LABEL, themeKeyFieldText);
+            			concept.addRelationship(Ld4lObjectProp.HAS_SOURCE, sourceEntity);
+
+            			// also store 'themekey' URI in local cache
+            			String cachedConceptUri = keywordToUri.get(themeKeyFieldText);
+            			if (cachedConceptUri != null) {
+            				concept.buildResource(cachedConceptUri);
+            			} else {
+            				concept.buildResource();
+            				String conceptUri = concept.getResource().getURI();
+            				cachingService.putUri(cacheMapType, themeKeyFieldText, conceptUri);
+            			}
+
             			work.addRelationship(Ld4lObjectProp.HAS_SUBJECT, concept);
                 	}
                 }
@@ -284,46 +330,72 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
         }
     }
     
-    private void addPlaces(FgdcKeywordsField keywordsField) {
+    private void addPlaces(FgdcKeywordsField keywordsField) throws CachingServiceException {
     	
         if (keywordsField != null && keywordsField.getPlaces().size() > 0) {
         	String layerId = record.getLayerId();
-        	List<PlaceKeyConcordanceBean> beans = placeKeyConcordanceManager.getConcordanceEntries(layerId);
-        	if (beans.size() > 0) {
-        		for (PlaceKeyConcordanceBean bean : beans) {
-        			String source = bean.getSource();
-        			String uri = bean.getUri();
-        			if (!StringUtils.isEmpty(uri)) {
-        				work.addExternalRelationship(FgdcObjectProp.GEOGRAPHIC_COVERAGE, uri);
-        			} else {
-         				Entity geographicCoverage = new Entity(GeographicCoverageType.GEOGRAPHIC_COVERAGE);
-         				geographicCoverage.addAttribute(Ld4lDatatypeProp.LABEL, bean.getLabel());
-         				Entity sourceEntity = new Entity();
-         				sourceEntity.addAttribute(Ld4lDatatypeProp.LABEL, source);
-            			String editorialNote = "Harvard FGDC placekey derived from: " + source;
-            			sourceEntity.addAttribute(Ld4lDatatypeProp.EDITORIAL_NOTE, editorialNote);
-            			geographicCoverage.addRelationship(Ld4lObjectProp.HAS_SOURCE, sourceEntity);
-            			work.addRelationship(FgdcObjectProp.GEOGRAPHIC_COVERAGE, geographicCoverage);
-        			}
-        		}
-        	} else {
-        		for (FgdcPlaceField placeField : keywordsField.getPlaces()) {
-        			
-        			Entity source = new Entity();
-        			String placeKtFieldText = placeField.getPlaceKt().getTextValue();
-        			source.addAttribute(Ld4lDatatypeProp.LABEL, placeKtFieldText);
-        			String editorialNote = "Harvard FGDC placekey derived from: " + placeKtFieldText;
-        			source.addAttribute(Ld4lDatatypeProp.EDITORIAL_NOTE, editorialNote);
-        			
-        			// create a GeographicCoverage for each key and add each to Work (Cartography)
-        			for (FgdcTextField key : placeField.getPlaceKeys()) {
-        				Entity geographicCoverage = new Entity(GeographicCoverageType.GEOGRAPHIC_COVERAGE);
-        				geographicCoverage.addAttribute(Ld4lDatatypeProp.LABEL, key.getTextValue());
-        				geographicCoverage.addRelationship(Ld4lObjectProp.HAS_SOURCE, source);
-        				work.addRelationship(FgdcObjectProp.GEOGRAPHIC_COVERAGE, geographicCoverage);
-        			}
-        		}
-        	}
+    		List<PlaceKeyConcordanceBean> beans = placeKeyConcordanceManager.getConcordanceEntries(layerId);
+    		if (beans.size() < 1) {
+    			return;
+    		}
+    		for (FgdcPlaceField placeField : keywordsField.getPlaces()) {
+        		String placeKtFieldText = placeField.getPlaceKt().getTextValue();
+    			for (PlaceKeyConcordanceBean bean : beans) {
+    				String source = bean.getSource();
+    				String uri = bean.getUri();
+    				// need to compare 'placekt' value to concordance record source value
+    				if (bean.getSource().equals(placeKtFieldText)) {
+    					if ( !StringUtils.isEmpty(uri)) {
+    						work.addExternalRelationship(FgdcObjectProp.GEOGRAPHIC_COVERAGE, uri);
+    					} else {
+
+    		        		Map<String, String> keywordToUri;
+                    		CachingService.MapType cacheMapType;
+    		        		if (MapType.GNIS_PLACE_THESAURUS_KEYWORD_TO_URI.marker().equalsIgnoreCase(source)) {
+    		        			cacheMapType = MapType.GNIS_PLACE_THESAURUS_KEYWORD_TO_URI;
+    		        			keywordToUri = cachingService.getMap(MapType.GNIS_PLACE_THESAURUS_KEYWORD_TO_URI);
+    		        		} else if (MapType.LCNA_PLACE_THESAURUS_KEYWORD_TO_URI.marker().equalsIgnoreCase(source)) {
+    		        			cacheMapType = MapType.LCNA_PLACE_THESAURUS_KEYWORD_TO_URI;
+    		        			keywordToUri = cachingService.getMap(MapType.LCNA_PLACE_THESAURUS_KEYWORD_TO_URI);
+    		        		} else {
+    		        			// If the 'placekt' value is neither of the above, do nothing.
+    		        			continue;
+    		        		}
+    		        		
+    		        		Entity sourceEntity = new Entity();
+	    					sourceEntity.addAttribute(Ld4lDatatypeProp.LABEL, source);
+	    					String editorialNote = "Harvard FGDC placekey derived from: " + source;
+	    					sourceEntity.addAttribute(Ld4lDatatypeProp.EDITORIAL_NOTE, editorialNote);
+
+	    					// create and  save local URI for concordance 'source' if it doesn't already exist
+                			String cachedSourceUri = keywordToUri.get(source);
+                			if (cachedSourceUri != null) {
+                				sourceEntity.buildResource(cachedSourceUri);
+                			} else {
+                				sourceEntity.buildResource();
+                				String sourceUri = sourceEntity.getResource().getURI();
+                				cachingService.putUri(cacheMapType, source, sourceUri);
+                			}
+    					
+	    					Entity geographicCoverage = new Entity(GeographicCoverageType.GEOGRAPHIC_COVERAGE);
+	    					String concordanceLabel = bean.getLabel();
+	    					geographicCoverage.addAttribute(Ld4lDatatypeProp.LABEL, concordanceLabel);
+	    					geographicCoverage.addRelationship(Ld4lObjectProp.HAS_SOURCE, sourceEntity);
+	    					
+	    					String cachedPlaceLabelUri = keywordToUri.get(concordanceLabel);
+	    					if (cachedPlaceLabelUri != null) {
+	    						geographicCoverage.buildResource(cachedPlaceLabelUri);
+	    					} else {
+	    						geographicCoverage.buildResource();
+	    						String placeLabelUri = geographicCoverage.getResource().getURI();
+	    						cachingService.putUri(cacheMapType, concordanceLabel, placeLabelUri);
+	    					}
+	    					
+	    					work.addRelationship(FgdcObjectProp.GEOGRAPHIC_COVERAGE, geographicCoverage);
+    					}
+    				}
+    			}
+    		}
         }
     }
         

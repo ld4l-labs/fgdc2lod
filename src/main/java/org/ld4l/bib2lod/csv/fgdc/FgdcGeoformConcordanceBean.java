@@ -45,8 +45,8 @@ public class FgdcGeoformConcordanceBean {
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("FgdcGeoformConcordanceBean [geoformText=");
+		StringBuilder builder = new StringBuilder(getClass().getSimpleName());
+		builder.append(" [geoformText=");
 		builder.append(geoformText);
 		builder.append(", mappingEquivalent=");
 		builder.append(mappingEquivalent);

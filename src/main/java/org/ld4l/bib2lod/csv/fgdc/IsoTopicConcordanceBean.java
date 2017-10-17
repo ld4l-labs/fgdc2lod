@@ -55,8 +55,8 @@ public class IsoTopicConcordanceBean {
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("IsoTopicConcordanceBean [topicKeyword=");
+		StringBuilder builder = new StringBuilder(getClass().getSimpleName());
+		builder.append(" [topicKeyword=");
 		builder.append(topicKeyword);
 		builder.append(", uri=");
 		builder.append(uri);
