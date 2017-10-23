@@ -2,13 +2,13 @@
   "localNamespace": "http://localhost:8080/bibframe/individual/",
   "InputService": {
     "class": "org.ld4l.bib2lod.io.FileInputService",
-    "source": "src/main/resources/9_CoreFGDC_AgentURIs.xml",
+    "source": "src/main/resources/",
     "extension": "xml"
   }, 
   "OutputService": {
     "class": "org.ld4l.bib2lod.io.FileOutputService",
-    "destination": "src/main/resources/",
-    "format": "N-TRIPLE"
+    "destination": "target/",
+    "format": "TURTLE"
   },
   "UriService": [
     { 
@@ -24,7 +24,7 @@
   "CachingService": {
     "class": "org.ld4l.bib2lod.caching.MapCachingService"
   },
-  "EntityBuilders": {
+  "EntityBuilderFactory": {
     "class": "org.ld4l.bib2lod.entitybuilders.fgdc.FgdcToLd4lEntityBuilderFactory"
   }
 }
