@@ -258,45 +258,6 @@ public class FgdcToCartographyBuilderTest extends AbstractTestClass {
 	}
 	
 	/**
-	 * This tests caching of URI for LayerId Entity
-	 */
-	@Test
-	public void sameUriForSameLayerId() throws Exception {
-		
-		fgdcRecord = buildFgdcRecordFromString(FgdcTestData.VALID_CITEINFO);
-		BuildParams params = new BuildParams()
-				.setRecord(fgdcRecord);
-		Entity cartography1 = cartographyBuilder.build(params);
-		
-		fgdcRecord = buildFgdcRecordFromString(FgdcTestData.VALID_CITEINFO_DUPLICATE_LAYER_ID_AND_HOLLIS);
-		params = new BuildParams()
-				.setRecord(fgdcRecord);
-		Entity cartography2 = cartographyBuilder.build(params);
-		
-		Assert.assertNotNull(cartography1);
-		Assert.assertNotNull(cartography2);
-
-		Entity layerId1 = cartography1.getChild(Ld4lObjectProp.IDENTIFIED_BY, HarvardType.HGLID);
-		Assert.assertNotNull(layerId1);
-		layerId1.buildResource();
-		Resource layerId1Resource = layerId1.getResource();
-		Assert.assertNotNull(layerId1Resource);
-		String layerId1Uri = layerId1Resource.getURI();
-		Assert.assertNotNull(layerId1Uri);
-		LOGGER.debug("layerId1Uri: {}", layerId1Uri);
-		
-		Entity layerId2 = cartography2.getChild(Ld4lObjectProp.IDENTIFIED_BY, HarvardType.HGLID);
-		Assert.assertNotNull(layerId2);
-		layerId2.buildResource();
-		Resource layerId2Resource = layerId2.getResource();
-		Assert.assertNotNull(layerId2Resource);
-		String layerId2Uri = layerId2Resource.getURI();
-		Assert.assertNotNull(layerId2Uri);
-		LOGGER.debug("layerId1Uri: {}", layerId2Uri);
-		Assert.assertEquals(layerId1Uri, layerId2Uri);
-	}
-	
-	/**
 	 * This tests caching of URI for Hollis number Entity
 	 */
 	@Test

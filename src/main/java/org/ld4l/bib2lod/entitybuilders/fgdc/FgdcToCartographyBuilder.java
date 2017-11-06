@@ -133,21 +133,8 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
 
     	// create and add HGLD identifier
     	String layerId = record.getLayerId(); // should be validated as non-null
-        String cachedHglIdUri = mapToUriCache.get(layerId);
-
         Entity hglIdentifier =  new Entity(HarvardType.HGLID);
         hglIdentifier.addAttribute(Ld4lDatatypeProp.VALUE, layerId);
-        if (cachedHglIdUri == null) {
-        	hglIdentifier.buildResource();
-        	String uri = hglIdentifier.getResource().getURI();
-        	try {
-				cachingService.putUri(MapType.NAMES_TO_URI, layerId, uri);
-			} catch (CachingServiceException e) {
-				throw new EntityBuilderException(e);
-			}
-        } else {
-        	hglIdentifier.buildResource(cachedHglIdUri);
-        }
         work.addRelationship(Ld4lObjectProp.IDENTIFIED_BY, hglIdentifier);
     	
     	// create and add Hollis number identifier
