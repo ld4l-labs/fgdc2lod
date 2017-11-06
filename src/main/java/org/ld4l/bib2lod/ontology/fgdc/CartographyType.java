@@ -14,7 +14,7 @@ public enum CartographyType implements Type {
     
 	GEOMETRY(CartographyNamespace.GEO, "Geometry"),
 	DATASET(Ld4lNamespace.BIBFRAME, "Dataset"),
-	EPSG_CODE(CartographyNamespace.CARTOTEKO, "EpsgCode"),
+	EPSG_CODE(CartographyNamespace.GEOSPATIAL_AND_CARTOGRAPHIC, "EpsgCode"),
     PROJECTION(Ld4lNamespace.BIBFRAME, "Projection");
     
     private String uri;

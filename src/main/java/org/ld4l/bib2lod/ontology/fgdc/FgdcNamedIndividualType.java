@@ -10,8 +10,8 @@ import org.ld4l.bib2lod.ontology.Type;
  */
 public enum FgdcNamedIndividualType implements Type {
     
-	EPSG4326_PROJECTION(CartographyNamespace.CARTOTEKO, "ProjectionEpsg4326"),
-	MERCATOR_PROJECTION(CartographyNamespace.CARTOTEKO, "Mercator");
+	EPSG4326_PROJECTION(CartographyNamespace.GEOSPATIAL_AND_CARTOGRAPHIC, "ProjectionEpsg4326"),
+	MERCATOR_PROJECTION(CartographyNamespace.GEOSPATIAL_AND_CARTOGRAPHIC, "Mercator");
     
     private String uri;
     private Resource ontClass;

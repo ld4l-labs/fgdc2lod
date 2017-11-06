@@ -12,8 +12,7 @@ import org.ld4l.bib2lod.ontology.Namespace;
 public enum CartographyNamespace implements Namespace {
 
 	GEO("http://www.opengis.net/ont/geosparql#", "geo"),
-	// FIXME: This needs a correct namespace
-	CARTOTEKO("http://ld4l.org/ontology/cartotek-o/", "cart"),
+	GEOSPATIAL_AND_CARTOGRAPHIC("http://ontology.library.harvard.edu/geo/", "gcro"),
     RDAU("http://rdaregistry.info/Elements/u/", "rdau");
 
     private static final Logger LOGGER = LogManager.getLogger(); 

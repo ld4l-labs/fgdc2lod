@@ -11,12 +11,12 @@ import org.ld4l.bib2lod.ontology.Type;
  */
 public enum CartographySubType implements Type {
     
-    CART_SUBTYPE(CartographyNamespace.CARTOTEKO, "CartSubtype"),
-    CART_VECTOR(CartographyNamespace.CARTOTEKO, "VectorData"),
-    CART_MAPS(CartographyNamespace.CARTOTEKO, "Maps"),
-    CART_GEOREFERENCED_RESOURCES(CartographyNamespace.CARTOTEKO, "GeoreferencedCartographicResources"),
-    CART_RASTER(CartographyNamespace.CARTOTEKO, "RasterData"),
-    CART_REMOTE(CartographyNamespace.CARTOTEKO, "RemoteSensingImages");
+    CART_SUBTYPE(CartographyNamespace.GEOSPATIAL_AND_CARTOGRAPHIC, "CartSubtype"),
+    CART_VECTOR(CartographyNamespace.GEOSPATIAL_AND_CARTOGRAPHIC, "VectorData"),
+    CART_MAPS(CartographyNamespace.GEOSPATIAL_AND_CARTOGRAPHIC, "Maps"),
+    CART_GEOREFERENCED_RESOURCES(CartographyNamespace.GEOSPATIAL_AND_CARTOGRAPHIC, "GeoreferencedCartographicResources"),
+    CART_RASTER(CartographyNamespace.GEOSPATIAL_AND_CARTOGRAPHIC, "RasterData"),
+    CART_REMOTE(CartographyNamespace.GEOSPATIAL_AND_CARTOGRAPHIC, "RemoteSensingImages");
     
 	private String localName;
     private String uri;
