@@ -11,8 +11,8 @@ import org.ld4l.bib2lod.ontology.Type;
  */
 public enum HarvardType implements Type {
     
-    HGLID(HarvardNamespace.METAL, "HGLID"),
-    HOLLIS_NUMBER(HarvardNamespace.METAL, "HOLLISNumber");
+    HGLID(HarvardNamespace.HARVARD, "HGLID"),
+    HOLLIS_NUMBER(HarvardNamespace.HARVARD, "HOLLISNumber");
     
     private String uri;
     private Resource ontClass;

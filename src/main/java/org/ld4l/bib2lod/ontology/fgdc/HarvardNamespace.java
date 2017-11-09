@@ -7,10 +7,9 @@ import org.ld4l.bib2lod.ontology.Namespace;
 /**
  * Define Harvard-related ontology namespace.
  */
-// FIXME: We need to resolve this namespace both here and in HFA
 public enum HarvardNamespace implements Namespace {
 
-	METAL("http://ontology.library.harvard.edu/harvcore/", "metal");
+	HARVARD("http://ontology.library.harvard.edu/harvcore/", "hcore");
     
     private final String uri;
     private final String prefix;
