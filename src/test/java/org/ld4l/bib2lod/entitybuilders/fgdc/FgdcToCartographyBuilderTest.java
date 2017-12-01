@@ -14,12 +14,14 @@ import org.junit.Test;
 import org.ld4l.bib2lod.caching.CachingService;
 import org.ld4l.bib2lod.caching.MapCachingService;
 import org.ld4l.bib2lod.configuration.ConfigurationNode;
+import org.ld4l.bib2lod.entity.Attribute;
 import org.ld4l.bib2lod.entity.Entity;
 import org.ld4l.bib2lod.entitybuilders.BuildParams;
 import org.ld4l.bib2lod.entitybuilders.EntityBuilder;
 import org.ld4l.bib2lod.entitybuilders.EntityBuilder.EntityBuilderException;
 import org.ld4l.bib2lod.entitybuilders.EntityBuilderFactory;
 import org.ld4l.bib2lod.ontology.ObjectProp;
+import org.ld4l.bib2lod.ontology.OwlThingType;
 import org.ld4l.bib2lod.ontology.Type;
 import org.ld4l.bib2lod.ontology.fgdc.CartographyType;
 import org.ld4l.bib2lod.ontology.fgdc.FgdcObjectProp;
@@ -137,25 +139,39 @@ public class FgdcToCartographyBuilderTest extends AbstractTestClass {
 		// theme keywords
 		List<Entity> subjects = relationships.getValues(Ld4lObjectProp.HAS_SUBJECT);
 		Assert.assertNotNull(subjects);
+		Assert.assertEquals(6, subjects.size());
 		for (Entity e : subjects) {
-			LOGGER.warn("Subject type: [{}] Label: [{}]", e.getType(), e.getAttribute(Ld4lDatatypeProp.LABEL).getValue());
+			LOGGER.debug("Subject type: [{}] Label: [{}]", e.getType(), e.getAttribute(Ld4lDatatypeProp.LABEL).getValue());
+			Assert.assertTrue(OwlThingType.THING.equals(e.getType()) || Ld4lConceptType.defaultType().equals(e.getType()));
 		}
-		Assert.assertEquals(4, subjects.size());
 
 		// external URI's from concordance files
 		MapOfLists<ObjectProp, String> externals = cartographyEntity.getExternalRelationships();
 		Assert.assertNotNull(externals);
 		List<String> externalUris = externals.getValues(Ld4lObjectProp.HAS_SUBJECT);
-		Assert.assertNotNull(externalUris);
-		Assert.assertEquals(2, externalUris.size());
+		Assert.assertEquals(0, externalUris.size());
 		
 		// place keywords
 		List<Entity> geographicCoverages = relationships.getValues(FgdcObjectProp.GEOGRAPHIC_COVERAGE);
-		Assert.assertNotNull(geographicCoverages);
-		Assert.assertEquals(1, geographicCoverages.size());
+		Assert.assertEquals(2, geographicCoverages.size());
 		
-		String uri = cartographyEntity.getExternal(FgdcObjectProp.GEOGRAPHIC_COVERAGE);
-		Assert.assertNotNull(uri);
+		// URI and label pulled from the concordance
+		List<Entity> geographicCoverageEntities = cartographyEntity.getChildren(FgdcObjectProp.GEOGRAPHIC_COVERAGE, OwlThingType.THING);
+		Assert.assertEquals(1, geographicCoverageEntities.size());
+		Entity geographicCoverageEntity = geographicCoverageEntities.get(0);
+		Assert.assertEquals("http://sws.geonames.org/4932004", geographicCoverageEntity.getResource().getURI());
+		Attribute attr = geographicCoverageEntity.getAttribute(Ld4lDatatypeProp.LABEL);
+		Assert.assertNotNull(attr);
+		Assert.assertEquals("City of Cambridge", attr.getValue());
+		
+		// locally generated URI - label pulled from concordance
+		geographicCoverageEntities = cartographyEntity.getChildren(FgdcObjectProp.GEOGRAPHIC_COVERAGE, GeographicCoverageType.GEOGRAPHIC_COVERAGE);
+		Assert.assertEquals(1, geographicCoverageEntities.size());
+		geographicCoverageEntity = geographicCoverageEntities.get(0);
+		attr = geographicCoverageEntity.getAttribute(Ld4lDatatypeProp.LABEL);
+		Assert.assertNotNull(attr);
+		Assert.assertEquals("Massachusetts | Cambridge", attr.getValue());
+
 		
 		// language
 		String language = cartographyEntity.getExternal(Ld4lObjectProp.HAS_LANGUAGE);

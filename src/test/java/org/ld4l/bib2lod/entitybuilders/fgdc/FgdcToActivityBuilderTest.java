@@ -118,15 +118,18 @@ public class FgdcToActivityBuilderTest extends AbstractTestClass {
 		
 		MapOfLists<ObjectProp, Entity> relationships = activityEntity.getRelationships();
 		Assert.assertNotNull(relationships);
-		Assert.assertEquals(1, relationships.keys().size());
+		Assert.assertEquals(2, relationships.keys().size());
 		
 		List<Entity> agents = relationships.getValues(Ld4lObjectProp.HAS_AGENT);
 		Assert.assertNotNull(agents);
 		Assert.assertEquals(1, agents.size());
 		
-		String location = activityEntity.getExternal(Ld4lObjectProp.HAS_LOCATION);
+		Entity location = activityEntity.getChild(Ld4lObjectProp.HAS_LOCATION);
 		Assert.assertNotNull(location);
-		Assert.assertEquals("http://sws.geonames.org/4932004", location);
+		Assert.assertEquals("http://sws.geonames.org/4932004", location.getResource().getURI());
+		Attribute attr = location.getAttribute(Ld4lDatatypeProp.LABEL);
+		Assert.assertNotNull(attr);
+		Assert.assertEquals("City of Cambridge", attr.getValue());
 		
 		List<String> dates = activityEntity.getValues(Ld4lDatatypeProp.DATE);
 		Assert.assertNotNull(dates);

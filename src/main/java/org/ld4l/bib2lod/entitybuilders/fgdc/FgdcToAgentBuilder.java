@@ -14,6 +14,7 @@ import org.ld4l.bib2lod.csv.fgdc.UriLabelConcordanceBean;
 import org.ld4l.bib2lod.csv.fgdc.UriLabelConcordanceManager;
 import org.ld4l.bib2lod.entity.Entity;
 import org.ld4l.bib2lod.entitybuilders.BuildParams;
+import org.ld4l.bib2lod.ontology.OwlThingType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lAgentType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lDatatypeProp;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lObjectProp;
@@ -55,12 +56,14 @@ public class FgdcToAgentBuilder extends FgdcToLd4lEntityBuilder {
         
         Entity agentEntity = null;
         UriLabelConcordanceBean concordanceBean = null;
-        String agentText = agentField.getTextValue();
-        concordanceBean = concordanceManager.getConcordanceEntry(agentField.getTextValue());
+        String agentText = agentField.getTextValue().trim();
+        concordanceBean = concordanceManager.getConcordanceEntry(agentText);
         if (concordanceBean != null) {
     		// for concordance match add external relationship to corresponding URI
-    		String uri = concordanceBean.getUri();
-    		parentEntity.addExternalRelationship(Ld4lObjectProp.HAS_AGENT, uri);
+    		agentEntity = new Entity(OwlThingType.THING);
+    		agentEntity.addAttribute(Ld4lDatatypeProp.LABEL, concordanceBean.getLabel());
+    		agentEntity.buildResource(concordanceBean.getUri());
+    		parentEntity.addRelationship(Ld4lObjectProp.HAS_AGENT, agentEntity);
         } else {
         	agentEntity = new Entity(Ld4lAgentType.AGENT);
         	agentEntity.addAttribute(Ld4lDatatypeProp.LABEL, agentText);

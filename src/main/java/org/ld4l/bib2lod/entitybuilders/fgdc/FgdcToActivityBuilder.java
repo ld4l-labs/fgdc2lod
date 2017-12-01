@@ -12,6 +12,7 @@ import org.ld4l.bib2lod.entity.Attribute;
 import org.ld4l.bib2lod.entity.Entity;
 import org.ld4l.bib2lod.entitybuilders.BuildParams;
 import org.ld4l.bib2lod.entitybuilders.EntityBuilder;
+import org.ld4l.bib2lod.ontology.OwlThingType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lActivityType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lAgentType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lDatatypeProp;
@@ -97,8 +98,10 @@ public class FgdcToActivityBuilder extends FgdcToLd4lEntityBuilder {
 				// see if in concordance for URI
 				UriLabelConcordanceBean bean = placesConcordanceManager.getConcordanceEntry(pubplaceField.getTextValue());
 				if (bean != null) {
-					String uri = bean.getUri();
-					activity.addExternalRelationship(Ld4lObjectProp.HAS_LOCATION, uri);
+        			Entity locationEntity = new Entity(OwlThingType.THING);
+        			locationEntity.addAttribute(Ld4lDatatypeProp.LABEL, bean.getLabel());
+        			locationEntity.buildResource(bean.getUri());
+					activity.addRelationship(Ld4lObjectProp.HAS_LOCATION, locationEntity);
 				} else {
 					Entity location = new Entity(Ld4lLocationType.LOCATION);
 					location.addAttribute(Ld4lDatatypeProp.LABEL, pubplaceField.getTextValue());

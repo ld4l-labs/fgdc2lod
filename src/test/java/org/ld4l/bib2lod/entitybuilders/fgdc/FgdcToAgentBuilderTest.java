@@ -75,12 +75,10 @@ public class FgdcToAgentBuilderTest extends AbstractTestClass {
 
 		Assert.assertNotNull(agentEntity);
 		List<Type> types = agentEntity.getTypes();
-		Assert.assertNotNull(types);
 		Assert.assertEquals(1, types.size());
 		Assert.assertEquals(Ld4lAgentType.AGENT, types.get(0));
 		
 		List<String> labels = agentEntity.getValues(Ld4lDatatypeProp.LABEL);
-		Assert.assertNotNull(labels);
 		Assert.assertEquals(1, labels.size());
 		Assert.assertEquals("Agent Text", labels.get(0));
 	}

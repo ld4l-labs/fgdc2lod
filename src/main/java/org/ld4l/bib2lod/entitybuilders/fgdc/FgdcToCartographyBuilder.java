@@ -19,6 +19,7 @@ import org.ld4l.bib2lod.csv.fgdc.UriLabelConcordanceManager;
 import org.ld4l.bib2lod.entity.Entity;
 import org.ld4l.bib2lod.entitybuilders.BuildParams;
 import org.ld4l.bib2lod.entitybuilders.EntityBuilder;
+import org.ld4l.bib2lod.ontology.OwlThingType;
 import org.ld4l.bib2lod.ontology.fgdc.CartographySubType;
 import org.ld4l.bib2lod.ontology.fgdc.CartographyType;
 import org.ld4l.bib2lod.ontology.fgdc.FgdcObjectProp;
@@ -61,6 +62,7 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
 			this.isoTopicConcordanceManager = new IsoTopicConcordanceManager();
 			concordanceManagerName = UriLabelConcordanceManager.class.getSimpleName();
 			this.fastConcordanceManager = UriLabelConcordanceManager.getFastConcordanceManager();
+			concordanceManagerName = PlaceKeyConcordanceManager.class.getSimpleName();
 			this.placeKeyConcordanceManager = new PlaceKeyConcordanceManager();
 		} catch ( FileNotFoundException e) {
 			throw new EntityBuilderException("Could not instantiate " + concordanceManagerName, e);
@@ -260,8 +262,11 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
                 	}
                 	
                 	if (concordanceUri != null) {
-                		// for concordance match add external relationship to corresponding URI
-                		work.addExternalRelationship(Ld4lObjectProp.HAS_SUBJECT, concordanceUri);
+                		// for concordance match add relationship to corresponding external URI along with label
+    	    	        Entity topicEntity = new Entity(OwlThingType.THING);
+    	    	        topicEntity.addAttribute(Ld4lDatatypeProp.LABEL, themeKeyFieldText);
+    	    	        topicEntity.buildResource(concordanceUri);
+    	    	        work.addRelationship(Ld4lObjectProp.HAS_SUBJECT, topicEntity);
                 	} else {
                 		// check cache for thesaurus URI already created
                 		Map<String, String> keywordToUri;
@@ -333,7 +338,10 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
     				// need to compare 'placekt' value to concordance record source value
     				if (bean.getSource().equals(placeKtFieldText)) {
     					if ( !StringUtils.isEmpty(uri)) {
-    						work.addExternalRelationship(FgdcObjectProp.GEOGRAPHIC_COVERAGE, uri);
+    			    		Entity geographicCoverageEntity = new Entity(OwlThingType.THING);
+    			    		geographicCoverageEntity.addAttribute(Ld4lDatatypeProp.LABEL, bean.getLabel());
+    			    		geographicCoverageEntity.buildResource(uri);
+    						work.addRelationship(FgdcObjectProp.GEOGRAPHIC_COVERAGE, geographicCoverageEntity);
     					} else {
 
     		        		Map<String, String> keywordToUri;

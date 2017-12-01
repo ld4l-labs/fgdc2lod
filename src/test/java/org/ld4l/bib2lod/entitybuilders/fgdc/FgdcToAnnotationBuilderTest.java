@@ -7,12 +7,11 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.ld4l.bib2lod.entity.Attribute;
 import org.ld4l.bib2lod.entity.Entity;
 import org.ld4l.bib2lod.entitybuilders.BuildParams;
 import org.ld4l.bib2lod.entitybuilders.EntityBuilder;
 import org.ld4l.bib2lod.entitybuilders.EntityBuilder.EntityBuilderException;
-import org.ld4l.bib2lod.entitybuilders.fgdc.FgdcToAnnotationBuilder;
-import org.ld4l.bib2lod.ontology.ObjectProp;
 import org.ld4l.bib2lod.ontology.Type;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lAnnotationType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lDatatypeProp;
@@ -26,7 +25,6 @@ import org.ld4l.bib2lod.records.Record.RecordException;
 import org.ld4l.bib2lod.testing.AbstractTestClass;
 import org.ld4l.bib2lod.testing.FgdcTestData;
 import org.ld4l.bib2lod.testing.xml.XmlTestUtils;
-import org.ld4l.bib2lod.util.collections.MapOfLists;
 
 /**
  * Tests the FgdcToAgentBuilder class.
@@ -62,16 +60,17 @@ public class FgdcToAnnotationBuilderTest extends AbstractTestClass {
 		Assert.assertEquals(1, types.size());
 		Assert.assertEquals(Ld4lAnnotationType.ANNOTATION, types.get(0));
 		
-		MapOfLists<ObjectProp, String> externals = purposeEntity.getExternalRelationships();
-		Assert.assertNotNull(externals);
-
-		String motivator = externals.getValue(Ld4lObjectProp.MOTIVATED_BY);
-		Assert.assertNotNull(motivator);
+		List<String> externals = purposeEntity.getExternals(Ld4lObjectProp.MOTIVATED_BY);
+		Assert.assertEquals(1, externals.size());
+		String motivator = externals.get(0);
 		Assert.assertEquals(Ld4lNamedIndividual.PROVIDING_PURPOSE.uri(), motivator);
 
-		String creator = externals.getValue(Ld4lObjectProp.HAS_CREATOR);
+		Entity creator = purposeEntity.getChild(Ld4lObjectProp.HAS_CREATOR);
 		Assert.assertNotNull(creator);
-		Assert.assertEquals(Ld4lNamedIndividual._134059638.uri(), creator);
+		Assert.assertEquals(Ld4lNamedIndividual._134059638.uri(), creator.getResource().getURI());
+		Attribute attr = creator.getAttribute(Ld4lDatatypeProp.LABEL);
+		Assert.assertNotNull(attr);
+		Assert.assertEquals("Harvard Map Collection", attr.getValue());
 		
 		Entity textualBody = purposeEntity.getChild(Ld4lObjectProp.HAS_BODY);
 		Assert.assertNotNull(textualBody);
@@ -93,16 +92,17 @@ public class FgdcToAnnotationBuilderTest extends AbstractTestClass {
 		Assert.assertEquals(1, types.size());
 		Assert.assertEquals(Ld4lAnnotationType.ANNOTATION, types.get(0));
 		
-		MapOfLists<ObjectProp, String> externals = abstractRecordEntity.getExternalRelationships();
-		Assert.assertNotNull(externals);
-
-		String motivator = externals.getValue(Ld4lObjectProp.MOTIVATED_BY);
-		Assert.assertNotNull(motivator);
+		List<String> externals = abstractRecordEntity.getExternals(Ld4lObjectProp.MOTIVATED_BY);
+		Assert.assertEquals(1, externals.size());
+		String motivator = externals.get(0);
 		Assert.assertEquals(Ld4lNamedIndividual.SUMMARIZING.uri(), motivator);
 
-		String creator = externals.getValue(Ld4lObjectProp.HAS_CREATOR);
+		Entity creator = abstractRecordEntity.getChild(Ld4lObjectProp.HAS_CREATOR);
 		Assert.assertNotNull(creator);
-		Assert.assertEquals(Ld4lNamedIndividual._134059638.uri(), creator);
+		Assert.assertEquals(Ld4lNamedIndividual._134059638.uri(), creator.getResource().getURI());
+		Attribute attr = creator.getAttribute(Ld4lDatatypeProp.LABEL);
+		Assert.assertNotNull(attr);
+		Assert.assertEquals("Harvard Map Collection", attr.getValue());
 		
 		Entity textualBody = abstractRecordEntity.getChild(Ld4lObjectProp.HAS_BODY);
 		Assert.assertNotNull(textualBody);
