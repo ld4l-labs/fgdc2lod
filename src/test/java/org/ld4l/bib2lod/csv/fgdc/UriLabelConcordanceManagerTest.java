@@ -41,13 +41,19 @@ public class UriLabelConcordanceManagerTest {
 			Map<String, UriLabelConcordanceBean> map = mgr.getMap();
 			Assert.assertNotNull(map);
 			Assert.assertFalse(map.isEmpty());
-			Assert.assertEquals(4, map.size());
+			Assert.assertEquals(5, map.size());
 			
-			UriLabelConcordanceBean bean = mgr.getConcordanceEntry("Lange, Henry, 1821-1893.");
+			UriLabelConcordanceBean bean = mgr.getConcordanceEntry("United States. Federal Railroad Administration");
 			Assert.assertNotNull(bean);
-			Assert.assertEquals("Lange, Henry, 1821-1893.", bean.getMatchingText());
-			Assert.assertEquals("http://id.loc.gov/rwo/agents/n2001120246", bean.getUri());
-			Assert.assertEquals("Lange, Henry, 1821-1893.", bean.getLabel());
+			Assert.assertEquals("United States. Federal Railroad Administration", bean.getMatchingText());
+			Assert.assertEquals("https://viaf.org/viaf/138970766", bean.getUri());
+			Assert.assertEquals("United States. Federal Railroad Administration", bean.getLabel());
+			
+			bean = mgr.getConcordanceEntry("Van Benthuysen, C. (Charles), 1817-1881.");
+			Assert.assertNotNull(bean);
+			Assert.assertEquals("Van Benthuysen, C. (Charles), 1817-1881.", bean.getMatchingText());
+			Assert.assertEquals("https://viaf.org/viaf/29153257", bean.getUri());
+			Assert.assertEquals("Van Benthuysen, C. (Charles), 1817-1881", bean.getLabel());
 			
 			bean = mgr.getConcordanceEntry("no-entry");
 			Assert.assertNull(bean);
