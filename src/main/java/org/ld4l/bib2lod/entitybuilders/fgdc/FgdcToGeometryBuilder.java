@@ -13,6 +13,7 @@ import org.ld4l.bib2lod.ontology.fgdc.CartographyType;
 import org.ld4l.bib2lod.ontology.fgdc.FgdcDatatypeProp;
 import org.ld4l.bib2lod.ontology.fgdc.FgdcNamedIndividualType;
 import org.ld4l.bib2lod.ontology.fgdc.FgdcObjectProp;
+import org.ld4l.bib2lod.ontology.ld4l.Ld4lDatatypeProp;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lObjectProp;
 import org.ld4l.bib2lod.record.xml.fgdc.FgdcBoundingField;
 import org.ld4l.bib2lod.record.xml.fgdc.FgdcRecord;
@@ -39,7 +40,8 @@ public class FgdcToGeometryBuilder extends FgdcToLd4lEntityBuilder {
                     "A related Entity is required to build a geometry.");
         }
 
-        Entity geometry = new Entity(CartographyType.superClass()); // (no rdfs:label added)
+        Entity geometry = new Entity(CartographyType.GEOMETRY);
+        geometry.addAttribute(Ld4lDatatypeProp.LABEL, CartographyType.GEOMETRY.label());
         
         FgdcBoundingField fgdcBoundingField = record.getBoundingField();
         if (fgdcBoundingField != null) {

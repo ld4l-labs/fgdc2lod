@@ -51,8 +51,13 @@ public class FgdcToActivityBuilderTest extends AbstractTestClass {
     @BeforeClass
     public static void setUpClass() throws Exception {
         factory = new BaseMockBib2LodObjectFactory();
-        factory.addInstance(EntityBuilderFactory.class, new FgdcToLd4lEntityBuilderFactory());
+        
         ConfigurationNode config = new ConfigurationNode.Builder()
+        		.addAttribute("institution", "Harvard")
+        		.build();
+        factory.addInstance(EntityBuilderFactory.class, new FgdcToLd4lEntityBuilderFactory(), config);
+        
+        config = new ConfigurationNode.Builder()
         		.addAttribute("localNamespace", "http://localhost/individual/").build();
         factory.addInstance(UriService.class, new RandomUriMinter(), config);
         factory.addInstance(CachingService.class, new MapCachingService());

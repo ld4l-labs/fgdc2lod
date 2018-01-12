@@ -12,25 +12,31 @@ import org.ld4l.bib2lod.ontology.ld4l.Ld4lNamespace;
  */
 public enum CartographyType implements Type {
     
-	GEOMETRY(CartographyNamespace.GEO, "Geometry"),
-	DATASET(Ld4lNamespace.BIBFRAME, "Dataset"),
-	EPSG_CODE(CartographyNamespace.GEOSPATIAL_AND_CARTOGRAPHIC, "EpsgCode"),
-    PROJECTION(Ld4lNamespace.BIBFRAME, "Projection");
+	GEOMETRY(CartographyNamespace.GEO, "Geometry", "Geometry"),
+	DATASET(Ld4lNamespace.BIBFRAME, "Dataset", "Dataset"),
+	EPSG_CODE(CartographyNamespace.GEOSPATIAL_AND_CARTOGRAPHIC, "EpsgCode", "EpsgCode"),
+    PROJECTION(Ld4lNamespace.BIBFRAME, "Projection", "Projection");
     
     private String uri;
     private Resource ontClass;
+    private final String label;
     
     /**
      * Constructor
      */
-    CartographyType(Namespace namespace, String localName) {
+    CartographyType(Namespace namespace, String localName, String label) {
         this.uri = namespace.uri() + localName;
         this.ontClass = ResourceFactory.createResource(uri);
+        this.label = label;
     }
     
     @Override
     public String uri() {
         return uri;
+    }
+    
+    public String label() {
+    	return label;
     }
 
     @Override

@@ -7,7 +7,7 @@
   }, 
   "OutputService": {
     "class": "org.ld4l.bib2lod.io.FileOutputService",
-    "destination": "target/",
+    "destination": "target/X",
     "format": "RDF/XML"
   },
   "UriService": [
@@ -25,6 +25,7 @@
     "class": "org.ld4l.bib2lod.caching.MapCachingService"
   },
   "EntityBuilderFactory": {
-    "class": "org.ld4l.bib2lod.entitybuilders.fgdc.FgdcToLd4lEntityBuilderFactory"
+    "class": "org.ld4l.bib2lod.entitybuilders.fgdc.FgdcToLd4lEntityBuilderFactory",
+    "institution": "Harvard"
   }
 }                         

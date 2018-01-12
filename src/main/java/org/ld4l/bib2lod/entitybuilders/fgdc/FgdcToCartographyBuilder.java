@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.ld4l.bib2lod.caching.CachingService;
 import org.ld4l.bib2lod.caching.CachingService.CachingServiceException;
 import org.ld4l.bib2lod.caching.CachingService.MapType;
+import org.ld4l.bib2lod.configuration.Bib2LodObjectFactory;
 import org.ld4l.bib2lod.csv.fgdc.IsoTopicConcordanceBean;
 import org.ld4l.bib2lod.csv.fgdc.IsoTopicConcordanceManager;
 import org.ld4l.bib2lod.csv.fgdc.PlaceKeyConcordanceBean;
@@ -19,6 +20,7 @@ import org.ld4l.bib2lod.csv.fgdc.UriLabelConcordanceManager;
 import org.ld4l.bib2lod.entity.Entity;
 import org.ld4l.bib2lod.entitybuilders.BuildParams;
 import org.ld4l.bib2lod.entitybuilders.EntityBuilder;
+import org.ld4l.bib2lod.entitybuilders.EntityBuilderFactory;
 import org.ld4l.bib2lod.ontology.OwlThingType;
 import org.ld4l.bib2lod.ontology.fgdc.CartographySubType;
 import org.ld4l.bib2lod.ontology.fgdc.CartographyType;
@@ -134,10 +136,13 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
     	Map<String, String> mapToUriCache = cachingService.getMap(MapType.NAMES_TO_URI);
 
     	// create and add HGLD identifier
-    	String layerId = record.getLayerId(); // should be validated as non-null
-        Entity hglIdentifier =  new Entity(HarvardType.HGLID);
-        hglIdentifier.addAttribute(Ld4lDatatypeProp.VALUE, layerId);
-        work.addRelationship(Ld4lObjectProp.IDENTIFIED_BY, hglIdentifier);
+    	String layerId = record.getLayerId(); // should have been validated as non-null
+    	// find out which institution
+    	FgdcToLd4lEntityBuilderFactory factory = (FgdcToLd4lEntityBuilderFactory) Bib2LodObjectFactory.getFactory()
+                .instanceForInterface(EntityBuilderFactory.class);
+    	Entity layerIdentifier = factory.getInstitutionEntity();
+        layerIdentifier.addAttribute(Ld4lDatatypeProp.VALUE, layerId);
+        work.addRelationship(Ld4lObjectProp.IDENTIFIED_BY, layerIdentifier);
     	
     	// create and add Hollis number identifier
 		String hollisNumber = record.getHollisNumber(); // could be null or empty
@@ -247,7 +252,7 @@ public class FgdcToCartographyBuilder extends FgdcToLd4lEntityBuilder {
                 	UriLabelConcordanceBean fastConcordanceBean = null;
                 	String concordanceUri = null;
                 	// check to see if themekt is of the type that requires a concordance file check
-                	if (MapType.ISO_THEME_THESAURUS_KEYWORD_TO_URI.marker().equalsIgnoreCase(themeKtFieldText)) {
+                	if (themeKtFieldText.startsWith(MapType.ISO_THEME_THESAURUS_KEYWORD_TO_URI.marker())) { // using startsWith() since variants on Harvard & Stanford data
                 		// expect only one
                 		isoTopicConcordanceBean = isoTopicConcordanceManager.getConcordanceEntry(themeKeyFieldText);
                     	if (isoTopicConcordanceBean != null) {

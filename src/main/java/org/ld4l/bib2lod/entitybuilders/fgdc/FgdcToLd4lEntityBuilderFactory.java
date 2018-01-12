@@ -4,11 +4,17 @@ package org.ld4l.bib2lod.entitybuilders.fgdc;
 
 import java.util.HashMap;
 
+import org.ld4l.bib2lod.configuration.Configurable;
+import org.ld4l.bib2lod.configuration.Configuration;
+import org.ld4l.bib2lod.configuration.Configuration.ConfigurationException;
+import org.ld4l.bib2lod.entity.Entity;
 import org.ld4l.bib2lod.entitybuilders.BaseEntityBuilderFactory;
 import org.ld4l.bib2lod.entitybuilders.EntityBuilder;
+import org.ld4l.bib2lod.entitybuilders.EntityBuilder.EntityBuilderException;
 import org.ld4l.bib2lod.ontology.Type;
 import org.ld4l.bib2lod.ontology.fgdc.CartographySubType;
 import org.ld4l.bib2lod.ontology.fgdc.CartographyType;
+import org.ld4l.bib2lod.ontology.fgdc.HarvardType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lActivityType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lAgentType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lAnnotationType;
@@ -17,8 +23,10 @@ import org.ld4l.bib2lod.ontology.ld4l.Ld4lItemType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lTitleType;
 import org.ld4l.bib2lod.ontology.ld4l.Ld4lWorkType;
 
-public class FgdcToLd4lEntityBuilderFactory extends BaseEntityBuilderFactory {
+public class FgdcToLd4lEntityBuilderFactory extends BaseEntityBuilderFactory implements Configurable {
 
+	private Entity institutionEntity;
+	
     private static HashMap<Type, Class<? extends EntityBuilder>> typeToBuilder = 
             new HashMap<>();
     static {
@@ -38,5 +46,23 @@ public class FgdcToLd4lEntityBuilderFactory extends BaseEntityBuilderFactory {
             getTypeToBuilderClassMap() {
         return typeToBuilder;
     }
+
+	@Override
+	public void configure(Configuration config) {
+		String institution = config.getAttribute("institution");
+		if ("Harvard".equalsIgnoreCase(institution)) {
+			this.institutionEntity = new Entity(HarvardType.HGLID);
+		} else if ("Stanford".equalsIgnoreCase(institution)) {
+			this.institutionEntity =  new Entity(HarvardType.STANFORD);
+		} else {
+			throw new ConfigurationException("Failed to create an instance of "+
+					getClass().getName() +
+					" -- no valid configuration value for 'institution': " + institution);
+		}
+	}
+	
+	public Entity getInstitutionEntity() throws EntityBuilderException {
+		return institutionEntity;
+	}
       
 }

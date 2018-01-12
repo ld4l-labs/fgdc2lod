@@ -31,7 +31,7 @@ public interface CachingService {
     }
     
     public static enum MapType {
-    	ISO_THEME_THESAURUS_KEYWORD_TO_URI("ISO 19115 Topic Category"),
+    	ISO_THEME_THESAURUS_KEYWORD_TO_URI("ISO 19115 Topic"), // could be either "ISO 19115 Topic Category" or "ISO 19115 Topic Categories" in input file, so will match on startsWith() rather than equals()
     	LCSH_THEME_THESAURUS_KEYWORD_TO_URI("LCSH"),
     	OTHER_THEME_THESAURUS_KEYWORK_TO_URI(""),
     	GNIS_PLACE_THESAURUS_KEYWORD_TO_URI("GNIS"),

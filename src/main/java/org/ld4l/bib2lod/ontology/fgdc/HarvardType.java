@@ -12,6 +12,7 @@ import org.ld4l.bib2lod.ontology.Type;
 public enum HarvardType implements Type {
     
     HGLID(HarvardNamespace.HARVARD, "HGLID"),
+    STANFORD(HarvardNamespace.HARVARD, "STANFORDID"),
     HOLLIS_NUMBER(HarvardNamespace.HARVARD, "HOLLISNumber");
     
     private String uri;
